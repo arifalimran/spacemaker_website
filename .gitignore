@@ -7,12 +7,12 @@ node_modules/
 */.env
 *.env.local
 
-# Build output
+# Build artifacts
 dist/
 build/
 */dist/
 
-# System and Editor files
+# Operating system & Editor files
 .DS_Store
 Thumbs.db
 .vscode/

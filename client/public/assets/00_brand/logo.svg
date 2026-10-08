@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 180" fill="none">
+  <!-- Stepped Isometric Tree Emblem -->
+  <g transform="translate(10, 10) scale(0.85)">
+    <!-- Lime Eco Canopy Highlight -->
+    <path d="M 55 10 L 78 10 L 98 42 L 85 42 L 68 68 L 38 68 L 52 42 L 32 42 Z" fill="#C6F00C"/>
+    
+    <!-- Outer Contour -->
+    <path d="M 55 10 L 105 10 L 118 30 L 140 30 L 148 45 L 165 45 L 180 70 L 150 70 L 150 95 L 85 95 L 75 110 L 25 110 L 25 95 L 5 95 L 35 45 L 55 45 Z" 
+          stroke="#121316" stroke-width="6" stroke-linejoin="round" fill="none"/>
+    
+    <!-- Trunk & Branch Structure -->
+    <path d="M 85 95 L 85 145 M 102 95 L 102 145 M 85 120 L 55 100 L 65 92 L 85 105 M 102 110 L 132 88 L 140 96 L 102 122" 
+          stroke="#121316" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    
+    <!-- Foundation Bed -->
+    <path d="M 15 145 L 170 145 L 160 160 L 25 160 Z" stroke="#121316" stroke-width="5" fill="none"/>
+    <rect x="25" y="166" width="135" height="8" rx="2" fill="#121316"/>
+  </g>
+
+  <!-- Typography: SPACE MAKER -->
+  <text x="195" y="75" font-family="'Space Grotesk', sans-serif" font-size="52" font-weight="800" letter-spacing="4" fill="#121316">SPACE</text>
+  <!-- Accent Lime Dot inside the A -->
+  <path d="M 333 48 Q 345 48 345 56 Q 345 64 333 64 Z" fill="#C6F00C"/>
+
+  <text x="195" y="125" font-family="'Space Grotesk', sans-serif" font-size="34" font-weight="600" letter-spacing="14" fill="#121316">MAKER</text>
+  
+  <!-- Tagline -->
+  <text x="198" y="152" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="500" letter-spacing="2" fill="#71717A">where space defines luxury</text>
+</svg>
