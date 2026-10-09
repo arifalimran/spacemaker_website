@@ -4,36 +4,81 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Space Maker Limited | Where Space Defines Luxury</title>
+    <title>Space Maker Limited | Real Estate Developer Dhaka</title>
 
-    <!-- Google Fonts: Geometric Display, Architectural Editorial Serif & Specs Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400;1,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
-    <!-- Instant Tailwind Configuration -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              accent: '#C6F00C',
-              canvas: '#F7F8F5',
-              graphite: '#121316',
+              banyanGreen: "#1B4332",
+              banyanLight: "#2D6A4F",
+              banyanGold: "#C5A880",
+              limeAccent: "#C6F00C",
+              slateDark: "#111827",
+              canvasSand: "#FAF8F5"
             },
             fontFamily: {
-              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-              display: ['"Space Grotesk"', 'sans-serif'],
-              serif: ['"Playfair Display"', 'serif'],
-              mono: ['"JetBrains Mono"', 'monospace'],
+              sans: ["\"Plus Jakarta Sans\"", "sans-serif"],
+              serif: ["\"Playfair Display\"", "serif"],
+              mono: ["\"JetBrains Mono\"", "monospace"]
             }
           }
         }
       }
     </script>
+    <style>
+      html { scroll-behavior: smooth; }
+      @keyframes flutterWings {
+        0%, 100% { transform: scaleX(1) rotate(0deg); }
+        50% { transform: scaleX(0.25) rotate(6deg); }
+      }
+      @keyframes floatPathOne {
+        0% { transform: translate3d(-10vw, 15vh, 0); opacity: 0; }
+        15% { opacity: 0.95; }
+        50% { transform: translate3d(45vw, 5vh, 0); }
+        85% { opacity: 0.95; }
+        100% { transform: translate3d(105vw, 25vh, 0); opacity: 0; }
+      }
+      @keyframes floatPathTwo {
+        0% { transform: translate3d(105vw, 65vh, 0); opacity: 0; }
+        15% { opacity: 0.9; }
+        50% { transform: translate3d(55vw, 75vh, 0); }
+        85% { opacity: 0.9; }
+        100% { transform: translate3d(-10vw, 60vh, 0); opacity: 0; }
+      }
+      .butterfly-gpu-1 {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 35;
+        animation: floatPathOne 28s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        will-change: transform, opacity;
+      }
+      .butterfly-gpu-2 {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 35;
+        animation: floatPathTwo 34s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        animation-delay: 14s;
+        will-change: transform, opacity;
+      }
+      .wings-flutter {
+        animation: flutterWings 0.32s ease-in-out infinite;
+        transform-origin: center;
+        will-change: transform;
+      }
+    </style>
   </head>
-  <body class="bg-[#F7F8F5] text-[#121316] antialiased">
+  <body class="bg-[#FAF8F5] text-[#111827] antialiased selection:bg-[#C6F00C] selection:text-black">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
