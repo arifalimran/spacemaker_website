@@ -11,7 +11,7 @@ import {
 /* ---------- Logo paths (your uploaded files) ----------
    Tip: rename to logo-text.png / logo-icon.png and folder 00_brand to avoid
    spaces in URLs. Until then the encoded versions below work. */
-const LOGO_ICON = '/assets/00_brand/emblem-watermark.svg';
+const LOGO_ICON = '/assets/00brand/logo%20icon.png';
 
 const CANVAS = '#FAF8F5';
 
