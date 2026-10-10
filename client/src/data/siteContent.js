@@ -1,82 +1,69 @@
 // client/src/data/siteContent.js
+// All words live here. Components only render them.
 
-export const brandDetails = {
+export const brand = {
   name: "SPACE MAKER",
   tagline: "where space defines luxury",
-  logoAsset: "/assets/00_brand/logo.svg",
-  accentColor: "#C6F00C"
+  phone: "+880 1916-100416",
+  whatsappNumber: "8801916100416",
+  email: "spacemakerbd@gmail.com",
+  messengerUrl: "https://m.me/spacemakerbd",
+};
+
+// Builds a WhatsApp deep link with a prefilled message
+export const waLink = (text) =>
+  `https://wa.me/${brand.whatsappNumber}?text=${encodeURIComponent(text)}`;
+
+export const navLinks = [
+  { label: "Available Flats", href: "#projects" },
+  { label: "Completed Homes", href: "#completed" },
+  { label: "Why Buy With Us", href: "#why" },
+  { label: "Contact", href: "#contact" },
+];
+
+export const navCta = {
+  label: "Book Flat Tour",
+  message: "Hello Space Maker, I would like to book a flat tour.",
 };
 
 export const heroContent = {
-  badge: "Engineering & Architecture",
-  headlineLine1: "Where Space",
-  headlineLine2: "Defines Luxury.",
-  subheading: "Your land is more than a property. It represents years of hard work, sacrifice, and achievement. At Space Maker Limited, we recognize that responsibility—protecting your interests while maximizing the value of your land through engineering excellence, transparent communication, and disciplined execution.",
-  slides: [
-    { id: 1, image: "/assets/01_hero/hero-1.jpg", title: "FORM & SPACE", location: "Sector 13, Jolshiri Abashon" },
-    { id: 2, image: "/assets/01_hero/hero-2.jpg", title: "Platinum Kusumbag", location: "Sabujbag, Dhaka" },
-    { id: 3, image: "/assets/01_hero/hero-3.jpg", title: "Moon Residence", location: "Dinajpur Central" }
-  ]
+  headline: "Find your sanctuary",
+  headlineAccent: "in Dhaka.",
+  subheading:
+    "Cross-ventilated, earthquake-resistant flats built for sunlight, fresh air and peace of mind, in Jolshiri, Sabujbag and the Dhanmondi edge.",
+  primaryCta: { label: "Explore Available Flats", href: "#projects" },
+  secondaryCta: {
+    label: "Schedule a Site Visit",
+    message: "Hello Space Maker, I would like to schedule a site visit.",
+  },
+  filtersLabel: "Browse by area",
+  filters: [
+    { label: "Jolshiri Abashon", note: "3 & 4 bed", message: "Hello Space Maker, I am looking for a 3 or 4 bed flat in Jolshiri Abashon." },
+    { label: "Sabujbag", note: "Luxury suites", message: "Hello Space Maker, I am interested in luxury suites at Sabujbag." },
+    { label: "Dhanmondi edge", note: "Rayer Bazar", message: "Hello Space Maker, I am interested in a flat near Dhanmondi / Rayer Bazar." },
+  ],
+  featured: {
+    image: "/assets/01_hero/hero-1.jpg",
+    fallback:
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+    title: "FORM & SPACE",
+    place: "Sector 13, Jolshiri Abashon",
+    spec: "G+M+8 residential building · Architect Hasib Uddin Ahmed",
+    message: "Hello Space Maker, I would like details and availability for FORM & SPACE, Jolshiri.",
+  },
 };
 
-export const whoWeAreContent = {
-  badge: "Corporate Profile",
-  title: "Who We Are",
+export const aboutContent = {
+  title: "Engineers and architects who build homes the way they would build their own.",
   paragraphs: [
-    "Space Maker Limited is a premium real estate development company dedicated to transforming valuable land into exceptional residential developments.",
-    "Behind every project is an experienced team of development professionals, architects, structural engineers, and project managers working together to ensure successful project delivery from concept to handover."
+    "Space Maker Limited is a Dhaka real estate developer. Our team of civil engineers, architects and project managers takes each building from concept to key handover.",
+    "We design for daylight and cross-ventilation first, then back it with tested materials, deep piling and structure that is engineered for earthquakes.",
   ],
-  quote: "“Every Great Development Begins with Trust, Transparency, and Disciplined Execution.”",
+  quote: "Every great development begins with trust, transparency and disciplined execution.",
   pillars: [
-    "Zero Compromise Structural Safety",
-    "Clear Legal JV Frameworks",
-    "Architectural Identity in Every Detail",
-    "Guaranteed Milestone Timelines"
-  ]
-};
-
-export const whyChooseUsContent = {
-  badge: "Value Proposition",
-  title: "Why Choose Space Maker",
-  subtitle: "Engineering excellence • Transparent process • Lasting value",
-  cards: [
-    { title: "Engineering Expertise", desc: "Every project begins with engineering—not assumptions.", icon: "Compass" },
-    { title: "Transparent Partnership", desc: "Clear agreements. Open communication. No hidden decisions.", icon: "ShieldCheck" },
-    { title: "Optimized Planning", desc: "Maximum utilization of land while maintaining quality.", icon: "Layers" },
-    { title: "Professional Execution", desc: "Experienced engineers supervise every single stage.", icon: "HardHat" },
-    { title: "Quality Construction", desc: "Attention to every structural and architectural detail.", icon: "Building2" },
-    { title: "Long-Term Relationship", desc: "We build enduring partnerships—not quick transactions.", icon: "Sparkles" }
-  ]
-};
-
-export const developmentProcessContent = {
-  badge: "Methodology",
-  title: "Our 10-Step Development Process",
-  subtitle: "A rigorous, disciplined engineering pipeline from feasibility to handover.",
-  steps: [
-    "01. Initial Meeting",
-    "02. Land Evaluation",
-    "03. Feasibility Study",
-    "04. JV Agreement",
-    "05. Concept Design",
-    "06. Detailed Engineering",
-    "07. Statutory Approvals",
-    "08. Construction Execution",
-    "09. Quality Inspection",
-    "10. Project Handover"
-  ]
-};
-
-export const contactContent = {
-  badge: "Direct Contact",
-  title: "Let's Discuss Your Land",
-  subtitle: "Whether you hold residential land in Jolshiri, Dhanmondi, or regional hubs, our engineering and development team provides feasibility and joint-venture modeling.",
-  offices: [
-    { name: "Corporate Office", address: "House 405, Road 29, Mohakhali DOHS, Dhaka" },
-    { name: "Jalshiri Operations", address: "House 22, Road 505A, Sector 16, Jalshiri Abashon, Dhaka" }
+    { title: "Structural safety", text: "Earthquake-resistant piling and lab-tested concrete and rebar." },
+    { title: "Light and air", text: "Layouts planned around sunlight and natural cross-ventilation." },
+    { title: "Clear legal footing", text: "Documented approvals and transparent agreements before you commit." },
+    { title: "On-time handover", text: "Milestone tracking from foundation to finishing." },
   ],
-  phone: "+880 1916-100416",
-  email: "spacemakerbd@gmail.com",
-  whatsappUrl: "https://wa.me/8801916100416?text=Hello%20Space%20Maker,%20I%20am%20inquiring%20about%20land%20development.",
-  messengerUrl: "https://m.me/spacemakerbd"
 };

@@ -1,31 +1,47 @@
-import React from "react";
+import React from 'react';
+
+/**
+ * Three small butterflies drifting across the viewport.
+ * - Only `transform` is animated (CSS keyframes in styles/index.css), so it runs on the GPU
+ *   and never triggers layout or React re-renders.
+ * - Fixed + pointer-events-none: never blocks scrolling or clicks.
+ * - Hidden for prefers-reduced-motion users.
+ */
+const FLIES = [
+  { id: 'a', path: 'bf-path-a', duration: 38, delay: 2,  size: 30, wing: '#C6F00C', body: '#1B4332' },
+  { id: 'b', path: 'bf-path-b', duration: 46, delay: 10, size: 24, wing: '#F59E0B', body: '#1B4332' },
+  { id: 'c', path: 'bf-path-a', duration: 54, delay: 24, size: 20, wing: '#60A5FA', body: '#111827' },
+];
+
+function Butterfly({ size, wing, body }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden="true">
+      <g className="bf-wings">
+        <path d="M20 19C14 6 3 6 4 15c1 6 8 8 16 4z" fill={wing} fillOpacity="0.9" />
+        <path d="M20 21c-8-3-14 0-12 7 2 6 10 4 12-7z" fill={wing} fillOpacity="0.7" />
+        <path d="M20 19C26 6 37 6 36 15c-1 6-8 8-16 4z" fill={wing} fillOpacity="0.9" />
+        <path d="M20 21c8-3 14 0 12 7-2 6-10 4-12-7z" fill={wing} fillOpacity="0.7" />
+      </g>
+      <rect x="19" y="12" width="2" height="18" rx="1" fill={body} />
+    </svg>
+  );
+}
 
 export default function Butterflies() {
   return (
-    <>
-      <div className="butterfly-gpu-1">
-        <svg viewBox="0 0 64 64" className="w-9 h-9 wings-flutter drop-shadow-md">
-          <ellipse cx="32" cy="32" rx="2.5" ry="12" fill="#111827" />
-          <path d="M32 26 C22 10 6 16 10 28 C12 36 24 34 32 30 Z" fill="#2D6A4F" />
-          <path d="M14 22 C18 16 26 18 30 25 C26 27 18 28 14 22 Z" fill="#C6F00C" opacity="0.85" />
-          <path d="M32 30 C24 34 14 42 16 50 C18 56 28 50 32 36 Z" fill="#C5A880" />
-          <path d="M32 26 C42 10 58 16 54 28 C52 36 40 34 32 30 Z" fill="#2D6A4F" />
-          <path d="M50 22 C46 16 38 18 34 25 C38 27 46 28 50 22 Z" fill="#C6F00C" opacity="0.85" />
-          <path d="M32 30 C40 34 50 42 48 50 C46 56 36 50 32 36 Z" fill="#C5A880" />
-        </svg>
-      </div>
-
-      <div className="butterfly-gpu-2">
-        <svg viewBox="0 0 64 64" className="w-8 h-8 wings-flutter drop-shadow-md">
-          <ellipse cx="32" cy="32" rx="2" ry="10" fill="#111827" />
-          <path d="M32 26 C22 12 8 18 12 30 C14 36 24 34 32 30 Z" fill="#F59E0B" />
-          <path d="M15 24 C19 18 27 20 30 26 C26 28 19 29 15 24 Z" fill="#38BDF8" opacity="0.9" />
-          <path d="M32 30 C24 34 15 42 17 48 C19 54 27 48 32 36 Z" fill="#EA580C" />
-          <path d="M32 26 C42 12 56 18 52 30 C50 36 40 34 32 30 Z" fill="#F59E0B" />
-          <path d="M49 24 C45 18 37 20 34 26 C38 28 45 29 49 24 Z" fill="#38BDF8" opacity="0.9" />
-          <path d="M32 30 C40 34 49 42 47 48 C45 54 37 48 32 36 Z" fill="#EA580C" />
-        </svg>
-      </div>
-    </>
+    <div aria-hidden="true" className="bf-layer fixed inset-0 z-[5] pointer-events-none overflow-hidden">
+      {FLIES.map((f) => (
+        <div
+          key={f.id + f.delay}
+          className="bf"
+          style={{
+            animation: `${f.path} ${f.duration}s linear ${f.delay}s infinite`,
+            opacity: 0.85,
+          }}
+        >
+          <Butterfly size={f.size} wing={f.wing} body={f.body} />
+        </div>
+      ))}
+    </div>
   );
 }

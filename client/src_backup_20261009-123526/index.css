@@ -1,0 +1,15 @@
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: #F7F8F5;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #F7F8F5;
+    color: #121316;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+}

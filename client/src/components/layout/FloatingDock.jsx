@@ -1,27 +1,29 @@
-import React from "react";
-import { Phone, MessageSquare } from "lucide-react";
-import { contactContent } from "../../data/siteContent";
+import React from 'react';
+import { MessageCircle, Phone } from 'lucide-react';
+import { brand, waLink } from '../../data/siteContent';
 
 export default function FloatingDock() {
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-white/95 backdrop-blur-md border border-neutral-300 p-2 rounded-2xl shadow-2xl">
-      <a 
-        href={contactContent.whatsappUrl} 
-        target="_blank" 
+    <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-2xl bg-white/90 backdrop-blur-md border border-[#1B4332]/10 p-2 shadow-xl">
+      <a
+        href={brand.messengerUrl}
+        target="_blank"
         rel="noreferrer"
-        className="w-11 h-11 rounded-xl bg-[#25D366] hover:bg-emerald-600 text-white flex items-center justify-center transition shadow-sm"
-        title="Direct WhatsApp"
+        title="Message on Facebook"
+        aria-label="Message on Facebook Messenger"
+        className="w-11 h-11 rounded-xl bg-[#0866FF] hover:bg-[#0654d6] text-white grid place-items-center transition"
+      >
+        <MessageCircle className="w-5 h-5" />
+      </a>
+      <a
+        href={waLink('Hello Space Maker, I would like to discuss a flat purchase.')}
+        target="_blank"
+        rel="noreferrer"
+        title="Chat on WhatsApp"
+        aria-label="Chat on WhatsApp"
+        className="w-11 h-11 rounded-xl bg-[#25D366] hover:bg-[#1fb857] text-white grid place-items-center transition"
       >
         <Phone className="w-5 h-5" />
-      </a>
-      <a 
-        href={contactContent.messengerUrl || "https://m.me/spacemakerbd"} 
-        target="_blank" 
-        rel="noreferrer"
-        className="w-11 h-11 rounded-xl bg-[#0084FF] hover:bg-blue-600 text-white flex items-center justify-center transition shadow-sm"
-        title="Direct Messenger"
-      >
-        <MessageSquare className="w-5 h-5" />
       </a>
     </div>
   );

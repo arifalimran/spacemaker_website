@@ -1,0 +1,90 @@
+/* client/src/index.css  — REPLACE your current file with this (keep your @tailwind lines at top if you use the Vite Tailwind build) */
+
+:root {
+  --banyan: #1B4332;
+  --forest: #2D6A4F;
+  --volt: #C6F00C;
+  --alabaster: #FAF8F5;
+  --morning: #F3EFE6;
+  --sage: #EDF4EC;
+  --slate: #111827;
+  --ink-soft: #374151;
+}
+
+html {
+  background: var(--alabaster);
+}
+/* Lenis handles smoothing — do NOT use CSS scroll-behavior: smooth with it */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  margin: 0;
+  background: var(--alabaster);
+  color: var(--slate);
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ---------- Typography roles ---------- */
+.f-display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.03em; }
+.f-serif   { font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-weight: 400; }
+.f-mono    { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+/* ---------- Section gradient dissolves (no hard borders) ---------- */
+.sec-hero  { background: linear-gradient(to bottom, #FAF8F5 0%, #F3EFE6 100%); }
+.sec-about { background: linear-gradient(to bottom, #F3EFE6 0%, #EDF4EC 100%); }
+.sec-portfolio { background: linear-gradient(to bottom, #EDF4EC 0%, #F6F8F5 100%); }
+.sec-why   { background: linear-gradient(to bottom, #F6F8F5 0%, #EBF2EA 100%); }
+.sec-testimonials { background: linear-gradient(to bottom, #EBF2EA 0%, #FAF8F5 100%); }
+
+/* ---------- Focus + selection ---------- */
+::selection { background: var(--volt); color: #000; }
+:focus-visible { outline: 2px solid var(--banyan); outline-offset: 3px; border-radius: 6px; }
+
+/* ---------- Buttons ---------- */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--banyan); color: #fff;
+  padding: .85rem 1.4rem; border-radius: .9rem;
+  font-weight: 600; font-size: .875rem;
+  transition: background .2s ease, transform .2s ease;
+}
+.btn-primary:hover { background: #14342A; }
+.btn-primary .dot { width: .5rem; height: .5rem; border-radius: 999px; background: var(--volt); }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: .5rem;
+  border: 1.5px solid rgba(27,67,50,.35); color: var(--banyan);
+  padding: .85rem 1.4rem; border-radius: .9rem;
+  font-weight: 600; font-size: .875rem;
+  transition: background .2s ease, border-color .2s ease;
+}
+.btn-ghost:hover { background: rgba(27,67,50,.06); border-color: var(--banyan); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* ---------- Butterflies (transform/opacity only = GPU friendly) ---------- */
+@keyframes bf-path-a {
+  0%   { transform: translate3d(-10vw, 70vh, 0) rotate(8deg); }
+  25%  { transform: translate3d(20vw, 45vh, 0) rotate(-6deg); }
+  50%  { transform: translate3d(55vw, 62vh, 0) rotate(10deg); }
+  75%  { transform: translate3d(85vw, 30vh, 0) rotate(-8deg); }
+  100% { transform: translate3d(110vw, 50vh, 0) rotate(6deg); }
+}
+@keyframes bf-path-b {
+  0%   { transform: translate3d(110vw, 25vh, 0) rotate(-8deg); }
+  30%  { transform: translate3d(75vw, 55vh, 0) rotate(8deg); }
+  60%  { transform: translate3d(40vw, 35vh, 0) rotate(-10deg); }
+  100% { transform: translate3d(-10vw, 65vh, 0) rotate(6deg); }
+}
+@keyframes bf-flap {
+  0%, 100% { transform: scaleX(1); }
+  50%      { transform: scaleX(0.25); }
+}
+.bf { position: absolute; top: 0; left: 0; will-change: transform; }
+.bf-wings { transform-origin: center; animation: bf-flap .45s ease-in-out infinite; will-change: transform; }
+@media (prefers-reduced-motion: reduce) { .bf-layer { display: none; } }

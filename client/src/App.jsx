@@ -1,60 +1,60 @@
-import React, { useState } from "react";
-
-import Navbar from "./components/layout/Navbar";
-import HeroStage from "./components/home/HeroStage";
-import WhoWeAre from "./components/home/WhoWeAre";
-import WhyChooseUs from "./components/home/WhyChooseUs";
-import PortfolioGrid from "./components/portfolio/PortfolioGrid";
-import LandownerParlor from "./components/home/LandownerParlor";
-import Careers from "./components/home/Careers";
-import Footer from "./components/layout/Footer";
-import FloatingDock from "./components/layout/FloatingDock";
-import Butterflies from "./components/common/Butterflies";
-import ProjectDetailModal from "./components/portfolio/modal/ProjectDetailModal";
+import React, { useEffect } from 'react';
+import Lenis from 'lenis';
+import Navbar from './components/layout/Navbar';
+import FloatingDock from './components/layout/FloatingDock';
+import BackgroundLayers from './components/common/BackgroundLayers';
+import Butterflies from './components/common/Butterflies';
+import HeroStage from './components/home/HeroStage';
+import WhoWeAre from './components/home/WhoWeAre';
 
 export default function App() {
-  const [selectedProject, setSelectedProject] = useState(null);
+  // Inertia scroll (skipped when the visitor prefers reduced motion)
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const openWhatsApp = (note = "") => {
-    const phone = "8801916100416";
-    const text = encodeURIComponent(note || "Hello Space Maker, I would like to schedule a consultation.");
-    window.open("https://wa.me/" + phone + "?text=" + text, "_blank");
-  };
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
 
-  const scrollToLandowner = () => {
-    document.getElementById("partner-land")?.scrollIntoView({ behavior: "smooth" });
-  };
+    let rafId;
+    const raf = (time) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    };
+    rafId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
+  }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#FAF8F5] text-[#111827] font-sans overflow-x-hidden selection:bg-[#C6F00C] selection:text-black">
+    <div className="relative min-h-screen bg-[#FAF8F5] text-[#111827]">
+      <BackgroundLayers />
       <Butterflies />
-      <Navbar onDiscussLand={scrollToLandowner} />
+      <Navbar />
 
       <main>
-        <HeroStage 
-          onInquire={(title, location) => openWhatsApp("Hello Space Maker! I would like to inquire about " + title + " at " + location + ".")} 
-          onDiscussLand={scrollToLandowner}
-        />
+        <HeroStage />
         <WhoWeAre />
-        <WhyChooseUs />
-        <PortfolioGrid 
-          onSelectProject={(proj) => setSelectedProject(proj)} 
-          onWhatsAppInquire={openWhatsApp}
-        />
-        <LandownerParlor />
-        <Careers />
+
+        {/* Phase 2: PortfolioGrid (#projects, #completed), WhyChooseUs (#why), Testimonials */}
+        {/* Phase 3: DevelopmentProcess, LandownerParlor, Contact (#contact), Footer */}
+        <section id="projects" className="relative z-10 py-24 px-6 text-center text-[#374151]">
+          Portfolio arrives in Phase 2.
+        </section>
+        <section id="why" className="relative z-10 py-24 px-6 text-center text-[#374151]">
+          Why Choose Us arrives in Phase 2.
+        </section>
+        <section id="contact" className="relative z-10 pb-24 px-6 text-center text-[#374151]">
+          Contact arrives in Phase 3.
+        </section>
       </main>
 
-      <Footer />
       <FloatingDock />
-
-      {selectedProject && (
-        <ProjectDetailModal 
-          project={selectedProject} 
-          onClose={() => setSelectedProject(null)} 
-          onWhatsApp={openWhatsApp}
-        />
-      )}
     </div>
   );
 }
