@@ -1,0 +1,66 @@
+/* client/src/styles/sm-effects.css
+   Image treatments and the expanding project panels. Imported once in App.jsx. */
+
+/* Blurred reveal: soft and out of focus until you hover */
+.sm-blur img {
+  filter: blur(14px) saturate(0.7);
+  transition: filter 0.9s ease;
+}
+.sm-blur:hover img,
+.sm-blur:focus-within img,
+.sm-blur.is-on img,
+.group:hover .sm-blur img {
+  filter: blur(0) saturate(1);
+}
+
+/* Duotone: filtered in the dark tone, colour returns on hover */
+.sm-duo {
+  isolation: isolate;
+}
+.sm-duo img {
+  filter: grayscale(1) contrast(1.05) brightness(0.92);
+  transition: filter 0.9s ease;
+}
+.sm-duo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: var(--duo, #2a1f1a);
+  mix-blend-mode: color;
+  opacity: 0.6;
+  transition: opacity 0.9s ease;
+}
+.sm-duo:hover img,
+.sm-duo.is-on img,
+.group:hover .sm-duo img {
+  filter: none;
+}
+.sm-duo:hover::after,
+.sm-duo.is-on::after,
+.group:hover .sm-duo::after {
+  opacity: 0;
+}
+
+/* Touch screens have no hover: show the photos clearly */
+@media (hover: none) {
+  .sm-blur img {
+    filter: none;
+  }
+  .sm-duo img {
+    filter: none;
+  }
+  .sm-duo::after {
+    opacity: 0;
+  }
+}
+
+/* Expanding project panels (desktop only) */
+@media (min-width: 768px) {
+  .sm-acc {
+    flex: var(--f, 1 1 0%);
+    min-width: 0;
+    transition: flex 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}

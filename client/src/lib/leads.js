@@ -1,18 +1,34 @@
 // client/src/lib/leads.js
-// WhatsApp / call links that carry a project (and flat) reference, plus click logging.
+// WhatsApp / call links that carry a project (and unit) reference, plus click logging.
 import { CONTACT } from '../data/portfolio';
 
 export const waLink = (message, number = CONTACT.whatsapp) =>
   `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 
-export function projectMessage(project, flat, kind = 'project') {
+export function projectMessage(project, unit, kind = 'project') {
   if (kind === 'upcoming') {
     return `Hello Space Maker, I would like to register my interest in your upcoming project in ${project.area}. Ref: UP-${project.id}`;
   }
-  if (flat) {
-    return `Hello Space Maker, I am interested in flat ${flat.id} (${flat.beds} bed, ${flat.size}) at ${project.title}, ${project.area}. Ref: ${project.ref}-${flat.id}`;
+  if (kind === 'interior') {
+    return `Hello Space Maker, I would like to know more about your interior work: ${project.title}. Ref: ${project.ref}`;
+  }
+  if (unit) {
+    return `Hello Space Maker, I am interested in unit ${unit.id} (${unit.label}, ${unit.size}) at ${project.title}, ${project.area}. Ref: ${project.ref}-${unit.id}`;
   }
   return `Hello Space Maker, I would like to know more about ${project.title}, ${project.area}. Ref: ${project.ref}`;
+}
+
+export function landMessage(f) {
+  return [
+    'Hello Space Maker, I would like a feasibility study for my land.',
+    f.name && `Name: ${f.name}`,
+    f.phone && `Phone: ${f.phone}`,
+    f.location && `Plot location: ${f.location}`,
+    f.size && `Plot size: ${f.size}`,
+    f.notes && `Notes: ${f.notes}`,
+  ]
+    .filter(Boolean)
+    .join('\n');
 }
 
 /* Logs every WhatsApp / call tap.

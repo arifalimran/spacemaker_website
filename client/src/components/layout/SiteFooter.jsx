@@ -45,17 +45,19 @@ export default function SiteFooter() {
             <div>
               <div className={head}>Explore</div>
               <ul className="mt-4 grid gap-2.5">
-                <li><Link to={{ pathname: '/', hash: '#residences' }} className={lk}>Residences</Link></li>
-                <li><Link to={{ pathname: '/', hash: '#about' }} className={lk}>Our Story</Link></li>
+                <li><Link to={{ pathname: '/', hash: '#projects' }} className={lk}>Projects</Link></li>
+                <li><Link to="/interiors" className={lk}>Interiors</Link></li>
+                <li><Link to={{ pathname: '/', hash: '#about' }} className={lk}>About</Link></li>
                 <li><Link to={{ pathname: '/', hash: '#why-us' }} className={lk}>Why Us</Link></li>
-                <li><Link to={{ pathname: '/', hash: '#land' }} className={lk}>For Landowners</Link></li>
+                <li><Link to={{ pathname: '/', hash: '#land' }} className={lk}>Landowners</Link></li>
                 <li><Link to="/careers" className={lk}>Careers</Link></li>
               </ul>
-              <div className={`${head} mt-8`}>Projects</div>
+              <div className={`${head} mt-8`}>Recent projects</div>
               <ul className="mt-4 grid gap-2.5">
-                {projects.map((p) => (
+                {projects.slice(0, 5).map((p) => (
                   <li key={p.id}><Link to={`/projects/${p.slug}`} className={lk}>{p.title}</Link></li>
                 ))}
+                <li><Link to="/projects" className="text-sm font-medium text-[#1B4332] underline decoration-[#C6F00C] decoration-2 underline-offset-4">All projects →</Link></li>
               </ul>
             </div>
 

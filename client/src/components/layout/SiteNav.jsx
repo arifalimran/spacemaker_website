@@ -6,10 +6,11 @@ import { waLink, trackLead } from '../../lib/leads';
 
 /* Simple, plain names. Hash links go to the home page sections. */
 const LINKS = [
-  { label: 'Residences', to: { pathname: '/', hash: '#residences' } },
-  { label: 'Our Story', to: { pathname: '/', hash: '#about' } },
+  { label: 'Projects', to: { pathname: '/', hash: '#projects' } },
+  { label: 'Interiors', to: '/interiors' },
+  { label: 'About', to: { pathname: '/', hash: '#about' } },
   { label: 'Why Us', to: { pathname: '/', hash: '#why-us' } },
-  { label: 'For Landowners', to: { pathname: '/', hash: '#land' } },
+  { label: 'Landowners', to: { pathname: '/', hash: '#land' } },
   { label: 'Careers', to: '/careers' },
   { label: 'Contact', to: { pathname: '/', hash: '#contact' } },
 ];

@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { aboutContent as c } from '../../data/siteContent';
-import { BlendedPhoto, Eyebrow, Reveal } from '../portfolio/shared';
+import { Slices, Eyebrow, Reveal } from '../portfolio/shared';
 import { BRAND } from '../../data/portfolio';
 
-/* Demo still. Swap for your own, or add `image: '/assets/...'` to aboutContent in siteContent.js */
+/* Demo photo. Add `sliceImage: '/assets/...'` to aboutContent in siteContent.js to use your own.
+   (The old `image` field is ignored on purpose: it pointed to a file that does not exist.) */
 const DEMO_IMAGE =
-  'https://images.unsplash.com/photo-1541888946425-d0fbb18615f7?auto=format&fit=crop&w=1800&q=80';
+  'https://images.unsplash.com/photo-1541888946425-d0fbb18615f7?auto=format&fit=crop&w=1600&q=80';
 
-/* The quiet second beat: one still image, blended like the hero, with the text sitting on it. */
+/* The quiet second beat: the story on the left, one photo cut into rising pillars on the right. */
 export default function WhoWeAre() {
   const reduce = useReducedMotion();
-  const ref = React.useRef(null);
+  const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const markY = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['-6%', '14%']);
   const pillars = c.pillars || [];
@@ -31,29 +32,25 @@ export default function WhoWeAre() {
         style={{ backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)', backgroundSize: '32px 32px' }}
       />
 
-      {/* the still */}
-      <div className="relative">
-        <div className="absolute right-0 top-[4%] z-[1] h-[80%] w-full opacity-45 md:w-[72%] md:opacity-100">
-          <BlendedPhoto src={c.image || DEMO_IMAGE} alt="Space Maker at work" side="right" drift className="h-full w-full" />
-        </div>
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-32 md:grid-cols-12 md:gap-10">
+        <Reveal className="md:col-span-6">
+          <Eyebrow>Who we are</Eyebrow>
+          <h2 className="f-display mt-5 text-3xl font-bold leading-[1.08] text-[#111827] sm:text-5xl">{c.title}</h2>
+          <div className="mt-8 max-w-xl space-y-5 text-base leading-relaxed text-[#374151] sm:text-lg">
+            {c.paragraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+          <blockquote className="mt-10 max-w-xl border-l-4 border-[#C6F00C] pl-6">
+            <p className="f-serif text-xl italic leading-snug text-[#1B4332] sm:text-2xl">“{c.quote}”</p>
+          </blockquote>
+        </Reveal>
 
-        <div className="relative z-10 mx-auto max-w-7xl px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-32">
-          <Reveal className="max-w-xl">
-            <Eyebrow>Who we are</Eyebrow>
-            <h2 className="f-display mt-5 text-3xl font-bold leading-[1.08] text-[#111827] sm:text-5xl">{c.title}</h2>
-            <div className="mt-8 space-y-5 text-base leading-relaxed text-[#374151] sm:text-lg">
-              {c.paragraphs.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
-            </div>
-            <blockquote className="mt-10 border-l-4 border-[#C6F00C] pl-6">
-              <p className="f-serif text-xl italic leading-snug text-[#1B4332] sm:text-2xl">“{c.quote}”</p>
-            </blockquote>
-          </Reveal>
+        <div className="md:col-span-6">
+          <Slices src={c.sliceImage || DEMO_IMAGE} count={4} className="h-[420px] sm:h-[560px]" />
         </div>
       </div>
 
-      {/* pillars: one quiet ruled row */}
       <ul className="relative z-10 mx-auto grid max-w-7xl gap-x-8 gap-y-8 px-5 pb-24 sm:grid-cols-2 sm:px-8 lg:grid-cols-4">
         {pillars.map((p, i) => (
           <motion.li
