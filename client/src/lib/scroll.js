@@ -35,12 +35,21 @@ export function scrollTop(immediate = true) {
   else window.scrollTo(0, 0);
 }
 
-/* Smooth inertia scrolling for the whole site, shared through window.__lenis */
+/* Smooth inertia scrolling for the whole site, shared through window.__lenis.
+   While the page is moving, <html> carries .sm-scrolling: hover effects pause (see index.css),
+   so the browser only paints the scroll itself. */
 export function useSmoothScroll() {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-    const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
+    const lenis = new Lenis({ duration: 1.2, smoothWheel: true, wheelMultiplier: 1, touchMultiplier: 1.2 });
     window.__lenis = lenis;
+    const root = document.documentElement;
+    let idle;
+    lenis.on('scroll', () => {
+      root.classList.add('sm-scrolling');
+      clearTimeout(idle);
+      idle = setTimeout(() => root.classList.remove('sm-scrolling'), 140);
+    });
     let raf;
     const loop = (t) => {
       lenis.raf(t);
@@ -49,6 +58,8 @@ export function useSmoothScroll() {
     raf = requestAnimationFrame(loop);
     return () => {
       cancelAnimationFrame(raf);
+      clearTimeout(idle);
+      root.classList.remove('sm-scrolling');
       lenis.destroy();
       window.__lenis = undefined;
     };

@@ -93,7 +93,7 @@ function Slice({ i, src, progress, still }) {
 
   return (
     <motion.div
-      style={{ x, y, opacity, willChange: 'transform, opacity' }}
+      style={{ x, y, opacity, willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
       className="relative h-full flex-1 overflow-hidden"
     >
       {/* the same photo on every slice, shifted so the four pieces join into one picture */}
@@ -106,15 +106,13 @@ function Slice({ i, src, progress, still }) {
           backgroundImage: src ? `url("${src}")` : 'linear-gradient(135deg,#DCE9DA,#EDF4EC)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          filter: 'grayscale(.55) contrast(1.05)',
         }}
       />
-      {/* espresso duotone, kept subtle */}
-      <div aria-hidden className="absolute inset-0" style={{ background: ESPRESSO, mixBlendMode: 'color', opacity: 0.5 }} />
+      {/* espresso tint: a plain overlay (no blend mode), cheap to paint while the slices move */}
       <div
         aria-hidden
         className="absolute inset-0"
-        style={{ background: `linear-gradient(to top, ${ESPRESSO}73, transparent 58%)`, mixBlendMode: 'multiply' }}
+        style={{ background: `linear-gradient(to top, ${ESPRESSO}8C, ${ESPRESSO}47 55%, ${ESPRESSO}33)` }}
       />
     </motion.div>
   );

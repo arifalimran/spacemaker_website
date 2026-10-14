@@ -59,3 +59,12 @@ html { scrollbar-color: #C6F00C #EDF4EC; scrollbar-width: thin; }
   box-shadow: 0 18px 40px -22px rgba(27, 67, 50, .5), 0 0 0 1px rgba(198, 240, 12, .55);
   transform: translateY(-3px);
 }
+/* >>> sm-smooth >>> */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+html { overflow-anchor: none; }
+html.sm-scrolling body { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { html.sm-scrolling body { pointer-events: auto; } }
+/* <<< sm-smooth <<< */
