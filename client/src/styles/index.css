@@ -14,7 +14,7 @@
 html {
   background: var(--alabaster);
 }
-/* Lenis handles smoothing — do NOT use CSS scroll-behavior: smooth with it */
+/* Lenis handles smoothing — do NOT use CSS with it */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 

@@ -1,0 +1,156 @@
+.
+├── client
+│   ├── README.md
+│   ├── apply-phase1.sh
+│   ├── index.html
+│   ├── package.json
+│   ├── public
+│   │   └── assets
+│   │       ├── 00_brand
+│   │       ├── 01_hero
+│   │       ├── 02_why_choose_us
+│   │       ├── 03_developments
+│   │       │   ├── architectural
+│   │       │   │   ├── dg-niport-bhaban
+│   │       │   │   │   ├── blueprint
+│   │       │   │   │   ├── facade
+│   │       │   │   │   ├── hero
+│   │       │   │   │   └── siteplan
+│   │       │   │   └── hotel-chittagong
+│   │       │   │       ├── blueprint
+│   │       │   │       ├── exterior
+│   │       │   │       └── hero
+│   │       │   ├── flagships
+│   │       │   │   ├── form-and-space-flagship
+│   │       │   │   │   ├── gallery
+│   │       │   │   │   ├── hero
+│   │       │   │   │   └── masterplan
+│   │       │   │   └── moon-residence
+│   │       │   │       ├── blueprint
+│   │       │   │       ├── commercial-atrium
+│   │       │   │       ├── delivered-facade
+│   │       │   │       └── hero
+│   │       │   └── ongoing
+│   │       │       ├── form-and-space
+│   │       │       │   ├── architectural
+│   │       │       │   ├── blueprint
+│   │       │       │   ├── hero
+│   │       │       │   └── progress
+│   │       │       ├── marchent-mahua
+│   │       │       │   ├── architectural
+│   │       │       │   ├── blueprint
+│   │       │       │   ├── hero
+│   │       │       │   └── progress
+│   │       │       ├── platinum-kusumbag
+│   │       │       │   ├── architectural
+│   │       │       │   ├── blueprint
+│   │       │       │   ├── hero
+│   │       │       │   └── progress
+│   │       │       └── rayer-bazar
+│   │       │           ├── architectural
+│   │       │           ├── blueprint
+│   │       │           ├── hero
+│   │       │           └── progress
+│   │       ├── 04_interiors
+│   │       │   ├── bosilla-residence
+│   │       │   ├── cielo-rooftop
+│   │       │   │   ├── lounge
+│   │       │   │   └── spiral-stairs
+│   │       │   ├── mirpur-residence
+│   │       │   ├── moulvibazar-villa
+│   │       │   │   ├── dining-breakfast-bar
+│   │       │   │   ├── executive-master
+│   │       │   │   ├── grand-living-lounge
+│   │       │   │   ├── media-reception
+│   │       │   │   ├── modern-kitchen
+│   │       │   │   └── spa-ensuite
+│   │       │   ├── rangs-corporate
+│   │       │   │   ├── boardroom
+│   │       │   │   └── executive-lounge
+│   │       │   ├── rupayan-uttara
+│   │       │   └── sirajgonj-residence
+│   │       ├── 05_partner_with_us
+│   │       └── people
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── components
+│   │   │   ├── common
+│   │   │   │   ├── BackgroundLayers.jsx
+│   │   │   │   └── Butterflies.jsx
+│   │   │   ├── home
+│   │   │   │   ├── Careers.jsx
+│   │   │   │   ├── HeroStage.jsx
+│   │   │   │   ├── LandownerSection.jsx
+│   │   │   │   ├── WhoWeAre.jsx
+│   │   │   │   └── WhyChooseUs.jsx
+│   │   │   ├── layout
+│   │   │   │   ├── BanyanMark.jsx
+│   │   │   │   ├── ButterflyLayer.jsx
+│   │   │   │   ├── FloatingDock.jsx
+│   │   │   │   ├── Footer.jsx
+│   │   │   │   ├── Navbar.jsx
+│   │   │   │   ├── SiteFooter.jsx
+│   │   │   │   └── SiteNav.jsx
+│   │   │   └── portfolio
+│   │   │       ├── AllProjects.jsx
+│   │   │       ├── InteriorPage.jsx
+│   │   │       ├── InteriorsIndex.jsx
+│   │   │       ├── Lightbox.jsx
+│   │   │       ├── PortfolioSection.jsx
+│   │   │       ├── ProjectPage.jsx
+│   │   │       └── shared.jsx
+│   │   ├── data
+│   │   │   ├── portfolio.js
+│   │   │   ├── projectsData.js
+│   │   │   └── siteContent.js
+│   │   ├── index.css
+│   │   ├── lib
+│   │   │   ├── leads.js
+│   │   │   └── scroll.js
+│   │   ├── main.jsx
+│   │   └── styles
+│   │       ├── index.css
+│   │       └── sm-effects.css
+│   ├── src_backup_20261009-123526
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── components
+│   │   │   ├── common
+│   │   │   │   └── Butterflies.jsx
+│   │   │   ├── home
+│   │   │   │   ├── Careers.jsx
+│   │   │   │   ├── HeroStage.jsx
+│   │   │   │   ├── LandownerParlor.jsx
+│   │   │   │   ├── WhoWeAre.jsx
+│   │   │   │   └── WhyChooseUs.jsx
+│   │   │   ├── layout
+│   │   │   │   ├── FloatingDock.jsx
+│   │   │   │   ├── Footer.jsx
+│   │   │   │   └── Navbar.jsx
+│   │   │   └── portfolio
+│   │   │       ├── PortfolioGrid.jsx
+│   │   │       ├── modal
+│   │   │       │   └── ProjectDetailModal.jsx
+│   │   │       ├── segments
+│   │   │       │   ├── architectural
+│   │   │       │   ├── flagships
+│   │   │       │   ├── interiors
+│   │   │       │   └── ongoing
+│   │   │       └── shared
+│   │   ├── data
+│   │   │   ├── projectsData.js
+│   │   │   └── siteContent.js
+│   │   ├── index.css
+│   │   └── main.jsx
+│   └── vite.config.js
+├── project_tree.txt
+└── server
+    ├── package.json
+    └── src
+        ├── config
+        ├── controllers
+        ├── index.js
+        └── routes
+
+97 directories, 57 files

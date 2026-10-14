@@ -2,7 +2,6 @@
 // Routes: /  (home), /projects, /projects/:slug, /interiors, /interiors/:slug, /careers
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import Lenis from 'lenis';
 
 import './styles/sm-effects.css';
 
@@ -20,42 +19,10 @@ import AllProjects from './components/portfolio/AllProjects';
 import InteriorsIndex from './components/portfolio/InteriorsIndex';
 import InteriorPage from './components/portfolio/InteriorPage';
 import { CONTACT } from './data/portfolio';
-import { scrollToEl, scrollTop } from './lib/scroll';
+import { useSmoothScroll, useHashScroll } from './lib/scroll';
 
 /* smooth inertia scroll, shared through window.__lenis */
-function useSmoothScroll() {
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-    document.documentElement.style.scrollBehavior = 'auto';
-    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
-    window.__lenis = lenis;
-    let raf;
-    const loop = (t) => {
-      lenis.raf(t);
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => {
-      cancelAnimationFrame(raf);
-      lenis.destroy();
-      window.__lenis = undefined;
-    };
-  }, []);
-}
-
 /* scroll to #section after a route change, or to the top on a new page */
-function ScrollManager() {
-  const { pathname, hash } = useLocation();
-  useEffect(() => {
-    const t = setTimeout(() => {
-      if (hash && scrollToEl(hash, -90)) return;
-      scrollTop();
-    }, 80);
-    return () => clearTimeout(t);
-  }, [pathname, hash]);
-  return null;
-}
-
 function Dock() {
   const base = 'flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-sm transition';
   return (
@@ -103,11 +70,11 @@ function NotFound() {
 
 function Shell() {
   useSmoothScroll();
+  useHashScroll();
   const { pathname } = useLocation();
   const detail = pathname.startsWith('/projects/') || pathname.startsWith('/interiors/');
   return (
     <div className="relative min-h-screen overflow-x-clip bg-[#FAF8F5] font-sans text-[#111827] selection:bg-[#C6F00C] selection:text-black">
-      <ScrollManager />
       <SiteNav />
       <ButterflyLayer />
       <Routes>
