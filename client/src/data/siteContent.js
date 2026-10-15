@@ -67,3 +67,37 @@ export const aboutContent = {
     { title: "On-time handover", text: "Milestone tracking from foundation to finishing." },
   ],
 };
+
+/* ------------------------------------------------------------------ */
+/* TESTIMONIALS (admin-managed). Fields: id, name, project, quote,     */
+/* photo (optional), isSample (true = shows a small "Sample" tag).     */
+/* PLACEHOLDERS ONLY: replace with real, approved client quotes.       */
+/* ------------------------------------------------------------------ */
+export const testimonialsSection = {
+  eyebrow: "In their words",
+  title: "What it feels like to live in a Space Maker home.",
+};
+
+export const testimonials = [
+  { id: "t-1", name: "[Client name]", project: "[Project name]", quote: "Sample testimonial — replace with a real quote from a client.", photo: "", isSample: true },
+  { id: "t-2", name: "[Client name]", project: "[Project name]", quote: "Sample testimonial — replace with a real quote from a client.", photo: "", isSample: true },
+  { id: "t-3", name: "[Client name]", project: "[Project name]", quote: "Sample testimonial — replace with a real quote from a client.", photo: "", isSample: true },
+];
+
+/* ------------------------------------------------------------------ */
+/* TEAM OF EXPERTS (admin-managed). Fields: id, name, role, bio,        */
+/* photo (optional; initials are shown without one), order.            */
+/* PLACEHOLDERS ONLY: replace with the real team.                      */
+/* ------------------------------------------------------------------ */
+export const teamSection = {
+  eyebrow: "Team of experts",
+  title: "The people behind every Space Maker home.",
+  intro: "Architects, engineers and site teams who design, build and hand over each project themselves.",
+};
+
+export const team = [
+  { id: "tm-1", name: "[Name]", role: "[Role]", bio: "[One line about their expertise]", photo: "", order: 1 },
+  { id: "tm-2", name: "[Name]", role: "[Role]", bio: "[One line about their expertise]", photo: "", order: 2 },
+  { id: "tm-3", name: "[Name]", role: "[Role]", bio: "[One line about their expertise]", photo: "", order: 3 },
+  { id: "tm-4", name: "[Name]", role: "[Role]", bio: "[One line about their expertise]", photo: "", order: 4 },
+];

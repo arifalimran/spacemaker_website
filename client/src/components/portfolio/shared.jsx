@@ -218,11 +218,12 @@ export function Pic({ src, alt = '', className = '', fallback, ...rest }) {
   return <motion.img src={src} alt={alt} loading="lazy" onError={() => setBad(true)} className={className} {...rest} />;
 }
 
+// plain rgba wash (no blend modes: they are expensive on moving layers, esp. Safari)
 const Tint = ({ op = 0.55 }) => (
   <div
     aria-hidden
-    className="absolute inset-0 mix-blend-soft-light"
-    style={{ background: 'linear-gradient(120deg, #EDF4EC 0%, #F3EFE6 100%)', opacity: op }}
+    className="pointer-events-none absolute inset-0"
+    style={{ background: 'linear-gradient(120deg, rgba(237,244,236,1) 0%, rgba(243,239,230,1) 100%)', opacity: op * 0.18 }}
   />
 );
 
@@ -366,21 +367,27 @@ function FilmFrame({ src, alt, className = '', drift }) {
   );
 }
 
-/* 7. Blur: soft and out of focus until you hover */
+/* 7. "Blur" (kept as a name for existing data): now a sharp, softly rounded photo. Photos are never blurred. */
 function BlurShot({ src, alt, className = '', drift }) {
   return (
-    <div className={`sm-blur relative h-full w-full overflow-hidden rounded-2xl ${className}`}>
+    <div className={`relative h-full w-full overflow-hidden rounded-2xl ${className}`}>
       <Parallax src={src} alt={alt} drift={drift} />
       <Tint op={0.4} />
     </div>
   );
 }
 
-/* 8. Duotone: filtered in the espresso tone, colour returns on hover */
+/* 8. "Duotone" (kept as a name for existing data): sharp photo with a light espresso rgba wash
+      that lifts on hover (opacity only, no CSS filters) */
 function Duotone({ src, alt, className = '', drift }) {
   return (
-    <div className={`sm-duo relative h-full w-full overflow-hidden rounded-2xl ${className}`}>
+    <div className={`group/duo relative h-full w-full overflow-hidden rounded-2xl ${className}`}>
       <Parallax src={src} alt={alt} drift={drift} />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 transition-opacity duration-700 group-hover/duo:opacity-0"
+        style={{ background: 'linear-gradient(to top, rgba(42,31,26,0.38) 0%, rgba(42,31,26,0.12) 60%, rgba(42,31,26,0.05) 100%)' }}
+      />
     </div>
   );
 }
@@ -500,11 +507,12 @@ export function HStrip({ children }) {
     const el = ref.current;
     if (el) el.scrollBy({ left: dir * Math.min(520, el.clientWidth * 0.8), behavior: 'smooth' });
   };
+  // kept inside the content width so the side corridors (butterflies) never hold text
   return (
-    <div>
+    <div className="mx-auto max-w-7xl">
       <div
         ref={ref}
-        className="flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 pb-4 sm:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory scroll-px-5 gap-6 overflow-x-auto px-5 pb-4 sm:scroll-px-8 sm:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {children}
       </div>

@@ -6,7 +6,10 @@ import Lenis from 'lenis';
 
 /* Scroll to an element (or selector). Same call everywhere:
    window.__lenis?.scrollTo(target, { offset: -80, duration: 1.2 }) */
-export function scrollToEl(target, offset = -80, duration = 1.2) {
+/* Height of the fixed menu (top-4 + bar) plus breathing room. Content must never sit under it. */
+export const NAV_OFFSET = 104;
+
+export function scrollToEl(target, offset = -NAV_OFFSET, duration = 1.2) {
   const el = typeof target === 'string' ? document.querySelector(target) : target;
   if (!el) return false;
   if (window.__lenis) {
@@ -27,7 +30,7 @@ export function scrollToHash(hash) {
     /* keep raw id */
   }
   const el = document.getElementById(id);
-  return el ? scrollToEl(el, -80, 1.2) : false;
+  return el ? scrollToEl(el, -NAV_OFFSET, 1.2) : false;
 }
 
 export function scrollTop(immediate = true) {

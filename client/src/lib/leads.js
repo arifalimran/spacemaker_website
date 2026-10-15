@@ -7,7 +7,8 @@ export const waLink = (message, number = CONTACT.whatsapp) =>
 
 export function projectMessage(project, unit, kind = 'project') {
   if (kind === 'upcoming') {
-    return `Hello Space Maker, I would like to register my interest in your upcoming project in ${project.area}. Ref: UP-${project.id}`;
+    const what = project.name ? `${project.name} in ${project.area}` : `your upcoming project in ${project.area}`;
+    return `Hello Space Maker, I would like to register my interest in ${what}. Ref: UP-${project.id}`;
   }
   if (kind === 'interior') {
     return `Hello Space Maker, I would like to know more about your interior work: ${project.title}. Ref: ${project.ref}`;

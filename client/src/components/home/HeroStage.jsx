@@ -5,7 +5,6 @@ import {
   AnimatePresence,
   useScroll,
   useTransform,
-  useReducedMotion,
 } from 'framer-motion';
 
 /* ---------- Logo paths (your uploaded files) ----------
@@ -50,69 +49,6 @@ const residences = [
 const WHATSAPP =
   'https://wa.me/8801916100416?text=Hello%20Space%20Maker,%20I%20would%20like%20to%20arrange%20a%20private%20visit.';
 
-/* ---------- Butterfly ---------- */
-function Butterfly({ size = 46, hue = '#C6F00C', delay = 0, duration = 34, reverse = false, topStart = 55 }) {
-  const reduce = useReducedMotion();
-  if (reduce) return null;
-
-  const xs = reverse
-    ? ['110vw', '78vw', '50vw', '22vw', '-12vw']
-    : ['-12vw', '22vw', '50vw', '78vw', '110vw'];
-
-  return (
-    <motion.div
-      aria-hidden
-      className="pointer-events-none absolute z-30"
-      style={{ top: `${topStart}%`, left: 0, width: size, height: size }}
-      initial={{ x: xs[0], y: 0, rotate: 0 }}
-      animate={{
-        x: xs,
-        y: [0, -90, 30, -70, -20],
-        rotate: reverse ? [-18, 12, -10, 16, -8] : [18, -12, 10, -16, 8],
-      }}
-      transition={{
-        duration,
-        delay,
-        ease: 'easeInOut',
-        repeat: Infinity,
-        repeatDelay: 2,
-      }}
-    >
-      {/* gentle bob */}
-      <motion.div
-        animate={{ y: [0, -8, 0, 6, 0] }}
-        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ transform: reverse ? 'scaleX(-1)' : undefined }}
-      >
-        <svg viewBox="0 0 100 100" width={size} height={size} style={{ overflow: 'visible' }}>
-          {/* left wing */}
-          <motion.g
-            style={{ transformBox: 'fill-box', transformOrigin: 'right center' }}
-            animate={{ scaleX: [1, 0.2, 1] }}
-            transition={{ duration: 0.42, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <path d="M50 48 C30 10, 4 14, 8 40 C10 58, 34 62, 50 52 Z" fill={hue} opacity="0.9" />
-            <path d="M50 54 C32 58, 14 74, 26 86 C38 94, 48 72, 50 58 Z" fill={hue} opacity="0.7" />
-            <circle cx="24" cy="36" r="4" fill="#1B4332" opacity="0.55" />
-          </motion.g>
-          {/* right wing */}
-          <motion.g
-            style={{ transformBox: 'fill-box', transformOrigin: 'left center' }}
-            animate={{ scaleX: [1, 0.2, 1] }}
-            transition={{ duration: 0.42, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <path d="M50 48 C70 10, 96 14, 92 40 C90 58, 66 62, 50 52 Z" fill={hue} opacity="0.9" />
-            <path d="M50 54 C68 58, 86 74, 74 86 C62 94, 52 72, 50 58 Z" fill={hue} opacity="0.7" />
-            <circle cx="76" cy="36" r="4" fill="#1B4332" opacity="0.55" />
-          </motion.g>
-          {/* body + antennae */}
-          <rect x="48.5" y="40" width="3" height="26" rx="1.5" fill="#111827" />
-          <path d="M50 40 C46 30, 42 28, 40 26 M50 40 C54 30, 58 28, 60 26" stroke="#111827" strokeWidth="1.2" fill="none" />
-        </svg>
-      </motion.div>
-    </motion.div>
-  );
-}
 
 export default function HeroStage() {
   const [index, setIndex] = useState(0);
@@ -208,9 +144,7 @@ export default function HeroStage() {
         />
       </motion.div>
 
-      {/* ---------- Butterflies flow over the whole hero ---------- */}
-      <Butterfly size={52} hue="#C6F00C" duration={36} topStart={58} />
-      <Butterfly size={34} hue="#9CCB7A" duration={44} delay={6} reverse topStart={30} />
+      {/* Butterflies live only in the side corridors (ButterflyLayer), never over text */}
 
       {/* ---------- Text ---------- */}
       <div className="relative z-20 mx-auto max-w-6xl px-6 pt-40 md:pt-48 pb-28">

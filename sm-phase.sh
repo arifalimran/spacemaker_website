@@ -72,7 +72,7 @@ C. Item 5 — Search & filters
  - Filters saved in URL query (shareable/back button works). Mobile: filter drawer. "Clear all" + "No projects match" state.
 
 D. Item 7 — One unified project detail template
- - All /projects/:slug pages use ONE template driven by data (no per-project layouts). Espresso + lime styling for depth sections, keep current fonts. Chapters only render if data exists.
+ - All /projects/:slug pages use ONE template driven by data (no per-project layouts). Light-espresso (latte) tints + lime accents for depth, never full dark sections (see CLAUDE.md), keep current fonts. Chapters only render if data exists.
  - Photo fit: fixed aspect ratios, object-fit: cover with optional focal point, graceful placeholder (soft tinted block + project name) when a photo is missing or the wrong size.
 
 E. Item 8 — Links

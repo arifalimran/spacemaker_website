@@ -25,35 +25,36 @@ const CSS = `
   50%{transform:translate3d(0,-7px,0)}
 }
 
-/* LEFT: lives in 0-18vw. One gentle arc per cycle, never past 45vw. */
+/* Side corridors only, so they never cross text. Content is max 80rem wide + 2rem padding,
+   so each corridor is (100vw - 80rem)/2 + 2rem. On screens narrower than 1440px the corridor is
+   too thin for a butterfly, so they are hidden there (see media query below).
+   LEFT: x between 0.5vw and 4vw (+ ~2.8vw body) -> stays inside the corridor. */
 @keyframes sm-fly-left{
-  0%   {transform:translate3d(3vw,62vh,0)}
-  10%  {transform:translate3d(11vw,52vh,0)}
-  20%  {transform:translate3d(5vw,40vh,0)}
-  30%  {transform:translate3d(14vw,30vh,0)}
-  40%  {transform:translate3d(7vw,22vh,0)}
-  50%  {transform:translate3d(15vw,30vh,0)}
-  60%  {transform:translate3d(28vw,20vh,0)}
-  68%  {transform:translate3d(45vw,26vh,0)}
-  76%  {transform:translate3d(30vw,40vh,0)}
-  84%  {transform:translate3d(12vw,54vh,0)}
-  92%  {transform:translate3d(2vw,66vh,0)}
-  100% {transform:translate3d(3vw,62vh,0)}
+  0%   {transform:translate3d(1vw,62vh,0)}
+  12%  {transform:translate3d(3.5vw,52vh,0)}
+  25%  {transform:translate3d(1.5vw,40vh,0)}
+  38%  {transform:translate3d(4vw,30vh,0)}
+  50%  {transform:translate3d(2vw,22vh,0)}
+  62%  {transform:translate3d(3.5vw,34vh,0)}
+  75%  {transform:translate3d(0.5vw,46vh,0)}
+  88%  {transform:translate3d(3vw,58vh,0)}
+  100% {transform:translate3d(1vw,62vh,0)}
 }
 
-/* RIGHT: lives in 82-100vw only. */
+/* RIGHT: x between 93.5vw and 96.5vw. */
 @keyframes sm-fly-right{
-  0%   {transform:translate3d(90vw,24vh,0)}
-  12%  {transform:translate3d(84vw,34vh,0)}
-  25%  {transform:translate3d(92vw,46vh,0)}
-  38%  {transform:translate3d(85vw,58vh,0)}
-  50%  {transform:translate3d(93vw,68vh,0)}
-  62%  {transform:translate3d(86vw,56vh,0)}
-  75%  {transform:translate3d(92vw,42vh,0)}
-  88%  {transform:translate3d(83vw,30vh,0)}
-  100% {transform:translate3d(90vw,24vh,0)}
+  0%   {transform:translate3d(95vw,24vh,0)}
+  12%  {transform:translate3d(93.5vw,34vh,0)}
+  25%  {transform:translate3d(96vw,46vh,0)}
+  38%  {transform:translate3d(94vw,58vh,0)}
+  50%  {transform:translate3d(96.5vw,68vh,0)}
+  62%  {transform:translate3d(94vw,56vh,0)}
+  75%  {transform:translate3d(96vw,42vh,0)}
+  88%  {transform:translate3d(93.5vw,30vh,0)}
+  100% {transform:translate3d(95vw,24vh,0)}
 }
 
+@media (max-width: 1439px){ .sm-bf{display:none} }
 @media (prefers-reduced-motion: reduce){ .sm-bf{display:none} }
 `;
 

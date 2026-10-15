@@ -44,6 +44,9 @@ body {
 .sec-why   { background: linear-gradient(to bottom, #F6F8F5 0%, #EBF2EA 100%); }
 .sec-testimonials { background: linear-gradient(to bottom, #EBF2EA 0%, #FAF8F5 100%); }
 
+/* ---------- Anchors never land under the fixed menu (= NAV_OFFSET in lib/scroll.js) ---------- */
+[id] { scroll-margin-top: 104px; }
+
 /* ---------- Focus + selection ---------- */
 ::selection { background: var(--volt); color: #000; }
 :focus-visible { outline: 2px solid var(--banyan); outline-offset: 3px; border-radius: 6px; }

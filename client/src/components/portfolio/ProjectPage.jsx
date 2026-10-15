@@ -197,7 +197,7 @@ function ChapterIndex({ chapters, hasUnits }) {
   return (
     <nav aria-label="Project chapters" className="fixed right-6 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-end gap-3 xl:flex">
       {ids.map((k) => (
-        <button key={k} type="button" onClick={() => scrollToEl(`#ch-${k}`, -80)} className="group flex items-center gap-3">
+        <button key={k} type="button" onClick={() => scrollToEl(`#ch-${k}`)} className="group flex items-center gap-3">
           <span
             className={`font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.16em] transition ${
               active === k ? 'text-[#1B4332] opacity-100' : 'text-neutral-500 opacity-0 group-hover:opacity-100'

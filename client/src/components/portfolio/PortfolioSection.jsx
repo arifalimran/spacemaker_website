@@ -7,7 +7,6 @@ import {
   projects,
   interiorProjects,
   interiorCover,
-  upcoming,
   STATUS_LABEL,
   TYPE_LABEL,
   coverOf,
@@ -19,11 +18,9 @@ import {
   Reveal,
   Facts,
   HStrip,
-  LeadLink,
   ActionRow,
   DarkBand,
   Flutter,
-  linkCls,
 } from './shared';
 
 /* ---------------- Signature (flagships) ---------------- */
@@ -203,7 +200,7 @@ function Panels({ items, extra }) {
 /* ---------------- Interiors strip ---------------- */
 function Interiors() {
   return (
-    <div>
+    <div id="interiors-strip">
       <div className="mx-auto max-w-7xl px-5 pb-2 pt-16 sm:px-8">
         <Eyebrow>Interiors</Eyebrow>
         <h3 className="mt-4 max-w-2xl font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.08] tracking-tight text-[#111827] sm:text-5xl">
@@ -250,99 +247,6 @@ function Interiors() {
           </Link>
         </HStrip>
       </div>
-    </div>
-  );
-}
-
-/* ---------------- Upcoming rows ---------------- */
-function Blueprint() {
-  return (
-    <svg viewBox="0 0 160 120" className="h-full w-full text-[#1B4332]/25" fill="none" stroke="currentColor" strokeWidth="1">
-      <rect x="40" y="14" width="80" height="96" />
-      <path d="M40 38h80M40 62h80M40 86h80M80 14v96M20 110h120" />
-    </svg>
-  );
-}
-
-function UpcomingRow({ u }) {
-  const facts = [
-    { k: 'Land', v: u.land },
-    { k: 'Facing', v: u.facing },
-    { k: 'Floors', v: u.floors },
-    { k: 'Construction', v: u.resume },
-  ];
-  const hasDetail =
-    u.status || facts.some((f) => f.v) || (u.units && u.units.length) || (u.facilities && u.facilities.length);
-
-  return (
-    <Reveal className="grid items-center gap-6 py-10 md:grid-cols-12 md:gap-10">
-      <div className="md:col-span-3">
-        <div className="aspect-[4/3] bg-[#EDF4EC]">
-          {u.image ? <Shot treatment="blur" src={u.image} alt={`Upcoming project in ${u.area}`} /> : <Blueprint />}
-        </div>
-      </div>
-
-      <div className="md:col-span-6">
-        <div className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-neutral-500">
-          {TYPE_LABEL[u.type] || 'Project'} · {u.opening}
-        </div>
-        <div className="mt-1 font-['Space_Grotesk'] text-3xl font-bold tracking-tight text-[#111827] sm:text-4xl">
-          {u.area}
-        </div>
-        <div className="mt-1 font-serif text-lg italic text-[#1B4332]/80">{u.line}</div>
-
-        {u.status && (
-          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#1B4332]/20 bg-white/60 px-3 py-1 font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.16em] text-[#1B4332]">
-            <span className="h-2 w-2 rounded-full bg-[#C6F00C] ring-4 ring-[#C6F00C]/25" />
-            {u.status}
-          </div>
-        )}
-
-        {hasDetail ? (
-          <>
-            <Facts className="mt-5" items={facts} />
-            {u.units && u.units.length > 0 && (
-              <div className="mt-5 font-['JetBrains_Mono'] text-xs uppercase leading-relaxed tracking-[0.14em] text-[#111827]">
-                {u.units.join('   ·   ')}
-              </div>
-            )}
-            {u.facilities && u.facilities.length > 0 && (
-              <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-neutral-600">
-                {u.facilities.map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#C6F00C]" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </>
-        ) : (
-          <p className="mt-4 max-w-md text-sm italic text-neutral-500">
-            Full details are shared once the design is approved. Register your interest and we will call you first.
-          </p>
-        )}
-      </div>
-
-      <div className="md:col-span-3 md:text-right">
-        <LeadLink project={u} kind="upcoming" className={linkCls}>
-          Register your interest →
-        </LeadLink>
-      </div>
-    </Reveal>
-  );
-}
-
-function Upcoming() {
-  return (
-    <div className="mx-auto max-w-7xl px-5 sm:px-8">
-      <ul className="divide-y divide-[#1B4332]/15 border-y border-[#1B4332]/15">
-        {upcoming.map((u) => (
-          <li key={u.id}>
-            <UpcomingRow u={u} />
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
@@ -398,21 +302,8 @@ export default function PortfolioSection() {
       )}
 
       <Interiors />
+      <div className="pb-8" />
 
-      <div className="pb-24 sm:pb-32">
-        <div className="mx-auto max-w-7xl px-5 pb-2 pt-20 sm:px-8">
-          <Eyebrow>Opening soon</Eyebrow>
-          <h3 className="mt-4 max-w-2xl font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.08] tracking-tight text-[#111827] sm:text-5xl">
-            New addresses are close.
-          </h3>
-          <p className="mt-4 max-w-xl text-neutral-600">
-            Tell us you are interested and we will reach you first.
-          </p>
-        </div>
-        <div className="mt-6">
-          <Upcoming />
-        </div>
-      </div>
     </section>
   );
 }

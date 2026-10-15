@@ -343,6 +343,9 @@ export const interiorProjects = [
 /* UPCOMING. Only the fields you fill in are shown.                     */
 /* Share details only after signing and floor plans are done: until     */
 /* then leave just `area` and `opening`.                                */
+/* Optional: name (project name), image (photo or render; no photo ->   */
+/* a designed placeholder), status ('Just signed', 'Submitted to        */
+/* RAJUK'...), land, facing, floors, units (sizes), facilities.         */
 /* ------------------------------------------------------------------ */
 export const upcoming = [
   {
@@ -406,9 +409,19 @@ export const WHY_US = {
 /* ------------------------------------------------------------------ */
 export const LANDOWNER = {
   eyebrow: 'Partner with us',
-  title: "Let's Discuss Your Land Over Coffee.",
+  title: "Let's discuss your land over coffee.",
   intro:
     'Whether you own a residential plot in Jolshiri, Dhanmondi, or elsewhere in Bangladesh, we offer free engineering feasibility reviews and transparent joint-venture ratios.',
+  // optional: large display line above the italic `title`
+  headline: 'Your land, engineered to last.',
+  // optional: 3 short benefit points (icons: 'review' | 'ratio' | 'engineering' | 'handover')
+  benefits: [
+    { icon: 'review', title: 'Free feasibility review', text: 'Our engineers review your plot and tell you honestly what it can become.' },
+    { icon: 'ratio', title: 'Transparent joint-venture ratios', text: 'Clear terms on paper from the first meeting, with nothing hidden.' },
+    { icon: 'engineering', title: 'Engineering first', text: 'Soil and structure are analysed before a single plan is drawn.' },
+  ],
+  // optional: small line under the benefits
+  trust: 'Your details go straight to our engineering director, who calls you back personally.',
   whyTitle: 'Why Landowners Choose Space Maker',
   slogan: 'Four promises we keep on every plot.',
   // Put a warm drawing-room / coffee photo here (or your own meeting room):

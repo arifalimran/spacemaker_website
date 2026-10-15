@@ -83,12 +83,11 @@ function Scene({ s, i }) {
 export default function WhyChooseUs() {
   return (
     <section
-      className="relative overflow-hidden pb-40 pt-32 sm:pb-48 sm:pt-40"
+      className="relative overflow-hidden pb-[220px] pt-[230px] sm:pb-[240px] sm:pt-[260px]"
       style={{
-        // vanishing light: light page tone dissolves into espresso, settles into deep,
-        // then lifts back to the calm landowner section below
+        // short warm fades (140px, no grey midpoint): cream above -> espresso -> deep -> pale lime (Testimonials)
         background:
-          'linear-gradient(to bottom, #F6F8F5 0px, #2A1F1A 180px, #261C17 50%, #1F1713 calc(100% - 200px), #F3EFE6 100%)',
+          'linear-gradient(to bottom, #F5F0E6 0px, #E8DCCD 40px, #A89480 90px, #2A1F1A 140px, #261C17 50%, #1F1713 calc(100% - 140px), #3E3A22 calc(100% - 100px), #A9B47F calc(100% - 45px), #EEF4DD 100%)',
       }}
     >
       {/* soft warm glow, plain rgba (static) */}

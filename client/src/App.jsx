@@ -12,6 +12,9 @@ import HeroStage from './components/home/HeroStage';
 import WhoWeAre from './components/home/WhoWeAre';
 import WhyChooseUs from './components/home/WhyChooseUs';
 import LandownerSection from './components/home/LandownerSection';
+import OpeningSoon from './components/home/OpeningSoon';
+import Testimonials from './components/home/Testimonials';
+import TeamSection from './components/home/TeamSection';
 import Careers from './components/home/Careers';
 import PortfolioSection from './components/portfolio/PortfolioSection';
 import ProjectPage from './components/portfolio/ProjectPage';
@@ -49,9 +52,13 @@ function Home() {
       <HeroStage />
       <WhoWeAre />
       <PortfolioSection />
+      <OpeningSoon />
+      {/* 6-step development process goes here (section not built yet) */}
       <div id="why-us">
         <WhyChooseUs />
       </div>
+      <Testimonials />
+      <TeamSection />
       <LandownerSection />
     </main>
   );
