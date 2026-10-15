@@ -22,6 +22,7 @@ import AllProjects from './components/portfolio/AllProjects';
 import InteriorsIndex from './components/portfolio/InteriorsIndex';
 import InteriorPage from './components/portfolio/InteriorPage';
 import { CONTACT } from './data/portfolio';
+import { AngleCut, SECTION } from './components/portfolio/shared';
 import { useSmoothScroll, useHashScroll } from './lib/scroll';
 
 /* smooth inertia scroll, shared through window.__lenis */
@@ -46,19 +47,29 @@ function Dock() {
   );
 }
 
+/* Homepage order = CLAUDE.md. Every section is a solid colour; wherever the colour changes the
+   join is the shared <AngleCut> (direction alternates down the page). Cuts inside a section
+   (Signature band) and into the footer live in those components and continue the alternation. */
 function Home() {
+  const C = SECTION;
   return (
     <main>
       <HeroStage />
       <WhoWeAre />
+      <AngleCut from={C.alabaster} to={C.cream} dir="left" />
       <PortfolioSection />
+      <AngleCut from={C.cream} to={C.sage} dir="right" />
       <OpeningSoon />
       {/* 6-step development process goes here (section not built yet) */}
+      <AngleCut from={C.sage} to={C.espresso} dir="left" />
       <div id="why-us">
         <WhyChooseUs />
       </div>
+      <AngleCut from={C.espresso} to={C.paleLime} dir="right" />
       <Testimonials />
+      <AngleCut from={C.paleLime} to={C.alabaster} dir="left" />
       <TeamSection />
+      <AngleCut from={C.alabaster} to={C.cream} dir="right" />
       <LandownerSection />
     </main>
   );
@@ -67,7 +78,7 @@ function Home() {
 function NotFound() {
   return (
     <main className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
-      <h1 className="font-['Space_Grotesk'] text-4xl font-extrabold text-[#111827]">Page not found.</h1>
+      <h1 className="font-heading text-4xl font-extrabold text-[#111827]">Page not found.</h1>
       <Link to="/" className="mt-6 text-[#1B4332] underline decoration-[#C6F00C] decoration-2 underline-offset-8">
         Back to home →
       </Link>

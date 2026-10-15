@@ -82,7 +82,7 @@ export default function Lightbox({ photos, index, onClose, onChange }) {
         <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-[#C6F00C]">
           {CHAPTERS[photo.chapter]?.label}
         </div>
-        {photo.caption && <div className="mt-1 font-['Space_Grotesk'] text-base font-semibold">{photo.caption}</div>}
+        {photo.caption && <div className="mt-1 font-heading text-base font-semibold">{photo.caption}</div>}
       </div>
     </motion.div>
   );

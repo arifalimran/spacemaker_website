@@ -1,5 +1,6 @@
 // client/src/components/portfolio/PortfolioSection.jsx
 // Home portfolio. Each part has its own look so a long list never feels repetitive:
+//   (solid cream; the Signature band joins it with angle cuts)
 //   signature flagships (dark, carved photo) -> expanding panels -> interiors strip -> upcoming rows
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -21,6 +22,7 @@ import {
   ActionRow,
   DarkBand,
   Flutter,
+  SECTION,
 } from './shared';
 
 /* ---------------- Signature (flagships) ---------------- */
@@ -44,7 +46,7 @@ function Signature({ project, index }) {
               <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.22em] text-[#C6F00C]">
                 {STATUS_LABEL[project.status]}
               </div>
-              <div className="relative mt-2 font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.02] tracking-tight text-[#F3EFE6] lg:text-5xl">
+              <div className="relative mt-2 font-heading text-4xl font-extrabold leading-[1.02] tracking-tight text-[#F3EFE6] lg:text-5xl">
                 {project.title}
                 <Flutter
                   hue="#C6F00C"
@@ -70,7 +72,7 @@ function Signature({ project, index }) {
         <div className="font-serif text-8xl italic leading-none text-[#C6F00C]/25">0{index + 1}</div>
         <div className="md:hidden">
           <TypeTag type={project.type} status={project.status} dark />
-          <h3 className="mt-3 font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.04] tracking-tight text-[#F3EFE6]">
+          <h3 className="mt-3 font-heading text-4xl font-extrabold leading-[1.04] tracking-tight text-[#F3EFE6]">
             {project.title}
           </h3>
         </div>
@@ -139,7 +141,7 @@ function Panels({ items, extra }) {
                 }`}
               >
                 <div
-                  className="font-['Space_Grotesk'] text-xl font-bold text-[#F3EFE6]"
+                  className="font-heading text-xl font-bold text-[#F3EFE6]"
                   style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
                 >
                   {p.title}
@@ -153,7 +155,7 @@ function Panels({ items, extra }) {
                 }`}
               >
                 <TypeTag type={p.type} status={p.status} dark />
-                <h3 className="mt-3 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.05] tracking-tight text-[#F3EFE6] sm:text-4xl">
+                <h3 className="mt-3 font-heading text-3xl font-extrabold leading-[1.05] tracking-tight text-[#F3EFE6] sm:text-4xl">
                   {p.title}
                 </h3>
                 <p className="mt-2 max-w-md font-serif text-lg italic text-[#F3EFE6]/85">{p.line}</p>
@@ -186,7 +188,7 @@ function Panels({ items, extra }) {
             <div className="mt-3 font-serif text-5xl italic leading-none text-[#F3EFE6]">
               {extra > 0 ? `+${extra}` : 'All'}
             </div>
-            <div className="mt-2 font-['Space_Grotesk'] text-lg font-bold text-[#F3EFE6]">
+            <div className="mt-2 font-heading text-lg font-bold text-[#F3EFE6]">
               {extra > 0 ? 'more projects' : 'projects'}
             </div>
             <div className="mt-4 text-[#C6F00C] transition duration-300 group-hover:translate-x-2">→</div>
@@ -203,7 +205,7 @@ function Interiors() {
     <div id="interiors-strip">
       <div className="mx-auto max-w-7xl px-5 pb-2 pt-16 sm:px-8">
         <Eyebrow>Interiors</Eyebrow>
-        <h3 className="mt-4 max-w-2xl font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.08] tracking-tight text-[#111827] sm:text-5xl">
+        <h3 className="mt-4 max-w-2xl font-heading text-3xl font-extrabold leading-[1.08] tracking-tight text-[#111827] sm:text-5xl">
           Rooms finished down to the joinery.
         </h3>
         <p className="mt-4 max-w-xl text-neutral-600">
@@ -225,7 +227,7 @@ function Interiors() {
                 <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-[#1B4332]">
                   {TYPE_LABEL[p.type]} interior
                 </div>
-                <div className="mt-1 font-['Space_Grotesk'] text-xl font-bold text-[#111827]">{p.title}</div>
+                <div className="mt-1 font-heading text-xl font-bold text-[#111827]">{p.title}</div>
                 <div className="mt-1 text-sm text-neutral-600">{p.location}</div>
               </div>
             </Link>
@@ -262,11 +264,11 @@ export default function PortfolioSection() {
     <section
       id="projects"
       className="relative"
-      style={{ background: 'linear-gradient(to bottom, #F6F8F5 0%, #EDF4EC 40%, #F3EFE6 100%)' }}
+      style={{ background: SECTION.cream }}
     >
       <div className="mx-auto max-w-7xl px-5 pb-10 pt-24 sm:px-8 sm:pt-32">
         <Eyebrow>Our projects</Eyebrow>
-        <h2 className="mt-5 max-w-3xl font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.06] tracking-tight text-[#111827] sm:text-6xl">
+        <h2 className="mt-5 max-w-3xl font-heading text-4xl font-extrabold leading-[1.06] tracking-tight text-[#111827] sm:text-6xl">
           Places we are building, and places already lived in.
         </h2>
         <p className="mt-6 max-w-xl text-base leading-[1.8] text-neutral-600 sm:text-lg">
@@ -276,10 +278,10 @@ export default function PortfolioSection() {
       </div>
 
       {flagships.length > 0 && (
-        <DarkBand id="signature" className="mt-6">
+        <DarkBand id="signature" className="mt-6" above={SECTION.cream} dirIn="right" dirOut="left">
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <Eyebrow dark>Signature projects</Eyebrow>
-            <h3 className="mt-4 max-w-2xl font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.08] tracking-tight text-[#F3EFE6] sm:text-5xl">
+            <h3 className="mt-4 max-w-2xl font-heading text-3xl font-extrabold leading-[1.08] tracking-tight text-[#F3EFE6] sm:text-5xl">
               The work we are proudest of.
             </h3>
           </div>

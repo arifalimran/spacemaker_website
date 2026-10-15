@@ -34,7 +34,7 @@ function RowInner({ item, n }) {
         {String(n).padStart(2, '0')}
       </span>
       <div className="col-span-10 sm:col-span-7">
-        <div className="font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.05] tracking-tight text-[#111827] transition duration-300 group-hover:translate-x-2 group-hover:text-[#1B4332] sm:text-5xl">
+        <div className="font-heading text-3xl font-extrabold leading-[1.05] tracking-tight text-[#111827] transition duration-300 group-hover:translate-x-2 group-hover:text-[#1B4332] sm:text-5xl">
           {item.title}
           {item.flagship && (
             <span className="ml-3 align-middle font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1B4332]">
@@ -97,7 +97,7 @@ export default function AllProjects() {
   return (
     <main
       className="relative min-h-screen pb-28"
-      style={{ background: 'linear-gradient(to bottom, #FAF8F5 0%, #F3EFE6 30%, #EDF4EC 100%)' }}
+      style={{ background: '#FAF8F5' }}
       onMouseMove={(e) => {
         mx.set(e.clientX + 200);
         my.set(e.clientY);
@@ -112,7 +112,7 @@ export default function AllProjects() {
         </Link>
         <div className="mt-8">
           <Eyebrow>All projects</Eyebrow>
-          <h1 className="mt-5 max-w-3xl font-['Space_Grotesk'] text-5xl font-extrabold leading-[1.03] tracking-tight text-[#111827] sm:text-7xl">
+          <h1 className="mt-5 max-w-3xl font-heading text-5xl font-extrabold leading-[1.03] tracking-tight text-[#111827] sm:text-7xl">
             Everything we are building, and have built.
           </h1>
         </div>

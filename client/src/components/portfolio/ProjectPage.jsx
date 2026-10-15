@@ -164,7 +164,7 @@ function ChapterHead({ n, keyName, note }) {
       <Eyebrow>
         {String(n).padStart(2, '0')} · {c.label}
       </Eyebrow>
-      <h2 className="mt-4 max-w-2xl font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.1] tracking-tight text-[#111827] sm:text-5xl">
+      <h2 className="mt-4 max-w-2xl font-heading text-3xl font-extrabold leading-[1.1] tracking-tight text-[#111827] sm:text-5xl">
         {c.title}
       </h2>
       {note && <p className="mt-4 max-w-xl text-neutral-600">{note}</p>}
@@ -222,7 +222,7 @@ function Portrait() {
   return (
     <div className="h-48 w-40 shrink-0" style={{ WebkitMaskImage: m, maskImage: m }}>
       {failed ? (
-        <div className="flex h-full w-full items-center justify-center bg-[#3A2B23] font-['Space_Grotesk'] text-4xl font-bold text-[#C6F00C]">
+        <div className="flex h-full w-full items-center justify-center bg-[#3A2B23] font-heading text-4xl font-bold text-[#C6F00C]">
           HA
         </div>
       ) : (
@@ -272,7 +272,7 @@ function ProjectView({ project }) {
   };
 
   return (
-    <main className="relative" style={{ background: 'linear-gradient(to bottom, #FAF8F5 0%, #F3EFE6 22%, #EDF4EC 60%, #F6F8F5 100%)' }}>
+    <main className="relative" style={{ background: '#FAF8F5' }}>
       {/* opening frame */}
       <section className="relative min-h-[92vh] overflow-hidden">
         <img
@@ -299,7 +299,7 @@ function ProjectView({ project }) {
           </Link>
           <div className="mt-8 max-w-2xl">
             <TypeTag type={project.type} status={project.status} />
-            <h1 className="mt-5 font-['Space_Grotesk'] text-5xl font-extrabold leading-[1.03] tracking-tight text-[#111827] sm:text-7xl">
+            <h1 className="mt-5 font-heading text-5xl font-extrabold leading-[1.03] tracking-tight text-[#111827] sm:text-7xl">
               {project.title}
             </h1>
             <p className="mt-6 font-serif text-2xl italic leading-snug text-[#1B4332]/85 sm:text-3xl">{project.line}</p>
@@ -321,7 +321,7 @@ function ProjectView({ project }) {
 
       {/* photo chapters */}
       {chapters.map((c, i) => (
-        <section key={c.key} id={`ch-${c.key}`} className="scroll-mt-24 py-16 sm:py-24">
+        <section key={c.key} id={`ch-${c.key}`} className="scroll-mt-[104px] py-16 sm:py-24">
           <Reveal>
             <ChapterHead n={i + 1} keyName={c.key} note={project.notes?.[c.key]} />
           </Reveal>
@@ -331,10 +331,10 @@ function ProjectView({ project }) {
 
       {/* available units */}
       {showUnits && (
-        <section id="ch-units" className="scroll-mt-24 py-16 sm:py-24">
+        <section id="ch-units" className="scroll-mt-[104px] py-16 sm:py-24">
           <div className="mx-auto max-w-5xl px-5 sm:px-8">
             <Eyebrow>Homes on offer</Eyebrow>
-            <h2 className="mt-4 font-['Space_Grotesk'] text-3xl font-extrabold tracking-tight text-[#111827] sm:text-5xl">
+            <h2 className="mt-4 font-heading text-3xl font-extrabold tracking-tight text-[#111827] sm:text-5xl">
               Find the one that fits you.
             </h2>
             {hasUnits ? (
@@ -375,7 +375,7 @@ function ProjectView({ project }) {
             <p className="mt-4 font-serif text-2xl italic leading-snug text-[#F3EFE6] sm:text-3xl">
               “{project.architectLine || ARCHITECT.line}”
             </p>
-            <div className="mt-4 font-['Space_Grotesk'] text-base font-bold text-[#C6F00C]">{ARCHITECT.name}</div>
+            <div className="mt-4 font-heading text-base font-bold text-[#C6F00C]">{ARCHITECT.name}</div>
           </div>
         </Reveal>
       </DarkBand>
@@ -383,7 +383,7 @@ function ProjectView({ project }) {
       {/* closing frame */}
       <section className="px-5 pb-28 pt-12 sm:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
-          <h2 className="font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.05] tracking-tight text-[#111827] sm:text-6xl">
+          <h2 className="font-heading text-4xl font-extrabold leading-[1.05] tracking-tight text-[#111827] sm:text-6xl">
             Ask about {project.title}.
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-neutral-600">
@@ -403,7 +403,7 @@ function ProjectView({ project }) {
             <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-neutral-500">Next project</div>
             <Link
               to={`/projects/${next.slug}`}
-              className="mt-2 inline-block font-['Space_Grotesk'] text-2xl font-bold text-[#1B4332] underline decoration-[#C6F00C] decoration-2 underline-offset-8"
+              className="mt-2 inline-block font-heading text-2xl font-bold text-[#1B4332] underline decoration-[#C6F00C] decoration-2 underline-offset-8"
             >
               {next.title} →
             </Link>
@@ -426,7 +426,7 @@ export default function ProjectPage() {
   if (!project) {
     return (
       <main className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
-        <h1 className="font-['Space_Grotesk'] text-4xl font-extrabold text-[#111827]">We could not find that project.</h1>
+        <h1 className="font-heading text-4xl font-extrabold text-[#111827]">We could not find that project.</h1>
         <Link to="/projects" className={`${linkCls} mt-6`}>
           See all projects →
         </Link>

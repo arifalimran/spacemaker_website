@@ -77,9 +77,7 @@ export default function HeroStage() {
     <section
       ref={sectionRef}
       className="relative overflow-hidden min-h-[100vh]"
-      style={{
-        background: `linear-gradient(to bottom, ${CANVAS} 0%, #F6F2EA 70%, #F3EFE6 100%)`,
-      }}
+      style={{ background: CANVAS }}
     >
       {/* ---------- Parallax logo watermarks, sitting in the empty spaces ---------- */}
       <motion.img
@@ -153,7 +151,7 @@ export default function HeroStage() {
           Residences &middot; Dhaka
         </div>
 
-        <h1 className="font-['Space_Grotesk'] font-extrabold tracking-tight leading-[1.04] text-[#111827] text-5xl sm:text-6xl md:text-7xl max-w-3xl">
+        <h1 className="font-heading font-extrabold tracking-tight leading-[1.04] text-[#111827] text-5xl sm:text-6xl md:text-7xl max-w-3xl">
           Find Your Sanctuary
           <br />
           <span className="font-serif italic font-normal text-[#1B4332]/80">in Dhaka.</span>
@@ -211,7 +209,7 @@ export default function HeroStage() {
             <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-neutral-500">
               {slide.place}
             </div>
-            <div className="font-['Space_Grotesk'] font-bold text-lg text-[#111827]">{slide.title}</div>
+            <div className="font-heading font-bold text-lg text-[#111827]">{slide.title}</div>
           </motion.div>
         </AnimatePresence>
         <div className="mt-3 flex justify-end gap-2">
@@ -228,12 +226,6 @@ export default function HeroStage() {
         </div>
       </div>
 
-      {/* bottom dissolve into the next section */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute bottom-0 left-0 right-0 h-40 z-[15]"
-        style={{ background: 'linear-gradient(to bottom, transparent, #F3EFE6)' }}
-      />
     </section>
   );
 }

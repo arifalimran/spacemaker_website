@@ -40,7 +40,7 @@ function Room({ room, i, onOpen }) {
       </Reveal>
       <Reveal className={`md:col-span-5 ${flip ? 'md:order-1' : ''}`}>
         <div className="font-serif text-7xl italic leading-none text-[#C6F00C]">0{i + 1}</div>
-        <h3 className="mt-3 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.06] tracking-tight text-[#111827] sm:text-4xl">
+        <h3 className="mt-3 font-heading text-3xl font-extrabold leading-[1.06] tracking-tight text-[#111827] sm:text-4xl">
           {room.title}
         </h3>
         <ul className="mt-5 grid gap-2">
@@ -68,7 +68,7 @@ function InteriorView({ p }) {
   const lead = { id: p.id, title: p.title, area: p.location, ref: p.ref };
 
   return (
-    <main style={{ background: 'linear-gradient(to bottom, #FAF8F5 0%, #F3EFE6 22%, #EDF4EC 60%, #F6F8F5 100%)' }}>
+    <main style={{ background: '#FAF8F5' }}>
       {/* opening */}
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 pb-20 pt-36 sm:px-8 md:grid-cols-12 md:pt-44">
@@ -81,7 +81,7 @@ function InteriorView({ p }) {
             </Link>
             <div className="mt-8">
               <Eyebrow>{TYPE_LABEL[p.type]} interior</Eyebrow>
-              <h1 className="mt-5 font-['Space_Grotesk'] text-5xl font-extrabold leading-[1.03] tracking-tight text-[#111827] sm:text-7xl">
+              <h1 className="mt-5 font-heading text-5xl font-extrabold leading-[1.03] tracking-tight text-[#111827] sm:text-7xl">
                 {p.title}
               </h1>
               <p className="mt-6 font-serif text-2xl italic leading-snug text-[#1B4332]/85 sm:text-3xl">{p.line}</p>
@@ -139,9 +139,9 @@ function InteriorView({ p }) {
       </section>
 
       {/* closing, on espresso */}
-      <DarkBand className="mt-10">
+      <DarkBand className="mb-16 mt-10 sm:mb-24">
         <Reveal className="mx-auto max-w-3xl px-5 text-center sm:px-8">
-          <h2 className="font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.05] tracking-tight text-[#F3EFE6] sm:text-6xl">
+          <h2 className="font-heading text-4xl font-extrabold leading-[1.05] tracking-tight text-[#F3EFE6] sm:text-6xl">
             Planning an interior?
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-[#F3EFE6]/75">
@@ -165,7 +165,7 @@ function InteriorView({ p }) {
             <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-white/50">Next interior</div>
             <Link
               to={`/interiors/${next.slug}`}
-              className="mt-2 inline-block font-['Space_Grotesk'] text-2xl font-bold text-[#F3EFE6] underline decoration-[#C6F00C] decoration-2 underline-offset-8"
+              className="mt-2 inline-block font-heading text-2xl font-bold text-[#F3EFE6] underline decoration-[#C6F00C] decoration-2 underline-offset-8"
             >
               {next.title} →
             </Link>
@@ -188,7 +188,7 @@ export default function InteriorPage() {
   if (!p) {
     return (
       <main className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
-        <h1 className="font-['Space_Grotesk'] text-4xl font-extrabold text-[#111827]">We could not find that interior.</h1>
+        <h1 className="font-heading text-4xl font-extrabold text-[#111827]">We could not find that interior.</h1>
         <Link to="/interiors" className={`${linkCls} mt-6`}>
           See all interiors →
         </Link>

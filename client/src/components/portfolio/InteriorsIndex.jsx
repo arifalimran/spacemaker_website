@@ -27,7 +27,7 @@ export default function InteriorsIndex() {
   return (
     <main
       className="min-h-screen pb-28"
-      style={{ background: 'linear-gradient(to bottom, #FAF8F5 0%, #F3EFE6 30%, #EDF4EC 100%)' }}
+      style={{ background: '#FAF8F5' }}
     >
       <div className="mx-auto max-w-7xl px-5 pt-36 sm:px-8 md:pt-44">
         <Link
@@ -38,7 +38,7 @@ export default function InteriorsIndex() {
         </Link>
         <div className="mt-8">
           <Eyebrow>Interiors</Eyebrow>
-          <h1 className="mt-5 max-w-3xl font-['Space_Grotesk'] text-5xl font-extrabold leading-[1.03] tracking-tight text-[#111827] sm:text-7xl">
+          <h1 className="mt-5 max-w-3xl font-heading text-5xl font-extrabold leading-[1.03] tracking-tight text-[#111827] sm:text-7xl">
             Rooms finished down to the joinery.
           </h1>
           <p className="mt-6 max-w-xl text-base leading-[1.8] text-neutral-600 sm:text-lg">
@@ -76,7 +76,7 @@ export default function InteriorsIndex() {
                       <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-[#1B4332]">
                         {TYPE_LABEL[p.type]} interior
                       </div>
-                      <div className="mt-1 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.05] tracking-tight text-[#111827] lg:text-4xl">
+                      <div className="mt-1 font-heading text-3xl font-extrabold leading-[1.05] tracking-tight text-[#111827] lg:text-4xl">
                         {p.title}
                       </div>
                     </div>
@@ -87,7 +87,7 @@ export default function InteriorsIndex() {
                     <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-[#1B4332]">
                       {TYPE_LABEL[p.type]} interior
                     </div>
-                    <div className="mt-1 font-['Space_Grotesk'] text-3xl font-extrabold tracking-tight text-[#111827]">
+                    <div className="mt-1 font-heading text-3xl font-extrabold tracking-tight text-[#111827]">
                       {p.title}
                     </div>
                   </div>

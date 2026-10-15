@@ -25,7 +25,7 @@ export default function Careers() {
   ];
 
   return (
-    <section id="careers" className="relative z-10 py-28 px-6 bg-gradient-to-b from-[#FAF8F5] via-[#EBF3E8] to-[#FAF8F5]">
+    <section id="careers" className="relative z-10 bg-[#FAF8F5] py-28 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="text-xs uppercase tracking-widest font-extrabold text-[#2D6A4F] mb-2 block">
@@ -40,7 +40,7 @@ export default function Careers() {
         </div>
 
         <div className="mb-20">
-          <h3 className="text-center text-xs uppercase font-extrabold tracking-wider text-neutral-500 mb-8">What We Provide For Our Team</h3>
+          <h3 className="text-center font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.22em] text-[#5C6E0A] mb-8">What We Provide For Our Team</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {perks.map((perk, idx) => (
               <div key={idx} className="bg-white p-6 rounded-2xl border border-neutral-300/70 shadow-sm flex flex-col justify-between">
@@ -48,7 +48,7 @@ export default function Careers() {
                   <div className="w-8 h-8 rounded-lg bg-[#1B4332] text-[#C6F00C] flex items-center justify-center font-bold text-xs mb-4">
                     0{idx+1}
                   </div>
-                  <h4 className="font-extrabold text-neutral-900 text-base mb-2">{perk.title}</h4>
+                  <h4 className="font-heading font-bold text-neutral-900 text-base mb-2">{perk.title}</h4>
                   <p className="text-xs text-neutral-600 leading-relaxed">{perk.desc}</p>
                 </div>
               </div>
@@ -62,7 +62,7 @@ export default function Careers() {
             {jobs.map((job, idx) => (
               <div key={idx} className="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h4 className="text-base font-extrabold text-neutral-900">{job.title}</h4>
+                  <h4 className="font-heading text-lg font-bold text-neutral-900">{job.title}</h4>
                   <div className="text-xs text-neutral-500 mt-1 flex flex-wrap gap-3">
                     <span>📍 {job.loc}</span>
                     <span>⏳ Experience: {job.exp}</span>
@@ -104,7 +104,7 @@ export default function Careers() {
         </div>
 
         <div className="text-center bg-[#1B4332] p-8 md:p-10 rounded-3xl text-white shadow-xl">
-          <h4 className="text-xl md:text-2xl font-extrabold mb-2">Want to Join Space Maker?</h4>
+          <h4 className="font-heading text-xl md:text-2xl font-bold mb-2">Want to Join Space Maker?</h4>
           <p className="text-xs md:text-sm text-neutral-200 mb-6 max-w-xl mx-auto">
             You do not need a complex form. Send your resume directly to our HR desk via email or WhatsApp.
           </p>

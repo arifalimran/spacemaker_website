@@ -136,7 +136,7 @@ export function Facts({ items, className = '', dark = false }) {
           >
             {i.k}
           </dt>
-          <dd className={`mt-1 font-['Space_Grotesk'] text-sm font-semibold ${dark ? 'text-[#F3EFE6]' : 'text-[#111827]'}`}>
+          <dd className={`mt-1 font-heading text-sm font-semibold ${dark ? 'text-[#F3EFE6]' : 'text-[#111827]'}`}>
             {i.v}
           </dd>
         </div>
@@ -146,27 +146,86 @@ export function Facts({ items, className = '', dark = false }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Espresso band with slanted top and bottom edges                      */
+/* Section colours (solid) + the ONE angle cut used between them        */
 /* ------------------------------------------------------------------ */
-export function DarkBand({ children, className = '', id, bg }) {
+export const SECTION = {
+  alabaster: CANVAS, // #FAF8F5
+  cream: '#F3EFE6',
+  sage: '#EDF4EC',
+  paleLime: '#EEF4DD',
+  espresso: ESPRESSO, // #2A1F1A
+  espressoCard: '#352822',
+};
+const LIME = '#C6F00C';
+/* same height (= same angle) on every cut; smaller on mobile */
+export const CUT_HEIGHT = 'clamp(28px, 4.5vw, 72px)';
+/* slope of the cut on desktop (4.5vw over 100vw), reused by the clipped-corner photo frame */
+export const CUT_SLOPE = 0.045;
+
+/* A straight diagonal join between two solid sections.
+   from = colour of the section above, to = colour of the section below.
+   dir 'left' = the edge is high on the left, 'right' = high on the right (alternate down the page).
+   line: 1.5px lime hairline on the edge (default: on whenever one side is espresso).
+   The block overlaps both neighbours by 1px so no seam can show at any zoom. */
+export function AngleCut({ from, to, dir = 'left', line, className = '' }) {
+  const showLine = line ?? (from === ESPRESSO || to === ESPRESSO);
+  const pts = dir === 'left' ? '0,0 100,100 0,100' : '100,0 100,100 0,100';
   return (
     <div
-      id={id}
-      className={`relative overflow-hidden ${className}`}
-      style={{
-        background: bg || `radial-gradient(ellipse 80% 60% at 20% 0%, #3A2B23 0%, ${ESPRESSO} 60%, #1E1612 100%)`,
-        clipPath: 'polygon(0 5vw, 100% 0, 100% calc(100% - 5vw), 0 100%)',
-        paddingTop: '8vw',
-        paddingBottom: '8vw',
-      }}
+      aria-hidden
+      className={`pointer-events-none relative z-[1] -my-px block w-full ${className}`}
+      style={{ height: CUT_HEIGHT, background: from }}
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.06]"
-        style={{ backgroundImage: 'radial-gradient(#C6F00C 1px, transparent 1px)', backgroundSize: '30px 30px' }}
-      />
-      <div className="relative">{children}</div>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 block h-full w-full">
+        <polygon points={pts} fill={to} shapeRendering="geometricPrecision" />
+        {showLine && (
+          <line
+            x1="0"
+            y1={dir === 'left' ? 0 : 100}
+            x2="100"
+            y2={dir === 'left' ? 100 : 0}
+            stroke={LIME}
+            strokeWidth="1.5"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
+      </svg>
     </div>
+  );
+}
+
+/* Solid espresso band, joined to its neighbours by angle cuts. */
+export function DarkBand({ children, className = '', id, above = CANVAS, below, dirIn = 'left', dirOut = 'right' }) {
+  return (
+    <div id={id} className={className}>
+      <AngleCut from={above} to={ESPRESSO} dir={dirIn} />
+      <div className="relative py-14 sm:py-20" style={{ background: ESPRESSO }}>
+        {children}
+      </div>
+      <AngleCut from={ESPRESSO} to={below ?? above} dir={dirOut} />
+    </div>
+  );
+}
+
+/* Fine line drawing of a building (placeholder visuals, footer motif). Colour = currentColor. */
+export function BuildingLines({ className = '', strokeWidth = 0.9 }) {
+  return (
+    <svg aria-hidden viewBox="0 0 200 240" className={className} fill="none" stroke="currentColor" strokeWidth={strokeWidth}>
+      <path d="M10 236h180" />
+      <rect x="52" y="34" width="96" height="202" />
+      <path d="M52 34l14-16h68l14 16" />
+      <path d="M100 18V6" />
+      {[58, 82, 106, 130, 154, 178, 202].map((y) => (
+        <g key={y}>
+          <path d={`M52 ${y}h96`} opacity="0.55" />
+          <rect x="62" y={y + 6} width="20" height="12" />
+          <rect x="90" y={y + 6} width="20" height="12" />
+          <rect x="118" y={y + 6} width="20" height="12" />
+        </g>
+      ))}
+      <rect x="86" y="212" width="28" height="24" />
+      <path d="M24 236v-60h28M176 236v-84h-28" opacity="0.6" />
+    </svg>
   );
 }
 
@@ -402,6 +461,40 @@ function Circle({ src, alt, className = '', drift }) {
   );
 }
 
+/* 10. Clip: clipped-corner frame. One corner is cut on the same slope as the section angle cuts
+       (container units keep the slope true at any frame size). `line` adds a lime hairline
+       parallel to the cut; `zoom` = the photo scales ~4% on hover of a parent .group. */
+export const clipPoly = (corner = 'tr', span = 62) => {
+  const d = `${(span * CUT_SLOPE).toFixed(2)}cqw`;
+  return corner === 'tl'
+    ? `polygon(0 ${d}, ${span}% 0, 100% 0, 100% 100%, 0 100%)`
+    : `polygon(0 0, ${100 - span}% 0, 100% ${d}, 100% 100%, 0 100%)`;
+};
+export function ClipFrame({ corner = 'tr', span = 62, line = false, className = '', children }) {
+  const d = `${(span * CUT_SLOPE).toFixed(2)}cqw`;
+  return (
+    <div className={`relative h-full w-full ${className}`} style={{ containerType: 'inline-size' }}>
+      {line && (
+        <div
+          aria-hidden
+          className={`pointer-events-none absolute -top-3 h-[1.5px] bg-[#C6F00C] ${corner === 'tl' ? 'left-0 origin-left' : 'right-0 origin-right'}`}
+          style={{ width: `${span}%`, transform: `rotate(${corner === 'tl' ? '-' : ''}${(Math.atan(CUT_SLOPE) * 180) / Math.PI}deg)` }}
+        />
+      )}
+      <div className="relative h-full w-full overflow-hidden" style={{ clipPath: clipPoly(corner, span) }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+function Clip({ src, alt, corner, span, line, className = '', drift }) {
+  return (
+    <ClipFrame corner={corner} span={span} line={line} className={className}>
+      <Parallax src={src} alt={alt} drift={drift} />
+    </ClipFrame>
+  );
+}
+
 const FeatherShot = ({ src, alt, side = 'center', fade = false, className = '', drift }) => (
   <BlendedPhoto src={src} alt={alt} side={side} fade={fade} drift={drift} className={`h-full w-full ${className}`} />
 );
@@ -416,6 +509,7 @@ const SHOTS = {
   blur: BlurShot,
   duotone: Duotone,
   circle: Circle,
+  clip: Clip,
 };
 
 /* One entry point:  <Shot treatment="arch" src=... />  ; `children` is the text for carved / band */
@@ -546,7 +640,7 @@ export function StickyBar({ project, kind = 'project', show }) {
             transition={{ duration: 0.35 }}
             className="pointer-events-auto flex items-center gap-5 rounded-full border border-[#1B4332]/15 bg-white/85 px-5 py-2.5 shadow-lg backdrop-blur"
           >
-            <span className="font-['Space_Grotesk'] text-sm font-bold text-[#111827]">{project.title}</span>
+            <span className="font-heading text-sm font-bold text-[#111827]">{project.title}</span>
             <LeadLink project={project} kind={kind} className="flex items-center gap-2 text-sm font-medium text-[#1B4332]">
               <span className="h-2 w-2 rounded-full bg-[#C6F00C] ring-4 ring-[#C6F00C]/30" />
               WhatsApp

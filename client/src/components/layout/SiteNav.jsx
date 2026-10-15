@@ -38,7 +38,7 @@ export default function SiteNav() {
 
   return (
     <header className="fixed inset-x-0 top-4 z-50 px-4 md:px-8">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl border border-neutral-200/70 bg-[#FAF8F5]/90 px-4 py-3 shadow-sm backdrop-blur-md md:px-6">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl border border-neutral-200/70 bg-[#FAF8F5] px-4 py-3 shadow-sm md:px-6">
         <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
           <Logo />
           <span>

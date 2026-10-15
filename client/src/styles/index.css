@@ -14,7 +14,12 @@
   --deep: #1F1713;
   --footer-green: #EEF4DD;
   --olive: #5C6E0A;
+  /* ONE heading font for every page: the bold high-contrast serif from "Let us show you around."
+     Times New Roman where installed (Mac, Windows, iOS); Tinos (its metric twin, Google Fonts) elsewhere. */
+  --font-heading: 'Times New Roman', Tinos, Times, serif;
 }
+
+h1, h2, h3, .font-heading { font-family: var(--font-heading); }
 
 html {
   background: var(--alabaster);
@@ -33,19 +38,17 @@ body {
 }
 
 /* ---------- Typography roles ---------- */
-.f-display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.03em; }
+.f-display { font-family: var(--font-heading); letter-spacing: -0.01em; }
 .f-serif   { font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-weight: 400; }
 .f-mono    { font-family: 'JetBrains Mono', ui-monospace, monospace; }
 
-/* ---------- Section gradient dissolves (no hard borders) ---------- */
-.sec-hero  { background: linear-gradient(to bottom, #FAF8F5 0%, #F3EFE6 100%); }
-.sec-about { background: linear-gradient(to bottom, #F3EFE6 0%, #EDF4EC 100%); }
-.sec-portfolio { background: linear-gradient(to bottom, #EDF4EC 0%, #F6F8F5 100%); }
-.sec-why   { background: linear-gradient(to bottom, #F6F8F5 0%, #EBF2EA 100%); }
-.sec-testimonials { background: linear-gradient(to bottom, #EBF2EA 0%, #FAF8F5 100%); }
+/* ---------- Solid section colours (joins = <AngleCut>, never gradients) ---------- */
+.sec-about { background: #FAF8F5; }
 
 /* ---------- Anchors never land under the fixed menu (= NAV_OFFSET in lib/scroll.js) ---------- */
 [id] { scroll-margin-top: 104px; }
+/* focus / find-in-page scrolling also stops below the menu (form fields never land under it) */
+html { scroll-padding-top: 104px; }
 
 /* ---------- Focus + selection ---------- */
 ::selection { background: var(--volt); color: #000; }
