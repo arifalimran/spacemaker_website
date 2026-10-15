@@ -35,6 +35,16 @@ export const CONTACT = {
   ],
   email: 'spacemakerbd@gmail.com',
   messenger: 'https://m.me/spacemakerbd',
+  whatsappDisplay: '+880 1916-100416', // optional: how the WhatsApp number is printed
+  tagline: 'where space defines luxury', // optional: short line under the footer logo
+  footerLine: 'Homes and buildings in Dhaka, designed for light, air and calm everyday life.', // optional DRAFT copy
+  // optional social links. PLACEHOLDER: paste the real page URLs; empty ones show as greyed placeholders.
+  social: [
+    { key: 'facebook', label: 'Facebook', href: '' },
+    { key: 'instagram', label: 'Instagram', href: '' },
+    { key: 'linkedin', label: 'LinkedIn', href: '' },
+    { key: 'youtube', label: 'YouTube', href: '' },
+  ],
   offices: [
     { name: 'Corporate Office', address: 'House 405, Road 29, Mohakhali DOHS, Dhaka' },
     { name: 'Jalshiri Operations', address: 'House 22, Road 505A, Sector 16, Jalshiri Abashon, Dhaka' },
@@ -376,7 +386,7 @@ export const WHY_US = {
       text: 'The structure behind the walls is built from materials we test and trust, with no compromise.',
       points: ['Certified 72.5 grade rebar', 'High-strength stone chips', 'Trusted cement brands'],
       image: U(INT3, 1400),
-      treatment: 'duotone',
+      treatment: 'frame', // cheap treatment on the espresso section (no CSS filters)
     },
     {
       key: 'ontime',

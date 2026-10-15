@@ -9,6 +9,11 @@
   --sage: #EDF4EC;
   --slate: #111827;
   --ink-soft: #374151;
+  /* option C blend additions */
+  --espresso: #2A1F1A;
+  --deep: #1F1713;
+  --footer-green: #EEF4DD;
+  --olive: #5C6E0A;
 }
 
 html {

@@ -43,15 +43,15 @@ A. Item 3 — Hero (client-oriented)
  - Clear client CTAs: "View projects" and WhatsApp +8801916100416 (use lib/leads.js).
  - All text/features come from data, not hard-coded.
 
-B. Item 16 — Missing sections, in this homepage order:
+B. Item 16 — Missing sections (positions per CLAUDE.md):
  0 Top bar: hotline/WhatsApp, email (placeholder if unknown), short line; slim, compact on mobile; doesn't cause layout jump.
  2 About us / Our profile: reuse the existing "Who we are" section as About us (anchor #about), add a short profile text + key-facts row from data. Facts I haven't supplied = "[placeholder]". No invented RAJUK/REHAB/credentials.
- 6 Testimonials: data-driven list in siteContent (name, project, quote, photo optional, `isSample` flag). Seed 3 entries clearly marked "[Client name]" / "Sample testimonial — replace". Show a small "Sample" tag while isSample is true.
+ Testimonials, Team of experts, Partner with us, Opening soon and Footer were done in Phase 1b — do NOT redesign them.
  7 6-step development process: "building rising" idea — steps from data (title + one line each, editable). Animate cheaply (transform/opacity on enter only, respects reduced motion).
- 10 Contact us: section with form (name, phone, email optional, interested in [project/interior/land], message) + WhatsApp + call + address/map placeholder.
+ Contact (block at the top of the footer, see CLAUDE.md): add the form there (name, phone, email optional, interested in [project/interior/land], message) + WhatsApp + call + address/map placeholder.
     Form front-end: validation, honeypot spam field, disabled button while sending, success message, no double submit.
     Back-end: there is a `server/` folder. Do NOT change it yet — first tell me exactly what endpoint/fields you'd add and wait for my yes. Until then, on submit fall back to opening WhatsApp with the message pre-filled.
- - Reorder homepage to: Top bar · Hero · About · Portfolio · Active/Completed-Handed over/Interiors · Why choose us · Testimonials · 6-step · Your lands · Contact · Footer. Career must NOT be on the homepage (footer/nav link only).
+ - Homepage order must match CLAUDE.md exactly. Career must NOT be on the homepage (footer/nav link only).
  - Nav links to #about and #contact must work with lib/scroll.js (account for top-bar height).
 
 C. Finish: `cd client && npm run build` passes; check 375px. Summary + files changed + questions. STOP. Don't commit/push/deploy.

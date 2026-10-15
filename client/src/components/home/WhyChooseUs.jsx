@@ -1,8 +1,10 @@
 // client/src/components/home/WhyChooseUs.jsx
 // Why choose us, written for BUYERS. (The landowner content now lives in LandownerSection.jsx.)
+// Espresso depth: #2A1F1A -> #1F1713, cream/alabaster text, lime for small accents only.
+// Plain gradients + rgba only (no filters / blend modes on this layer).
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { WHY_US, BRAND } from '../../data/portfolio';
+import { WHY_US } from '../../data/portfolio';
 import { Shot, Eyebrow, Reveal } from '../portfolio/shared';
 
 function Timeline({ items }) {
@@ -11,7 +13,7 @@ function Timeline({ items }) {
   return (
     <div ref={ref} className="relative w-full px-6 sm:px-10">
       <div className="relative">
-        <div aria-hidden className="absolute left-0 right-0 top-[7px] h-[2px] bg-[#1B4332]/20" />
+        <div aria-hidden className="absolute left-0 right-0 top-[7px] h-[2px] bg-[#FAF8F5]/25" />
         <motion.div
           aria-hidden
           className="absolute left-0 top-[7px] h-[2px] origin-left bg-[#C6F00C]"
@@ -23,11 +25,11 @@ function Timeline({ items }) {
           {items.map((m, i) => (
             <li key={m} className="flex flex-col items-center gap-3">
               <motion.span
-                className="h-4 w-4 rounded-full border-2 border-[#1B4332] bg-[#FAF8F5]"
+                className="h-4 w-4 rounded-full border-2 border-[#C6F00C] bg-[#1F1713]"
                 animate={seen ? { backgroundColor: '#C6F00C' } : undefined}
                 transition={{ delay: 0.3 + i * 0.35 }}
               />
-              <span className="hidden font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.14em] text-[#111827] sm:block">
+              <span className="hidden font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.14em] text-[#FAF8F5]/85 sm:block">
                 {m}
               </span>
             </li>
@@ -57,17 +59,17 @@ function Scene({ s, i }) {
       </div>
 
       <Reveal className={`md:col-span-6 ${flip ? 'md:order-1' : ''}`}>
-        <div className="font-serif text-7xl italic leading-none text-[#C6F00C]">0{i + 1}</div>
-        <h3 className="mt-3 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.06] tracking-tight text-[#111827] sm:text-5xl">
+        <div className="font-['JetBrains_Mono'] text-sm font-semibold tracking-[0.2em] text-[#C6F00C]">0{i + 1}</div>
+        <h3 className="mt-3 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.06] tracking-tight text-[#FAF8F5] sm:text-5xl">
           {s.title}
         </h3>
-        <p className="mt-4 font-serif text-xl italic text-[#1B4332]/85 sm:text-2xl">{s.line}</p>
-        <p className="mt-5 max-w-lg text-base leading-[1.8] text-[#374151] sm:text-lg">{s.text}</p>
+        <p className="mt-4 font-serif text-xl italic text-[#F3EFE6]/80 sm:text-2xl">{s.line}</p>
+        <p className="mt-5 max-w-lg text-base leading-[1.8] text-[#F3EFE6]/70 sm:text-lg">{s.text}</p>
         {s.points && (
           <ul className="mt-6 grid gap-2">
             {s.points.map((p) => (
-              <li key={p} className="flex items-center gap-3 font-['JetBrains_Mono'] text-xs uppercase tracking-[0.14em] text-[#111827]">
-                <span className="h-2 w-2 rounded-full bg-[#C6F00C] ring-4 ring-[#C6F00C]/25" />
+              <li key={p} className="flex items-center gap-3 font-['JetBrains_Mono'] text-xs uppercase tracking-[0.14em] text-[#FAF8F5]/90">
+                <span className="h-2 w-2 rounded-full bg-[#C6F00C] ring-4 ring-[#C6F00C]/20" />
                 {p}
               </li>
             ))}
@@ -81,20 +83,31 @@ function Scene({ s, i }) {
 export default function WhyChooseUs() {
   return (
     <section
-      className="relative overflow-hidden py-20 sm:py-28"
-      style={{ background: 'linear-gradient(to bottom, #F3EFE6 0%, #EDF4EC 50%, #F6F8F5 100%)' }}
+      className="relative overflow-hidden pb-40 pt-32 sm:pb-48 sm:pt-40"
+      style={{
+        // vanishing light: light page tone dissolves into espresso, settles into deep,
+        // then lifts back to the calm landowner section below
+        background:
+          'linear-gradient(to bottom, #F6F8F5 0px, #2A1F1A 180px, #261C17 50%, #1F1713 calc(100% - 200px), #F3EFE6 100%)',
+      }}
     >
-      <img
-        src={BRAND.emblem}
-        alt=""
+      {/* soft warm glow, plain rgba (static) */}
+      <div
         aria-hidden
-        className="pointer-events-none absolute -right-20 top-10 w-[420px] select-none opacity-[0.06]"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 60% 40% at 15% 18%, rgba(243,239,230,0.07) 0%, rgba(243,239,230,0) 70%), radial-gradient(ellipse 50% 35% at 90% 70%, rgba(198,240,12,0.04) 0%, rgba(198,240,12,0) 70%)',
+        }}
       />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-        <Eyebrow>{WHY_US.eyebrow}</Eyebrow>
-        <h2 className="mt-5 max-w-3xl font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.06] tracking-tight text-[#111827] sm:text-6xl">
+        <Eyebrow dark>{WHY_US.eyebrow}</Eyebrow>
+        <h2 className="mt-5 max-w-3xl font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.06] tracking-tight text-[#FAF8F5] sm:text-6xl">
           {WHY_US.title}
         </h2>
+        {WHY_US.intro && (
+          <p className="mt-5 max-w-2xl text-base leading-[1.8] text-[#F3EFE6]/70 sm:text-lg">{WHY_US.intro}</p>
+        )}
       </div>
 
       <div className="relative mt-6">
@@ -103,16 +116,18 @@ export default function WhyChooseUs() {
         ))}
       </div>
 
-      <Reveal className="relative mx-auto mt-6 max-w-7xl px-5 sm:px-8">
-        <ul className="grid gap-4 border-y border-[#1B4332]/15 py-7 sm:grid-cols-3">
-          {WHY_US.assurances.map((a) => (
-            <li key={a} className="flex items-center gap-3 font-['Space_Grotesk'] text-base font-semibold text-[#1B4332]">
-              <span className="h-2 w-2 rounded-full bg-[#C6F00C] ring-4 ring-[#C6F00C]/30" />
-              {a}
-            </li>
-          ))}
-        </ul>
-      </Reveal>
+      {WHY_US.assurances?.length > 0 && (
+        <Reveal className="relative mx-auto mt-6 max-w-7xl px-5 sm:px-8">
+          <ul className="grid gap-4 border-y border-[#FAF8F5]/15 py-7 sm:grid-cols-3">
+            {WHY_US.assurances.map((a) => (
+              <li key={a} className="flex items-center gap-3 font-['Space_Grotesk'] text-base font-semibold text-[#FAF8F5]">
+                <span className="h-2 w-2 flex-none rounded-full bg-[#C6F00C] ring-4 ring-[#C6F00C]/20" />
+                {a}
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      )}
     </section>
   );
 }

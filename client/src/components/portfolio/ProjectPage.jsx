@@ -203,7 +203,7 @@ function ChapterIndex({ chapters, hasUnits }) {
               active === k ? 'text-[#1B4332] opacity-100' : 'text-neutral-500 opacity-0 group-hover:opacity-100'
             }`}
           >
-            {k === 'units' ? 'Available' : CHAPTERS[k].label}
+            {k === 'units' ? 'Homes' : CHAPTERS[k].label}
           </span>
           <span
             className={`h-2 w-2 rounded-full transition ${
@@ -250,6 +250,10 @@ function ProjectView({ project }) {
   const next = projects[(idx + 1) % projects.length];
   const units = project.units || [];
   const hasUnits = units.length > 0;
+  // Never reveal how many units are available: show each layout type once, never one row per unit.
+  const layouts = units.filter(
+    (u, i) => units.findIndex((v) => v.label === u.label && v.size === u.size) === i
+  );
   const showUnits = hasUnits || project.status === 'active';
 
   const renderChapter = (c) => {
@@ -329,19 +333,19 @@ function ProjectView({ project }) {
       {showUnits && (
         <section id="ch-units" className="scroll-mt-24 py-16 sm:py-24">
           <div className="mx-auto max-w-5xl px-5 sm:px-8">
-            <Eyebrow>Available units</Eyebrow>
+            <Eyebrow>Homes on offer</Eyebrow>
             <h2 className="mt-4 font-['Space_Grotesk'] text-3xl font-extrabold tracking-tight text-[#111827] sm:text-5xl">
               Find the one that fits you.
             </h2>
             {hasUnits ? (
               <ul className="mt-10 divide-y divide-[#1B4332]/15 border-y border-[#1B4332]/15">
-                {units.map((u) => (
-                  <li key={u.id} className="flex flex-wrap items-center justify-between gap-3 py-5">
+                {layouts.map((u) => (
+                  <li key={`${u.label}|${u.size}`} className="flex flex-wrap items-center justify-between gap-3 py-5">
                     <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-[0.16em] text-[#111827] sm:text-sm">
-                      {u.id} · {u.label} · {u.size} · {u.floor}
+                      {[u.label, u.size].filter(Boolean).join(' · ')}
                     </span>
                     <LeadLink project={project} unit={u} className={linkCls}>
-                      Ask about this unit →
+                      Ask about availability →
                     </LeadLink>
                   </li>
                 ))}
@@ -349,11 +353,11 @@ function ProjectView({ project }) {
             ) : (
               <>
                 <p className="mt-8 max-w-xl text-neutral-600">
-                  Everything is reserved for now. Tell us what you are looking for and we will keep you first in line.
+                  Tell us what you are looking for and we will share current availability with you personally.
                 </p>
                 <div className="mt-6">
                   <LeadLink project={project} className={linkCls}>
-                    Join the waiting list →
+                    Ask about availability →
                   </LeadLink>
                 </div>
               </>
