@@ -1,6 +1,7 @@
 // client/src/components/home/LandownerSection.jsx
 // Partner with us (landowners). Warm cream, split layout: pitch + 3 benefits on the left,
-// the feasibility form on the right. Leads into the footer's warm espresso fade.
+// the feasibility form on the right. Ends in a solid #F3EADC that the footer's wave edge cuts into
+// (extra bottom padding = room for the wave, which overlaps this section's last ~40-72px).
 import React, { useRef, useState } from 'react';
 import { LANDOWNER as L } from '../../data/portfolio';
 import { waLink, landMessage, trackLead } from '../../lib/leads';
@@ -93,10 +94,10 @@ export default function LandownerSection() {
   return (
     <section
       id="land"
-      className="relative overflow-hidden pb-20 pt-20 sm:pb-24 sm:pt-24"
+      className="relative overflow-hidden pb-28 pt-20 sm:pb-40 sm:pt-24"
       style={{
         background:
-          'radial-gradient(ellipse 60% 50% at 85% 10%, rgba(198,240,12,0.07) 0%, rgba(198,240,12,0) 70%), radial-gradient(ellipse 70% 60% at 0% 100%, rgba(168,148,128,0.14) 0%, rgba(168,148,128,0) 70%), linear-gradient(to bottom, #F5F0E6 0%, #F3EADC 100%)',
+          'radial-gradient(ellipse 60% 50% at 85% 10%, rgba(198,240,12,0.07) 0%, rgba(198,240,12,0) 70%), radial-gradient(ellipse 55% 45% at 0% 45%, rgba(168,148,128,0.12) 0%, rgba(168,148,128,0) 70%), linear-gradient(to bottom, #F5F0E6 0%, #F3EADC 100%)',
       }}
     >
       {/* subtle warm paper texture: tiny dots, plain rgba, static */}

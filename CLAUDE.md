@@ -20,15 +20,17 @@ LIVE site for Space Maker (Dhaka real estate developer). Stack: React 19 + Vite 
 ## Brand (decided — option C blend, revised 15 Oct)
 - KEEP current fonts: Space Grotesk (display), Playfair Display italic (emotional lines), Plus Jakarta Sans (body), JetBrains Mono (labels/numbers).
 - Main look stays green + cream: brand green #1B4332, cream/sage backgrounds, lime #C6F00C for accents.
-- Espresso #2A1F1A / Deep #1F1713: ONLY for (a) Why Choose Us and (b) the footer. Nowhere else as a full section background. Light espresso tints (rgba) are allowed for small accents/overlays.
-- Pale lime #EEF4DD: background for Testimonials (flowing smoothly into Team of experts).
-- Olive #5C6E0A for links/labels on pale lime or cream. Lime #C6F00C never as body text on light backgrounds, never as a full section background.
-- Transitions between sections: clean edge OR a short fade (80–160px). Gradients must use warm stops (no grey/muddy midpoint), e.g. cream #F5F0E6 → #E8DCCD → #A89480 → #2A1F1A.
+- DARK espresso (#3A2C24 → #2A1F1A): ONLY the footer. No other full section is dark.
+- Why Choose Us = LIGHT ESPRESSO ("latte"), chosen option 6: background gradient #DCCFBF → #E2D8C9 (40%) → #E8E6D1 (70%) → #EEF4DD (100%), flowing straight into the pale-lime Testimonials so the change is almost invisible. Headings/body espresso #2A1F1A, labels olive #5C6E0A, a short lime bar (48×3px) under the heading, lime only for small accents.
+- Footer = "curved lip", chosen option B: the cream Partner-with-us section ends in a soft SVG wave edge (no fade) with a 1.5px lime #C6F00C line along the curve; below it the footer goes #3A2C24 → #2A1F1A. Cream text, lime links.
+- Pale lime #EEF4DD: Testimonials background (flowing into Team of experts, which fades to cream).
+- Olive #5C6E0A for links/labels on pale lime, latte or cream. Lime #C6F00C never as text on light backgrounds, never as a full section background.
+- NO long dark-to-light gradients anywhere (they look harsh). Between sections use: a clean edge, a soft curve, or a fade between two LIGHT colours only. Light-espresso (latte) tints are fine for depth on other pages; never a full dark section.
 - Photos are always sharp — no blur "teaser" effect.
 - WhatsApp/hotline: +8801916100416.
 - Project status = Active / Completed / Handed Over. "Signature" is a separate yes/no label. Opening-soon projects may have no photo yet.
 
 ## Homepage order
-Top bar · Hero · About us · Projects portfolio · Active / Completed & Handed-over / Interiors · Opening soon · 6-step development process · Why choose us (espresso) · Testimonials (pale lime) · Team of experts · Partner with us (landowners) · Footer (espresso fade, with Contact block at its top).
+Top bar · Hero · About us · Projects portfolio · Active / Completed & Handed-over / Interiors · Opening soon · 6-step development process · Why choose us (light espresso) · Testimonials (pale lime) · Team of experts · Partner with us (landowners, cream) · Footer (curved lip, dark espresso, with Contact block at its top).
 Career is a SEPARATE page (`/careers`), only linked from nav/footer.
 <!-- END-SPACEMAKER-BRIEF -->

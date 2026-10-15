@@ -1,6 +1,7 @@
 // client/src/components/layout/SiteFooter.jsx
-// Footer with the Contact block on top. Starts from the cream of "Partner with us" and fades
-// through warm stops (~150px, no grey) into light espresso, deepening to #2A1F1A at the bottom.
+// Footer with the Contact block on top. "Curved lip" (option B): a soft SVG wave rises into the
+// section above (no fade) with a 1.5px lime line along the curve; below it the footer goes
+// #3A2C24 -> #2A1F1A.
 // Also the "Contact" target in the nav. Everything comes from CONTACT / BRAND in data/portfolio.js.
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -59,6 +60,24 @@ const ICON = {
     </>
   ),
 };
+
+/* The curved lip: sits just above the footer and overlaps the bottom of the section above.
+   Above the curve is transparent (that section shows through); below it is footer colour.
+   Scales with the width (preserveAspectRatio="none"); the lime line keeps 1.5px (non-scaling stroke). */
+const WAVE = 'M0 46 C 220 78, 470 82, 720 52 C 960 24, 1200 10, 1440 30';
+function WaveLip() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 1440 80"
+      preserveAspectRatio="none"
+      className="pointer-events-none absolute inset-x-0 bottom-[calc(100%-1px)] block h-10 w-full sm:h-[72px]"
+    >
+      <path d={`${WAVE} L1440 80 L0 80 Z`} fill="#3A2C24" />
+      <path d={WAVE} fill="none" stroke="#C6F00C" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+    </svg>
+  );
+}
 
 function ContactItem({ icon, title, children }) {
   return (
@@ -119,14 +138,11 @@ export default function SiteFooter() {
   return (
     <footer
       id="contact"
-      className="relative overflow-hidden text-[#F5F0E6]"
-      style={{
-        // warm fade from the cream above (no grey midpoint), then light espresso deepening to #2A1F1A
-        background:
-          'linear-gradient(to bottom, #F3EADC 0px, #E8DCCD 45px, #A89480 100px, #6B5546 150px, #4E3D33 360px, #2A1F1A 100%)',
-      }}
+      className="relative text-[#F5F0E6]"
+      style={{ background: 'linear-gradient(to bottom, #3A2C24 0%, #2A1F1A 100%)' }}
     >
-      <div className="relative mx-auto max-w-7xl px-5 pb-8 pt-[190px] sm:px-8 sm:pt-[200px]">
+      <WaveLip />
+      <div className="relative mx-auto max-w-7xl px-5 pb-8 pt-12 sm:px-8 sm:pt-14">
         {/* Contact block */}
         <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-4">

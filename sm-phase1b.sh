@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # =====================================================================
 #  Space Maker website — PHASE 1b (do this BEFORE Phase 2)
-#  Opening soon redesign · Testimonials (pale lime) · Team of experts ·
-#  Partner with us redesign · Curved espresso footer · light-espresso Why
-#  Choose Us · restore previous fonts · gradient + overlap fixes
+#  Heading font site-wide · solid espresso (Signature, Why Choose Us,
+#  Footer) · angle cuts everywhere, no gradients · Opening soon ·
+#  Testimonials · Team of experts · Partner with us · overlap fixes
 #
 #  Run in the terminal inside spacemaker_website:   bash sm-phase1b.sh
 #  Then: Claude Code desktop → new session (+) → Cmd+V → Enter
@@ -29,13 +29,13 @@ git tag "backup-phase1b-$STAMP"
 echo "✅ Backup tag: backup-phase1b-$STAMP"
 echo "   Undo this phase later with:  git reset --hard backup-phase1b-$STAMP"
 
-# ---------- Replace the standing brief in CLAUDE.md with v3 ----------
+# ---------- Replace the standing brief in CLAUDE.md with v4 ----------
 touch CLAUDE.md
 if grep -q "<!-- SPACEMAKER-BRIEF" CLAUDE.md; then
   sed -i '' '/<!-- SPACEMAKER-BRIEF/,/<!-- END-SPACEMAKER-BRIEF -->/d' CLAUDE.md
 fi
 cat >> CLAUDE.md <<'BRIEF'
-<!-- SPACEMAKER-BRIEF v3 -->
+<!-- SPACEMAKER-BRIEF v4 -->
 # Space Maker website — standing brief (applies to every phase)
 
 LIVE site for Space Maker (Dhaka real estate developer). Stack: React 19 + Vite 8 + Tailwind 4, framer-motion, lenis, react-router-dom 7. App lives in `client/` (dev: `cd client && npm run dev`). Content data: `client/src/data/portfolio.js`, `siteContent.js`. Scrolling: `client/src/lib/scroll.js` only. Leads: `client/src/lib/leads.js`. Image treatments: `Shot` in `portfolio/shared.jsx`.
@@ -54,82 +54,91 @@ LIVE site for Space Maker (Dhaka real estate developer). Stack: React 19 + Vite 
 11. Performance: no CSS `filter`/`blur` or blend modes on photos or moving layers; use plain rgba tints. Hover/scroll animation = transform + opacity only. Respect reduced motion.
 12. Content must never sit under the sticky menu: use scroll-margin-top / top padding equal to menu height. Butterflies must never overlap text.
 
-## Brand (decided — option C blend, revised 15 Oct)
-- KEEP current fonts: Space Grotesk (display), Playfair Display italic (emotional lines), Plus Jakarta Sans (body), JetBrains Mono (labels/numbers).
-- Main look stays green + cream: brand green #1B4332, cream/sage backgrounds, lime #C6F00C for accents.
-- DARK espresso (#3A2C24 → #2A1F1A): ONLY the footer. No other full section is dark.
-- Why Choose Us = LIGHT ESPRESSO ("latte"), chosen option 6: background gradient #DCCFBF → #E2D8C9 (40%) → #E8E6D1 (70%) → #EEF4DD (100%), flowing straight into the pale-lime Testimonials so the change is almost invisible. Headings/body espresso #2A1F1A, labels olive #5C6E0A, a short lime bar (48×3px) under the heading, lime only for small accents.
-- Footer = "curved lip", chosen option B: the cream Partner-with-us section ends in a soft SVG wave edge (no fade) with a 1.5px lime #C6F00C line along the curve; below it the footer goes #3A2C24 → #2A1F1A. Cream text, lime links.
-- Pale lime #EEF4DD: Testimonials background (flowing into Team of experts, which fades to cream).
-- Olive #5C6E0A for links/labels on pale lime, latte or cream. Lime #C6F00C never as text on light backgrounds, never as a full section background.
-- NO long dark-to-light gradients anywhere (they look harsh). Between sections use: a clean edge, a soft curve, or a fade between two LIGHT colours only. Light-espresso (latte) tints are fine for depth on other pages; never a full dark section.
-- Photos are always sharp — no blur "teaser" effect.
+## Typography (decided 15 Oct — use on EVERY page)
+- Headings (h1–h3, section titles, card titles): the bold high-contrast SERIF currently used in "Let's Discuss Your Land Over Coffee", "Why Landowners Choose Space Maker" and "Let us show you around.". Keep this font; use it for all headings site-wide through one token (e.g. --font-heading).
+- Emotional/italic lines: Playfair Display italic (as in "Four promises we keep on every plot.").
+- Body: Plus Jakarta Sans. Labels, numbers, small caps lines: JetBrains Mono. Logo lockup unchanged.
+
+## Colour (decided 15 Oct)
+- Base look: cream/alabaster + brand green #1B4332, lime #C6F00C for accents only.
+- SOLID espresso #2A1F1A (cards on it #352822, borders rgba(245,240,230,.12)) for exactly three premium sections: Signature projects, Why Choose Us, Footer. Solid colour — no gradients inside or between them. Cream text, Playfair italic lines in lime, mono labels in lime.
+- Testimonials: pale lime #EEF4DD (solid). Team of experts: cream/alabaster (solid). Partner with us: cream (solid) — it is NOT dark, so it never sits dark-next-to-dark with the footer.
+- Olive #5C6E0A for links/labels on light backgrounds. Lime never as text on light backgrounds, never as a full section background.
+- Two dark sections must never touch each other.
+
+## Section joins: ANGLE CUTS only (no gradients, no waves, no curves)
+- Remove every gradient blend between sections. Sections join with a straight diagonal angle cut wherever the background colour changes; same-colour neighbours join flat.
+- ONE shared implementation (component or utility class, e.g. `<AngleCut from to direction />`) used everywhere — never one-off per section.
+- Congruent: the SAME angle on every cut (height clamp(28px, 4.5vw, 72px) across the full width); direction alternates down the page (left-high, then right-high) so consecutive cuts run parallel like architectural lines.
+- The triangle is filled with the neighbouring section's exact colour: no seam, no white hairline gaps, no overlap shadow.
+- Espresso sections may carry a fine 1.5px lime line along their cut edge (subtle premium detail); light-to-light cuts have no line.
+- Keep content padding so text, cards and buttons never touch the slope; menu/butterflies never cover it. Smaller cut on mobile.
+- Use cuts on ALL pages (projects, interiors, careers, detail pages) with the same rules.
+
+## Photo frames
+- Arch frames are retired for Why Choose Us. Use the clipped-corner frame: rectangle with one diagonal corner cut matching the angle-cut slope (from `Shot`, e.g. notch/carved, or add a `clip` variant), optionally a thin lime offset frame line. Keep frames consistent within a section.
+- Photos always sharp — no blur teaser.
+
+## Other
 - WhatsApp/hotline: +8801916100416.
 - Project status = Active / Completed / Handed Over. "Signature" is a separate yes/no label. Opening-soon projects may have no photo yet.
 
 ## Homepage order
-Top bar · Hero · About us · Projects portfolio · Active / Completed & Handed-over / Interiors · Opening soon · 6-step development process · Why choose us (light espresso) · Testimonials (pale lime) · Team of experts · Partner with us (landowners, cream) · Footer (curved lip, dark espresso, with Contact block at its top).
+Top bar · Hero · About us · Projects portfolio (Signature = espresso) · Active / Completed & Handed-over / Interiors · Opening soon · 6-step development process · Why choose us (espresso) · Testimonials (pale lime) · Team of experts (cream) · Partner with us (cream) · Footer (espresso, Contact block at its top).
 Career is a SEPARATE page (`/careers`), only linked from nav/footer.
 <!-- END-SPACEMAKER-BRIEF -->
 BRIEF
-echo "✅ CLAUDE.md brief updated to v3"
+echo "✅ CLAUDE.md brief updated to v4"
 
 # ---------- Phase 1b task ----------
 read -r -d '' TASK <<'EOF' || true
-PHASE 1b — Homepage lower half redesign. Follow CLAUDE.md (brief v3 — note the colour rules changed). Open only the homepage file, the components for the sections below, `portfolio/shared.jsx` (Shot) if needed, and `client/src/data/siteContent.js` / `portfolio.js`.
+PHASE 1b — Homepage lower half + site-wide font and angle cuts. Follow CLAUDE.md (brief v4 — typography, colour and section-join rules changed). Open only the files each step needs.
 
-0. FIRST — restore my previous fonts (Phase 1 changed them by mistake; I want the old ones back)
- - The state before Phase 1 is git tag `__FONT_TAG__`. Run only: `git diff __FONT_TAG__ -- client/index.html client/src/index.css` (and any font/theme config file that diff points to).
- - Restore ONLY font-related lines from that tag: Google Fonts links/imports, @font-face, --font-* theme tokens, font-family rules. Keep every colour and other change made since.
- - Then search `client/src` (rg "font-family|font-serif|font-display|Cormorant|Garamond") for any font names Phase 1 added in components and switch them back to the old tokens. Show me which lines you restored.
+0. Heading font everywhere
+ - Find the font-family/token used by the "Let's Discuss Your Land Over Coffee" heading (Landowner/Partner section) and "Let us show you around." (footer). Tell me its name.
+ - Make it the single heading token (--font-heading) and apply it to ALL headings on all pages (home, projects, project detail, interiors, careers). Any other heading font Phase 1 introduced → switch to this token. Body/italic/mono stay as in CLAUDE.md.
 
-A. Opening soon — new presentation
- - Purpose: we list projects right after signing to measure customer interest, so many will have NO photo yet. The section must look rich and confident with or without photos — never pale, empty or odd.
- - Each project = a proper card: visual on one side; name, location, status line (e.g. "Just signed", "Submitted to RAJUK" — from data), a neat specs grid (land, facing, floors, sizes — only those present in data), feature chips, and a clear "Register interest" button placed right with the details (not floating far right).
- - Photo present → sharp, no blur, object-fit cover. Photo missing → designed placeholder: deep green #1B4332 (or warm cream) panel with a fine lime line-drawing of a building, the project name/location in large type and a small "Render coming soon" label. It must look intentional and premium.
- - Hover (desktop): card lifts slightly, photo zooms ~4%, a lime underline/arrow and a "View sizes & features →" detail line appear. Mobile: details always visible. Transform/opacity only.
- - Layout: balanced alignment, consistent card heights, 1 column mobile, 2 desktop (or featured first card + others) — choose what looks best with 1–6 projects.
- - Register interest: opens WhatsApp with project name pre-filled (lib/leads.js) — no back-end yet. Never show unit counts.
+1. Remove gradients between sections
+ - Search `client/src` (rg "linear-gradient|radial-gradient") and list every section-to-section gradient. Remove them (keep gradients that are only photo overlays for text legibility).
 
-B. Testimonials (after Why choose us)
- - Background pale lime #EEF4DD, olive/espresso text, lime + olive accents (big quote mark, thin lines, name labels).
- - Data-driven: name, project, quote, optional photo, `isSample` flag. Seed 3 entries "[Client name]" / "Sample testimonial — replace", with a small "Sample" tag while isSample is true.
- - Why choose us is now LIGHT espresso (latte gradient from CLAUDE.md) ending in #EEF4DD, so Testimonials continues it seamlessly — no edge, no dark band. Pale lime then fades gently into Team of experts.
+2. Angle cuts
+ - Build ONE shared AngleCut component/utility per CLAUDE.md (same angle everywhere, alternating direction, exact neighbour colour, optional lime hairline on espresso edges, smaller on mobile).
+ - Apply it on the homepage wherever the background colour changes, and on the other existing pages (projects, project detail, interiors, careers) the same way. Make sure no seam or white gap appears at any zoom/width.
 
-C. Team of experts (new, after Testimonials)
- - Light section (pale lime fading to cream). Heading + short intro from data.
- - Cards: photo, name, role, one line about expertise; no photo → elegant monogram/initials circle on green with lime ring. Hover: lift + photo zoom.
- - Data in siteContent `team` (name, role, bio, photo, order). Seed 4 placeholders "[Name]" / "[Role]". No invented people.
+3. Solid espresso sections: Signature projects (keep), Why Choose Us, Footer — all solid #2A1F1A, matching the Signature section's look (cream text, lime labels/italic, #352822 cards).
+ - Why Choose Us: replace the arch photo frame with the clipped-corner frame (CLAUDE.md "Photo frames"); keep content data-driven.
 
-D. Partner with us — redesign (it is dull now, heading doesn't attract)
- - Stronger, warmer heading treatment (keep fonts): e.g. large display line + Playfair italic emotional line ("Let's discuss your land over coffee." can stay as the italic line), lime underline accent.
- - Split layout: left = pitch + 3 benefit points with icons (text from data, no invented claims/credentials) + small trust line; right = the existing "Request feasibility study" form in a cleaner card.
- - Background cream with a subtle warm texture/tint; it must lead nicely into the footer fade. Attractive but not louder than the hero.
+4. Opening soon — new presentation
+ - We list projects right after signing to gauge interest, so many have NO photo. Must look rich with or without photos — never pale or odd.
+ - Card per project: visual on one side; name, location, status line from data ("Just signed", "Submitted to RAJUK"), neat specs grid (only fields present), feature chips, "Register interest" button placed with the details (not floating far right).
+ - Photo present → sharp, object-fit cover, clipped-corner frame. Photo missing → designed placeholder: deep green #1B4332 panel, fine lime line-drawing of a building, project name/location large, small "Render coming soon" label.
+ - Hover (desktop): card lifts, photo zooms ~4%, lime arrow + "View sizes & features →" appears. Mobile: details always visible. Transform/opacity only.
+ - 1 column mobile, 2 desktop (or featured first + others) — best for 1–6 projects. Register interest → WhatsApp pre-filled (lib/leads.js). Never unit counts.
 
-E. Footer — curved lip (option B)
- - No fade. Partner with us (cream) ends in a soft SVG wave edge, full width, with a 1.5px lime line following the curve; the footer below goes #3A2C24 at the top to #2A1F1A at the bottom. The wave scales with width (preserveAspectRatio="none"), ~60–80px tall desktop, ~40px mobile.
- - Top part of footer = Contact block (hotline/WhatsApp +8801916100416, email placeholder, address placeholder, quick message link). Then logo + tagline, quick links (Projects, Interiors, Careers, About, Contact), social placeholders, copyright.
- - Text cream on dark parts, lime accents; all readable at 375px.
+5. Testimonials (after Why Choose Us) — solid pale lime #EEF4DD, joined to Why Choose Us by an angle cut with lime hairline.
+ - Data-driven: name, project, quote, optional photo, `isSample`. Seed 3 "[Client name]" / "Sample testimonial — replace" with a small "Sample" tag.
+ - Big quote mark, olive labels, heading in --font-heading.
 
-F. Fixes
- - Why Choose Us: change from dark espresso to the light-espresso latte look (option 6 in CLAUDE.md); remove the long grey fade above it — the section above meets it with a clean edge or a light-to-light fade. Text colours switch to espresso/olive so contrast stays readable.
- - Remove any other long dark-to-light gradient on the homepage (e.g. the process/milestone section) — use a clean edge instead.
- - Interiors carousel titles and process labels must not slide under the sticky menu.
- - Butterflies must never overlap text (keep them in the side corridors).
- - Update homepage order to match CLAUDE.md.
+6. Team of experts (new, after Testimonials) — solid cream, angle cut from pale lime.
+ - Cards: photo (clipped-corner frame), name, role, one-line expertise; no photo → initials circle on green with lime ring. Hover lift + zoom.
+ - Data `team` in siteContent (name, role, bio, photo, order). Seed 4 "[Name]" / "[Role]". No invented people.
 
-G. Finish: `cd client && npm run build` passes; check 375px; no console errors. Summary + files changed + questions. STOP. Don't commit/push/deploy.
+7. Partner with us — redesign, solid CREAM (currently dark: change it; footer is the dark one).
+ - Strong heading in --font-heading ("Let's Discuss Your Land Over Coffee."), Playfair italic support line, lime underline accent.
+ - Split: left = pitch + the four promises as compact numbered cards (01–04, from data) + trust line; right = "Request feasibility study" form in a clean card. No invented claims beyond existing copy.
+ - Ends in an angle cut into the espresso footer.
+
+8. Footer — solid espresso #2A1F1A (no gradient, no wave)
+ - Top: Contact block ("Let us show you around.", WhatsApp/hotline +8801916100416, email, both office addresses already in the current footer, Facebook link). Then quick links (Projects, Interiors, About, Why Us, Landowners, Careers), Recent projects, social, copyright.
+ - Cream text, lime links/labels, the line-drawing building motif in rgba(245,240,230,.06). Readable at 375px.
+
+9. Fixes
+ - Nothing slides under the sticky menu (form fields, interiors titles, process labels).
+ - Butterflies stay in side corridors, never on text.
+ - Homepage order matches CLAUDE.md.
+
+10. Finish: `cd client && npm run build` passes; check 375px; no console errors. Summary (incl. heading font name, list of gradients removed, where cuts were added) + files changed + questions. STOP. Don't commit/push/deploy.
 EOF
-
-# Font restore: the tag made just before Phase 1 holds the old fonts
-FONT_TAG="$(git tag -l 'backup-phase1-*' | sort | head -1)"
-if [ -z "$FONT_TAG" ]; then
-  echo "⚠️  No backup-phase1-* tag found — Claude Code will ask you which commit has the old fonts."
-  FONT_TAG="(no tag found — ask me which commit has the old fonts)"
-else
-  echo "🔤 Old fonts will be restored from: $FONT_TAG"
-fi
-TASK="${TASK//__FONT_TAG__/$FONT_TAG}"
 
 printf '%s' "$TASK" > .sm-phase1b-task.md
 printf '%s' "$TASK" | pbcopy
