@@ -1,6 +1,6 @@
 // client/src/components/home/WhyChooseUs.jsx
 // Why choose us, written for BUYERS. (The landowner content now lives in LandownerSection.jsx.)
-// Espresso depth: #2A1F1A -> #1F1713, cream/alabaster text, lime for small accents only.
+// Solid espresso #2A1F1A (clean edges, no fades), cream/alabaster text, lime for small accents only.
 // Plain gradients + rgba only (no filters / blend modes on this layer).
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
@@ -82,24 +82,7 @@ function Scene({ s, i }) {
 
 export default function WhyChooseUs() {
   return (
-    <section
-      className="relative overflow-hidden pb-40 pt-32 sm:pb-48 sm:pt-40"
-      style={{
-        // vanishing light: light page tone dissolves into espresso, settles into deep,
-        // then lifts back to the calm landowner section below
-        background:
-          'linear-gradient(to bottom, #F6F8F5 0px, #2A1F1A 180px, #261C17 50%, #1F1713 calc(100% - 200px), #F3EFE6 100%)',
-      }}
-    >
-      {/* soft warm glow, plain rgba (static) */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(ellipse 60% 40% at 15% 18%, rgba(243,239,230,0.07) 0%, rgba(243,239,230,0) 70%), radial-gradient(ellipse 50% 35% at 90% 70%, rgba(198,240,12,0.04) 0%, rgba(198,240,12,0) 70%)',
-        }}
-      />
+    <section className="relative overflow-hidden py-24 md:py-32" style={{ background: '#2A1F1A' }}>
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <Eyebrow dark>{WHY_US.eyebrow}</Eyebrow>
         <h2 className="mt-5 max-w-3xl font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.06] tracking-tight text-[#FAF8F5] sm:text-6xl">
