@@ -1,9 +1,11 @@
 // client/src/components/home/Testimonials.jsx
-// "In their words" (v2), directly after Why Choose Us.
+// "In their words" (v3), directly after Why Choose Us.
 // Background = the same warm off-white + faint dot grid as "Who we are". Top = clean straight edge
 // against the espresso above; the last ~120px blend into pale lime #EEF4DD (ready for Team).
 // Decor (aria-hidden, behind the text unless noted): golden glow, swaying tree (bottom-right),
 // lawn along the bottom, falling leaves (back layer behind / front layer above the text).
+// v3 performance: every animation is CSS transform/opacity on <div> wrappers (no SMIL, no per-path
+// animation); out of view the decor gets .sm-paused, reduced motion gets .sm-static.
 // Testimonials are open items (no cards): lime left bar, grayscale photo, Playfair italic quote.
 // Hover / keyboard focus / tap highlights one item and dims the others; tap again or outside clears.
 // Data: testimonialsSection + testimonials in data/siteContent.js (every field optional-safe).
@@ -12,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { testimonials, testimonialsSection as S } from '../../data/siteContent';
 import { Eyebrow } from '../portfolio/shared';
-import TestimonialsTree, { FLUTTER_CSS } from './TestimonialsTree';
+import TestimonialsTree from './TestimonialsTree';
 import TestimonialsLawn from './TestimonialsLawn';
 import TestimonialsFallingLeaves from './TestimonialsFallingLeaves';
 
@@ -20,6 +22,26 @@ const BG = '#F3EFE6'; // "Who we are" warm off-white
 const PALE_LIME = '#EEF4DD';
 const LIME = '#C6F00C';
 const ring = (w) => `0 0 0 3px ${BG}, 0 0 0 ${w}px ${LIME}`;
+const GLOW = 520;
+
+/* decor CSS: tree size/sway, live-leaf flutter, grass wave, pause + static states */
+const DECOR_CSS = `
+.sm-tree{position:absolute;right:0;bottom:18px;width:clamp(260px,26vw,360px);aspect-ratio:320/440;max-height:520px;z-index:2;pointer-events:none}
+@media (max-width:1023px){.sm-tree{width:220px;opacity:.45}}
+@media (max-width:767px){.sm-tree{width:160px;opacity:.35}}
+.sm-sway{position:absolute;inset:0;transform-origin:91% 100%;will-change:transform;animation:smSway 5s ease-in-out infinite}
+@keyframes smSway{0%{transform:rotate(calc(var(--a)*-1))}50%{transform:rotate(var(--a))}100%{transform:rotate(calc(var(--a)*-1))}}
+.sm-live-leaf{position:absolute}
+.sm-flutter{width:100%;height:100%;transform-origin:50% 90%;will-change:transform;animation:smFlutter 2s ease-in-out infinite alternate}
+@keyframes smFlutter{0%{transform:rotate(-14deg)}100%{transform:rotate(14deg)}}
+.sm-lawn{position:absolute;left:0;bottom:0;width:100%;z-index:3;pointer-events:none}
+.sm-grass{position:absolute;bottom:0;transform-origin:bottom center;will-change:transform;animation:smGrass 3.4s ease-in-out infinite}
+@keyframes smGrass{0%,100%{transform:skewX(1deg)}50%{transform:skewX(var(--sk))}}
+.sm-glow{position:absolute;top:0;left:0;width:${GLOW}px;height:${GLOW}px;border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle,rgba(232,184,96,.30),transparent 70%);will-change:transform,opacity;transition:opacity .4s ease}
+.sm-paused .sm-sway,.sm-paused .sm-flutter,.sm-paused .sm-grass{animation-play-state:paused}
+.sm-static .sm-sway,.sm-static .sm-flutter,.sm-static .sm-grass{animation:none}
+`;
 
 const initials = (name = '') =>
   name
@@ -77,28 +99,30 @@ function Avatar({ t, active }) {
 
 export default function Testimonials({ items = testimonials }) {
   const list = [...(items || [])].filter((t) => t && t.quote).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-  const reduce = useReducedMotion();
+  // reduced motion: decor renders static, no falling leaves (highlight still works)
+  const [reduce] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
   const [active, setActive] = useState(null);
   const [inView, setInView] = useState(false);
   const sectionRef = useRef(null);
   const listRef = useRef(null);
+  const glowRef = useRef(null);
   const pointer = useRef('mouse');
 
   // in view? (decor animations + falling leaves run only then)
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return undefined;
-    // ~25% of the section visible, or (tall section on a short screen) it fills 25% of the viewport
-    const io = new IntersectionObserver(
-      ([e]) => {
-        const vh = e.rootBounds?.height || window.innerHeight;
-        setInView(e.isIntersecting && (e.intersectionRatio >= 0.25 || e.intersectionRect.height >= vh * 0.25));
-      },
-      { threshold: [0, 0.1, 0.25, 0.5] }
-    );
+    // any part visible = in view
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0 });
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  const moveGlow = (x, y) => {
+    if (glowRef.current) glowRef.current.style.transform = `translate3d(${(x - GLOW / 2).toFixed(0)}px, ${(y - GLOW / 2).toFixed(0)}px, 0)`;
+  };
 
   // golden glow follows the mouse (rAF-throttled); static under reduced motion
   useEffect(() => {
@@ -113,8 +137,7 @@ export default function Testimonials({ items = testimonials }) {
       raf = requestAnimationFrame(() => {
         raf = 0;
         const r = el.getBoundingClientRect();
-        el.style.setProperty('--gx', `${(pt.clientX - r.left).toFixed(0)}px`);
-        el.style.setProperty('--gy', `${(pt.clientY - r.top).toFixed(0)}px`);
+        moveGlow(pt.clientX - r.left, pt.clientY - r.top);
       });
     };
     el.addEventListener('pointermove', onMove, { passive: true });
@@ -140,8 +163,7 @@ export default function Testimonials({ items = testimonials }) {
     if (!el || !node) return;
     const r = el.getBoundingClientRect();
     const n = node.getBoundingClientRect();
-    el.style.setProperty('--gx', `${(n.left + n.width / 2 - r.left).toFixed(0)}px`);
-    el.style.setProperty('--gy', `${(n.top + n.height / 2 - r.top).toFixed(0)}px`);
+    moveGlow(n.left + n.width / 2 - r.left, n.top + n.height / 2 - r.top);
   };
 
   if (!list.length) return null;
@@ -150,10 +172,10 @@ export default function Testimonials({ items = testimonials }) {
     <section
       ref={sectionRef}
       id="testimonials"
-      className="relative pb-36 pt-24 md:pb-44 md:pt-32"
-      style={{ background: BG, zIndex: 1, overflowX: 'clip', '--gx': '50%', '--gy': '50%' }}
+      className={`relative pb-[100px] pt-24 md:pt-32 lg:pb-[140px] ${reduce ? 'sm-static' : inView ? '' : 'sm-paused'}`}
+      style={{ background: BG, position: 'relative', zIndex: 1, overflowX: 'clip' }}
     >
-      <style>{FLUTTER_CSS}</style>
+      <style>{DECOR_CSS}</style>
 
       {/* "Who we are" dot grid */}
       <div
@@ -167,18 +189,11 @@ export default function Testimonials({ items = testimonials }) {
         className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[120px]"
         style={{ background: `linear-gradient(to bottom, rgba(243,239,230,0), ${PALE_LIME})` }}
       />
-      {/* golden glow while an item is active */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-[1] transition-opacity duration-[400ms]"
-        style={{
-          opacity: active !== null ? 1 : 0,
-          background: 'radial-gradient(260px circle at var(--gx) var(--gy), rgba(232,184,96,.30), transparent 70%)',
-        }}
-      />
+      {/* golden glow while an item is active (one composited div, moved with translate3d) */}
+      <div ref={glowRef} aria-hidden className="sm-glow" style={{ opacity: active !== null ? 1 : 0 }} />
 
-      <TestimonialsTree running={inView} reduce={reduce} />
-      <TestimonialsLawn sectionRef={sectionRef} running={inView} reduce={reduce} />
+      <TestimonialsTree />
+      <TestimonialsLawn sectionRef={sectionRef} />
       <TestimonialsFallingLeaves sectionRef={sectionRef} enabled={inView && !reduce} />
 
       <div className="relative z-[5] mx-auto max-w-7xl px-5 sm:px-8">
@@ -190,7 +205,7 @@ export default function Testimonials({ items = testimonials }) {
           {S.intro && <p className="mt-5 text-base leading-[1.8] text-[#374151] sm:text-lg">{S.intro}</p>}
         </FadeUp>
 
-        <ul ref={listRef} className="mt-12 grid gap-10 md:grid-cols-2 md:gap-x-8 lg:mt-14 lg:w-[68%] lg:grid-cols-3">
+        <ul ref={listRef} className="mt-12 grid gap-10 md:grid-cols-2 md:gap-x-8 lg:mt-14 lg:w-[70%] lg:grid-cols-3">
           {list.map((t, i) => {
             const on = active === i;
             const dim = active !== null && !on;
@@ -229,7 +244,7 @@ export default function Testimonials({ items = testimonials }) {
                     }}
                   >
                     <Avatar t={t} active={on} />
-                    <blockquote className="mt-6 flex-1 font-serif text-base italic leading-[1.6] text-[#2A1F1A] lg:text-lg">
+                    <blockquote className="mt-6 flex-1 font-serif text-base italic leading-[1.6] text-[#2A1F1A] lg:text-[17px]">
                       “{t.quote}”
                     </blockquote>
                     <figcaption className="mt-5">

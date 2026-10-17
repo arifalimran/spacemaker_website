@@ -1,38 +1,44 @@
 // client/src/components/home/TestimonialsFallingLeaves.jsx
-// Leaves drift down from over the bottom of Why Choose Us into Testimonials, but only while the
-// visitor stands still: every 1.5s, if the section is in view and there has been no scroll for
-// over 1s, one leaf starts. Scrolling stops NEW leaves; falling ones finish their path.
+// Leaves drift down from over the bottom of Why Choose Us into Testimonials, only while the
+// visitor stands still: every 1.5s, if the section is in view and nothing moved (scroll / wheel /
+// touchmove) for over 1s, one leaf starts. New leaves stop while moving; falling ones finish.
 // Two layers: BACK (behind the text, small/faint/slow) and FRONT (above the text, large).
-// The layers start 120px above the section. Web Animations API (transform + opacity only).
+// The layers start 120px above the section. Each leaf is a small div animated with
+// element.animate() using transform (translate3d + rotate + scale) and opacity only.
 import React, { useEffect, useRef } from 'react';
-import { LEAF_COLORS, LEAF_PATH } from './TestimonialsTree';
+import { LEAF, LEAF_COLORS } from './TestimonialsTree';
 
 const BAND = 120; // px above the section where leaves appear
 const rand = (a, b) => a + Math.random() * (b - a);
 
-function makeLeaf(scale) {
+function makeLeaf() {
   const wrap = document.createElement('div');
   wrap.style.cssText = 'position:absolute;top:0;left:0;width:16px;height:20px;will-change:transform,opacity;opacity:0';
-  wrap.innerHTML = `<svg viewBox="-8 -18 16 20" width="16" height="20" style="display:block;overflow:visible"><path d="${LEAF_PATH}" fill="${
+  wrap.innerHTML = `<svg viewBox="-8 -18 16 20" width="16" height="20" style="display:block;overflow:visible"><path d="${LEAF}" fill="${
     LEAF_COLORS[Math.floor(Math.random() * LEAF_COLORS.length)]
   }"/></svg>`;
-  wrap.dataset.scale = scale;
   return wrap;
 }
 
 export default function TestimonialsFallingLeaves({ sectionRef, enabled }) {
   const backRef = useRef(null);
   const frontRef = useRef(null);
-  const lastScroll = useRef(0);
+  const lastMove = useRef(Date.now());
 
-  // remember the last scroll time (always, so "standing still" is known when leaves turn on)
+  // "standing still" = no scroll / wheel / touchmove for a moment
   useEffect(() => {
-    lastScroll.current = performance.now();
-    const onScroll = () => {
-      lastScroll.current = performance.now();
+    const moved = () => {
+      lastMove.current = Date.now();
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const opts = { passive: true };
+    window.addEventListener('scroll', moved, opts);
+    window.addEventListener('wheel', moved, opts);
+    window.addEventListener('touchmove', moved, opts);
+    return () => {
+      window.removeEventListener('scroll', moved, opts);
+      window.removeEventListener('wheel', moved, opts);
+      window.removeEventListener('touchmove', moved, opts);
+    };
   }, []);
 
   useEffect(() => {
@@ -42,7 +48,7 @@ export default function TestimonialsFallingLeaves({ sectionRef, enabled }) {
       const back = backRef.current;
       const front = frontRef.current;
       if (!section || !back || !front) return;
-      if (performance.now() - lastScroll.current <= 1000) return;
+      if (Date.now() - lastMove.current <= 1000) return;
       const max = window.innerWidth < 768 ? 6 : 14;
       if (back.childElementCount + front.childElementCount >= max) return;
 
@@ -57,14 +63,14 @@ export default function TestimonialsFallingLeaves({ sectionRef, enabled }) {
       const dx = rand(-80, 80);
       const dy = rand(0.65, 0.95) * Hs;
       const rt = rand(-300, 300);
-      const leaf = makeLeaf(sc);
+      const leaf = makeLeaf();
       (near ? front : back).appendChild(leaf);
 
       const at = (o, yf, xo, opacity) => ({
         offset: o,
         opacity,
         easing: 'ease-in-out',
-        transform: `translate(${(x + dx * o + xo).toFixed(1)}px, ${(y + dy * yf).toFixed(1)}px) rotate(${(rt * o).toFixed(0)}deg) scale(${sc.toFixed(2)})`,
+        transform: `translate3d(${(x + dx * o + xo).toFixed(1)}px, ${(y + dy * yf).toFixed(1)}px, 0) rotate(${(rt * o).toFixed(0)}deg) scale(${sc.toFixed(2)})`,
       });
       const anim = leaf.animate(
         [
@@ -84,11 +90,11 @@ export default function TestimonialsFallingLeaves({ sectionRef, enabled }) {
     return () => clearInterval(id);
   }, [enabled, sectionRef]);
 
-  const layer = 'pointer-events-none absolute inset-x-0 bottom-0 overflow-visible';
+  const layer = { position: 'absolute', left: 0, right: 0, bottom: 0, top: -BAND, pointerEvents: 'none' };
   return (
     <>
-      <div ref={backRef} aria-hidden="true" className={`${layer} z-[4]`} style={{ top: -BAND }} />
-      <div ref={frontRef} aria-hidden="true" className={`${layer} z-[6]`} style={{ top: -BAND }} />
+      <div ref={backRef} aria-hidden="true" style={{ ...layer, zIndex: 4 }} />
+      <div ref={frontRef} aria-hidden="true" style={{ ...layer, zIndex: 6 }} />
     </>
   );
 }
