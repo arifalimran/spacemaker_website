@@ -4,7 +4,8 @@
 // against the espresso above; the last ~120px blend into pale lime #EEF4DD (ready for Team).
 // Decor (aria-hidden, behind the text unless noted): golden glow, swaying tree (bottom-right),
 // lawn along the bottom, falling leaves (back layer behind / front layer above the text).
-// v3 performance: every animation is CSS transform/opacity on <div> wrappers (no SMIL, no per-path
+// v4 tree: nested branch groups (each sways from its own joint, carrying its twigs + leaves).
+// Performance: every animation is CSS transform/opacity on <div> wrappers (no SMIL, no per-path
 // animation); out of view the decor gets .sm-paused, reduced motion gets .sm-static.
 // Testimonials are open items (no cards): lime left bar, grayscale photo, Playfair italic quote.
 // Hover / keyboard focus / tap highlights one item and dims the others; tap again or outside clears.
@@ -29,8 +30,9 @@ const DECOR_CSS = `
 .sm-tree{position:absolute;right:0;bottom:18px;width:clamp(260px,26vw,360px);aspect-ratio:320/440;max-height:520px;z-index:2;pointer-events:none}
 @media (max-width:1023px){.sm-tree{width:220px;opacity:.45}}
 @media (max-width:767px){.sm-tree{width:160px;opacity:.35}}
-.sm-sway{position:absolute;inset:0;transform-origin:91% 100%;will-change:transform;animation:smSway 5s ease-in-out infinite}
-@keyframes smSway{0%{transform:rotate(calc(var(--a)*-1))}50%{transform:rotate(var(--a))}100%{transform:rotate(calc(var(--a)*-1))}}
+.sm-trunk{position:absolute;inset:0}
+.sm-branch{position:absolute;inset:0;will-change:transform;animation:smSway var(--dur) ease-in-out var(--dl) infinite}
+@keyframes smSway{0%,100%{transform:rotate(calc(var(--a)*-1))}50%{transform:rotate(var(--a))}}
 .sm-live-leaf{position:absolute}
 .sm-flutter{width:100%;height:100%;transform-origin:50% 90%;will-change:transform;animation:smFlutter 2s ease-in-out infinite alternate}
 @keyframes smFlutter{0%{transform:rotate(-14deg)}100%{transform:rotate(14deg)}}
@@ -39,8 +41,8 @@ const DECOR_CSS = `
 @keyframes smGrass{0%,100%{transform:skewX(1deg)}50%{transform:skewX(var(--sk))}}
 .sm-glow{position:absolute;top:0;left:0;width:${GLOW}px;height:${GLOW}px;border-radius:50%;pointer-events:none;z-index:1;
   background:radial-gradient(circle,rgba(232,184,96,.30),transparent 70%);will-change:transform,opacity;transition:opacity .4s ease}
-.sm-paused .sm-sway,.sm-paused .sm-flutter,.sm-paused .sm-grass{animation-play-state:paused}
-.sm-static .sm-sway,.sm-static .sm-flutter,.sm-static .sm-grass{animation:none}
+.sm-paused .sm-branch,.sm-paused .sm-flutter,.sm-paused .sm-grass{animation-play-state:paused}
+.sm-static .sm-branch,.sm-static .sm-flutter,.sm-static .sm-grass{animation:none}
 `;
 
 const initials = (name = '') =>
@@ -172,7 +174,7 @@ export default function Testimonials({ items = testimonials }) {
     <section
       ref={sectionRef}
       id="testimonials"
-      className={`relative pb-[100px] pt-24 md:pt-32 lg:pb-[140px] ${reduce ? 'sm-static' : inView ? '' : 'sm-paused'}`}
+      className={`relative pb-[100px] pt-16 sm:pt-20 lg:pb-[140px] ${reduce ? 'sm-static' : inView ? '' : 'sm-paused'}`}
       style={{ background: BG, position: 'relative', zIndex: 1, overflowX: 'clip' }}
     >
       <style>{DECOR_CSS}</style>

@@ -37,6 +37,11 @@ body {
 .f-serif   { font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-weight: 400; }
 .f-mono    { font-family: 'JetBrains Mono', ui-monospace, monospace; }
 
+/* Heading token = the bold serif the site has always shown in Safari. "Space Grotesk" is never
+   loaded from the web, so Safari falls back to Times New Roman; Chrome instead used a copy of
+   Space Grotesk installed on the computer (sans). Pin the class to the serif in every browser. */
+.font-\[\'Space_Grotesk\'\] { font-family: 'Times New Roman', Times, serif !important; }
+
 /* ---------- Section gradient dissolves (no hard borders) ---------- */
 .sec-hero  { background: linear-gradient(to bottom, #FAF8F5 0%, #F3EFE6 100%); }
 .sec-about { background: linear-gradient(to bottom, #F3EFE6 0%, #EDF4EC 100%); }
