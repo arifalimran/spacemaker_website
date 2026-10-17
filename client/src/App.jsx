@@ -11,6 +11,7 @@ import ButterflyLayer from './components/layout/ButterflyLayer';
 import HeroStage from './components/home/HeroStage';
 import WhoWeAre from './components/home/WhoWeAre';
 import WhyChooseUs from './components/home/WhyChooseUs';
+import Testimonials from './components/home/Testimonials';
 import LandownerSection from './components/home/LandownerSection';
 import Careers from './components/home/Careers';
 import PortfolioSection from './components/portfolio/PortfolioSection';
@@ -52,6 +53,7 @@ function Home() {
       <div id="why-us">
         <WhyChooseUs />
       </div>
+      <Testimonials />
       <LandownerSection />
     </main>
   );

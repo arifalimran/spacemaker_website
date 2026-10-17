@@ -67,3 +67,51 @@ export const aboutContent = {
     { title: "On-time handover", text: "Milestone tracking from foundation to finishing." },
   ],
 };
+
+/* ------------------------------------------------------------------ */
+/* TESTIMONIALS (admin-managed). Fields (all optional except quote):    */
+/* id, name, project, projectSlug (links to /projects/<slug>), quote,   */
+/* photo, order, isSample.                                              */
+/* SAMPLE CONTENT for the demo: names, quotes and stock photos are NOT  */
+/* real clients (isSample: true). Replace with approved client quotes.  */
+/* ------------------------------------------------------------------ */
+export const testimonialsSection = {
+  eyebrow: "In their words",
+  title: "What our clients say",
+};
+
+export const testimonials = [
+  {
+    id: "t-1",
+    name: "Kamrul Hasan",
+    project: "Moon Residence",
+    projectSlug: "moon-residence",
+    quote:
+      "We were handed our keys on the date written in the agreement, not a day later. Two years on, the walls have no cracks and the bathrooms have never leaked.",
+    photo: "/images/samples/testimonials/testimonial-1.jpg",
+    order: 1,
+    isSample: true,
+  },
+  {
+    id: "t-2",
+    name: "Moumita Saha",
+    project: "FORM & SPACE",
+    projectSlug: "form-and-space",
+    quote:
+      "What sold us was the light: the living room gets sun all morning and a breeze through both balconies. Every month the site engineer sends photos of how the floors are progressing.",
+    photo: "/images/samples/testimonials/testimonial-2.jpg",
+    order: 2,
+    isSample: true,
+  },
+  {
+    id: "t-3",
+    name: "Tanvir Ahmed",
+    project: "Platinum Kusumbag",
+    projectSlug: "platinum-kusumbag",
+    quote:
+      "As an engineer I asked to see the rebar and concrete test reports, and they shared every one without hesitation. The layout is sensible, with no wasted corridors and real storage space.",
+    photo: "/images/samples/testimonials/testimonial-3.jpg",
+    order: 3,
+    isSample: true,
+  },
+];
