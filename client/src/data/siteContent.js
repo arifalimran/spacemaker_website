@@ -76,8 +76,10 @@ export const aboutContent = {
 /* real clients (isSample: true). Replace with approved client quotes.  */
 /* ------------------------------------------------------------------ */
 export const testimonialsSection = {
-  eyebrow: "In their words",
-  title: "What our clients say",
+  label: "IN THEIR WORDS",
+  heading: "What our clients say.",
+  intro:
+    "Every home we build becomes someone's story. Here is what families living in Space Maker apartments say about their homes.",
 };
 
 export const testimonials = [
@@ -87,7 +89,7 @@ export const testimonials = [
     project: "Moon Residence",
     projectSlug: "moon-residence",
     quote:
-      "We were handed our keys on the date written in the agreement, not a day later. Two years on, the walls have no cracks and the bathrooms have never leaked.",
+      "We were handed our keys on the exact date written in our agreement, not a single day later. Two monsoons on, there are no cracks in the walls and not one leak in the bathrooms. Whenever something small needed attention, their site engineer came the same week and fixed it properly.",
     photo: "/images/samples/testimonials/testimonial-1.jpg",
     order: 1,
     isSample: true,
@@ -98,7 +100,7 @@ export const testimonials = [
     project: "FORM & SPACE",
     projectSlug: "form-and-space",
     quote:
-      "What sold us was the light: the living room gets sun all morning and a breeze through both balconies. Every month the site engineer sends photos of how the floors are progressing.",
+      "What sold us was the light. On our last site visit the living room was already full of morning sun, with a cool breeze running through both balconies. Every month the site engineer sends photos of how our floor is progressing, so we always know where our home stands.",
     photo: "/images/samples/testimonials/testimonial-2.jpg",
     order: 2,
     isSample: true,
@@ -109,7 +111,7 @@ export const testimonials = [
     project: "Platinum Kusumbag",
     projectSlug: "platinum-kusumbag",
     quote:
-      "As an engineer I asked to see the rebar and concrete test reports, and they shared every one without hesitation. The layout is sensible, with no wasted corridors and real storage space.",
+      "As an engineer myself, I asked to see the rebar certificates and concrete cube test reports before signing. They shared every single one without hesitation and walked me through the structure. The layout is just as sensible: no wasted corridors, proper storage, and bedrooms that actually fit a wardrobe.",
     photo: "/images/samples/testimonials/testimonial-3.jpg",
     order: 3,
     isSample: true,
