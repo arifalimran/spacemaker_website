@@ -1,10 +1,10 @@
 // client/src/components/home/TestimonialsFallingLeaves.jsx
-// Leaves drift down from over the bottom of Why Choose Us into Testimonials, only while the
-// visitor stands still: every 1.5s, if the section is in view and nothing moved (scroll / wheel /
-// touchmove) for over 1s, one leaf starts. New leaves stop while moving; falling ones finish.
-// Two layers: BACK (behind the text, small/faint/slow) and FRONT (above the text, large), both
-// starting 120px above the section. Each leaf is a small div animated with element.animate()
-// using transform (translate3d + rotate + scale) and opacity only; it lifts a little twice.
+// Wind-blown leaves (v2): leaves lift off the tree on the right and blow across the section to the left
+// edge, bobbing and tumbling as they fall a little. They run whenever the section is in view and the
+// tab is visible (no more waiting for the visitor to stand still).
+// Two layers: BACK (behind the text, small/faint/slow) and FRONT (above the text, larger). Each leaf is a
+// small div animated with element.animate() using transform + opacity only. The parent decides whether
+// this runs at all (it is off under prefers-reduced-motion).
 import React, { useEffect, useRef } from 'react';
 import { LEAF, VEIN, leafColor } from './TestimonialsTree';
 
@@ -18,70 +18,57 @@ function leafEl() {
 export default function TestimonialsFallingLeaves({ sectionRef, enabled }) {
   const backRef = useRef(null);
   const frontRef = useRef(null);
-  const lastMove = useRef(Date.now());
-
-  // "standing still" = no scroll / wheel / touchmove for a moment
-  useEffect(() => {
-    const moved = () => {
-      lastMove.current = Date.now();
-    };
-    const opts = { passive: true };
-    window.addEventListener('scroll', moved, opts);
-    window.addEventListener('wheel', moved, opts);
-    window.addEventListener('touchmove', moved, opts);
-    return () => {
-      window.removeEventListener('scroll', moved, opts);
-      window.removeEventListener('wheel', moved, opts);
-      window.removeEventListener('touchmove', moved, opts);
-    };
-  }, []);
 
   useEffect(() => {
     if (!enabled) return undefined;
-    const drop = () => {
+    const blow = () => {
+      if (document.hidden) return;
       const section = sectionRef.current;
       const BACK = backRef.current;
       const FRONT = frontRef.current;
       if (!section || !BACK || !FRONT) return;
-      const max = window.innerWidth < 768 ? 6 : 14;
+      const mobile = window.innerWidth < 768;
+      const max = mobile ? 5 : 11;
       if (BACK.childElementCount + FRONT.childElementCount >= max) return;
       const W = section.clientWidth;
       const H = section.clientHeight;
 
       const near = Math.random() < 0.4;
       const layer = near ? FRONT : BACK;
-      const sc = near ? 1.3 + Math.random() * 0.5 : 0.55 + Math.random() * 0.35;
-      const op = near ? 1 : 0.55;
+      const sc = near ? 1.2 + Math.random() * 0.5 : 0.55 + Math.random() * 0.35;
+      const op = near ? 1 : 0.6;
       const el = leafEl();
       layer.appendChild(el);
-      const x = W * (0.1 + Math.random() * 0.85);
-      const y = Math.random() * 40;
-      const dx = (Math.random() - 0.5) * 160;
-      const dy = (H + 120) * (0.65 + Math.random() * 0.3);
-      const rt = (Math.random() - 0.5) * 600;
-      const t = (near ? 6500 : 8500) + Math.random() * 2500;
-      const f = (o, yy, xx, rr, o2) => ({
-        transform: `translate3d(${x + xx}px,${y + yy}px,0) rotate(${rr}deg) scale(${sc})`,
-        opacity: o2,
-        offset: o,
-      });
-      el.animate(
-        [
-          f(0, 0, 0, 0, 0),
-          f(0.1, dy * 0.12, dx * 0.1, rt * 0.1, op),
-          f(0.3, dy * 0.32, dx * 0.3 + 30, rt * 0.3, op),
-          f(0.42, dy * 0.27, dx * 0.42 + 10, rt * 0.42, op), // lifts up a little
-          f(0.62, dy * 0.55, dx * 0.6 - 30, rt * 0.6, op),
-          f(0.74, dy * 0.5, dx * 0.72 - 15, rt * 0.72, op), // lifts again
-          f(0.92, dy * 0.9, dx * 0.92, rt * 0.92, op),
-          f(1, dy, dx, rt, 0),
-        ],
-        { duration: t, easing: 'ease-in-out' }
-      ).onfinish = () => el.remove();
+
+      // start over the tree (right side, upper-middle of the section), end past the left edge
+      const x0 = W * (0.78 + Math.random() * 0.2);
+      const y0 = 120 + H * (0.06 + Math.random() * 0.4); // layer starts 120px above the section
+      const dx = -(x0 + 60 + Math.random() * 40);
+      const dy = H * (0.12 + Math.random() * 0.3);
+      const speed = (near ? 130 : 95) + Math.random() * 40; // px per second, faster for the near layer
+      const dur = Math.min(26000, Math.max(7000, (Math.abs(dx) / speed) * 1000));
+      const bob = 16 + Math.random() * 22;
+      const bobs = 2 + Math.random() * 2.5;
+      const spin = (Math.random() < 0.5 ? -1 : 1) * (360 + Math.random() * 540);
+      const N = 14;
+      const frames = [];
+      for (let i = 0; i <= N; i++) {
+        const p = i / N;
+        // gusts: progress runs a little uneven, so the leaf speeds up and eases
+        const q = Math.min(1, Math.max(0, p + 0.035 * Math.sin(p * Math.PI * 4)));
+        const yy = dy * q + bob * Math.sin(p * Math.PI * 2 * bobs);
+        const rr = spin * q + 18 * Math.sin(p * Math.PI * 6);
+        const o = i === 0 ? 0 : i === 1 ? op : i === N ? 0 : op;
+        frames.push({
+          transform: `translate3d(${x0 + dx * q}px,${y0 + yy}px,0) rotate(${rr}deg) scale(${sc})`,
+          opacity: o,
+          offset: p,
+        });
+      }
+      el.animate(frames, { duration: dur, easing: 'linear' }).onfinish = () => el.remove();
     };
-    const id = setInterval(() => {
-      if (Date.now() - lastMove.current > 1000) drop();
-    }, 1500);
+    const id = setInterval(blow, 1400);
+    blow();
     return () => clearInterval(id);
   }, [enabled, sectionRef]);
 

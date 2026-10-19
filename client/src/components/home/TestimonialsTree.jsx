@@ -8,14 +8,14 @@
 // No SMIL, no per-path animation: only transform on <div> wrappers.
 import React, { useMemo } from 'react';
 
-export const LEAF = 'M0,0 C4,-4 5,-11 0,-16 C-5,-11 -4,-4 0,0Z';
-export const VEIN = 'M0,-1 L0,-14';
+export const LEAF = 'M0,0 C3.2,-2.2 6.2,-7.5 4.6,-12.2 C3.6,-14.6 1.6,-16.4 0.3,-18 C-1.3,-16.2 -3.8,-14.6 -4.9,-11.6 C-6.1,-7.4 -3.6,-2.4 0,0Z';
+export const VEIN = 'M0,-0.5 Q0.5,-9 0.3,-16.4 M0.1,-4.2 L3.6,-7.4 M0.1,-4.2 L-3.2,-7.2 M0.3,-8.6 L4,-11.6 M0.3,-8.6 L-3.8,-11.4 M0.3,-12.4 L2.4,-14.2 M0.3,-12.4 L-2.6,-14';
 export const LEAF_GREENS = ['#5C6E0A', '#6E8F2E', '#7FA34A', '#9DB83A', '#4F7726', '#C6F00C', '#6A9A34'];
 export const LEAF_GOLDS = ['#D9A441', '#C47A2C', '#E2B85C'];
 export const leafColor = (rnd = Math.random) =>
   rnd() < 0.7 ? LEAF_GREENS[Math.floor(rnd() * LEAF_GREENS.length)] : LEAF_GOLDS[Math.floor(rnd() * LEAF_GOLDS.length)];
 
-function buildTree(isMobile) {
+function buildTree(isMobile, wide) {
   let s = 23;
   const r = () => {
     s = (s * 9301 + 49297) % 233280;
@@ -70,6 +70,48 @@ function buildTree(isMobile) {
     }
   }
   br(292, 440, -12, 110, TOP, 22, root);
+
+  // ---- additions (made AFTER the original tree, so the seeded sequence above is untouched) ----
+  // (desktop only: on tablet/mobile the tree sits at the top of the section and keeps its short trunk)
+  const base = groups.length;
+  if (wide) {
+    // desktop: no trunk at all. The crown is one big canopy entering from the right edge (the trunk wood is hidden;
+    // the CSS places the joint on the edge, leans the whole canopy to the left and blows it gently).
+    groups[0].wood = [];
+    // a few more branches in the upper crown: mostly on the right, one or two on the left, to widen the top.
+    // (added after the lower tier, so the tier above keeps its exact shape)
+    const spawn = (px, py, ang, len, w, d) => {
+      let best = null;
+      let bd = 1e9;
+      groups.forEach((g, gi) => {
+        if (gi === 0 || gi >= base) return;
+        g.wood.forEach((wd) => {
+          const m = wd.d.match(/-?[\d.]+/g).map(Number);
+          const dd = Math.hypot(m[4] - px, m[5] - py);
+          if (dd < bd) {
+            bd = dd;
+            best = { gi, x: m[4], y: m[5] };
+          }
+        });
+      });
+      const gid = newGroup(best.gi, best.x, best.y, 3);
+      br(best.x, best.y, ang, len, d, w, gid);
+    };
+    // fuller crown: right side first, then the left (all rising like the existing branches)
+    spawn(306, 211, 75, 28, 3.0, TOP - 4);
+    spawn(284, 260, 60, 34, 3.0, TOP - 4);
+    spawn(303, 186, 75, 34, 3.0, TOP - 3);
+    spawn(316, 266, 75, 28, 3.0, TOP - 3);
+    spawn(302, 244, 30, 34, 3.0, TOP - 4);
+    spawn(70, 155, -60, 34, 2.6, TOP - 3);
+    spawn(175, 148, -60, 28, 2.6, TOP - 4);
+    spawn(125, 198, -60, 40, 2.6, TOP - 3);
+    spawn(57, 160, -30, 34, 2.6, TOP - 4);
+    spawn(93, 180, -45, 40, 2.6, TOP - 4);
+  }
+  groups.forEach((g, gi) => {
+    if (gi >= base) g.extra = true;
+  });
   return groups;
 }
 
@@ -87,7 +129,7 @@ function Leaf({ l, place = true }) {
   return (
     <g transform={t}>
       <path d={LEAF} fill={l.c} opacity={l.o} />
-      <path d={VEIN} stroke="rgba(255,255,255,.35)" strokeWidth=".5" fill="none" />
+      <path d={VEIN} stroke="rgba(255,255,255,.35)" strokeWidth=".45" fill="none" strokeLinecap="round" />
     </g>
   );
 }
@@ -150,18 +192,31 @@ function Group({ g, kids, live }) {
 export default function TestimonialsTree() {
   const { root, kids, live } = useMemo(() => {
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const groups = buildTree(isMobile);
+    const wide = typeof window !== 'undefined' && window.innerWidth >= 1024;
+    const groups = buildTree(isMobile, wide);
     // seeded timing per group: breeze passes from left to right
     let s = 57;
     const r = () => {
       s = (s * 9301 + 49297) % 233280;
       return s / 233280;
     };
-    groups.forEach((g) => {
-      if (!g.level) return;
+    // the original groups keep their exact timing draws; the added branches get their own generator
+    const setTiming = (g, rnd) => {
       const [lo, hi] = LEVEL[g.level].d;
-      g.dur = (lo + r() * (hi - lo)).toFixed(2);
+      g.dur = (lo + rnd() * (hi - lo)).toFixed(2);
       g.dl = (-(g.px / 320) * 1.6 - g.level * 0.3).toFixed(2);
+    };
+    groups.forEach((g) => {
+      if (!g.level || g.extra) return;
+      setTiming(g, r);
+    });
+    let s2 = 91;
+    const r2 = () => {
+      s2 = (s2 * 9301 + 49297) % 233280;
+      return s2 / 233280;
+    };
+    groups.forEach((g) => {
+      if (g.extra) setTiming(g, r2);
     });
     const k = new Map();
     groups.forEach((g) => {
@@ -170,7 +225,7 @@ export default function TestimonialsTree() {
       k.get(g.parent).push(g);
     });
     // 12 flutter leaves from level-2/3 groups, spread out (every Nth)
-    const pool = groups.filter((g) => g.level >= 2).flatMap((g) => g.leaves);
+    const pool = groups.filter((g) => g.level >= 2 && !g.extra).flatMap((g) => g.leaves);
     const n = Math.max(1, Math.floor(pool.length / 12));
     const lv = new Map();
     pool
@@ -182,7 +237,9 @@ export default function TestimonialsTree() {
 
   return (
     <div className="sm-tree" aria-hidden="true">
-      <Group g={root} kids={kids} live={live} />
+      <div className="sm-lean">
+        <Group g={root} kids={kids} live={live} />
+      </div>
     </div>
   );
 }
