@@ -27,9 +27,9 @@
   inset: 0;
   z-index: 2;
   pointer-events: none;
+  /* plain tint, no mix-blend-mode: blend modes force a re-blend of everything underneath on every scroll frame */
   background: var(--duo, #2a1f1a);
-  mix-blend-mode: color;
-  opacity: 0.6;
+  opacity: 0.3;
   transition: opacity 0.9s ease;
 }
 .sm-duo:hover img,

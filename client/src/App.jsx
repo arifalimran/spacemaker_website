@@ -8,6 +8,8 @@ import './styles/sm-effects.css';
 import SiteNav from './components/layout/SiteNav';
 import SiteFooter from './components/layout/SiteFooter';
 import ButterflyLayer from './components/layout/ButterflyLayer';
+import SectionWatcher from './components/layout/SectionWatcher';
+import SectionDock from './components/layout/SectionDock';
 import HeroStage from './components/home/HeroStage';
 import WhoWeAre from './components/home/WhoWeAre';
 import WhyChooseUs from './components/home/WhyChooseUs';
@@ -21,43 +23,35 @@ import ProjectPage from './components/portfolio/ProjectPage';
 import AllProjects from './components/portfolio/AllProjects';
 import InteriorsIndex from './components/portfolio/InteriorsIndex';
 import InteriorPage from './components/portfolio/InteriorPage';
-import { CONTACT } from './data/portfolio';
 import { useSmoothScroll, useHashScroll } from './lib/scroll';
 
 /* smooth inertia scroll, shared through window.__lenis */
 /* scroll to #section after a route change, or to the top on a new page */
-function Dock() {
-  const base = 'flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-sm transition';
-  return (
-    <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-2xl border border-neutral-200/90 bg-white/90 p-2 shadow-xl backdrop-blur-md">
-      <a href={CONTACT.messenger} target="_blank" rel="noreferrer" title="Message on Facebook" className={`${base} bg-blue-600 hover:bg-blue-700`}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-5A8.5 8.5 0 1 1 21 11.5Z" /></svg>
-      </a>
-      <a
-        href={`https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hello Space Maker, I would like to know more about your projects.')}`}
-        target="_blank"
-        rel="noreferrer"
-        title="Chat on WhatsApp"
-        className={`${base} bg-[#25D366] hover:bg-emerald-600`}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" /></svg>
-      </a>
-    </div>
-  );
-}
-
 function Home() {
+  // data-sec / data-key / data-theme tell SectionWatcher which section is under the top bar
   return (
     <main>
-      <HeroStage />
-      <WhoWeAre />
-      <PortfolioSection />
-      <div id="why-us">
+      <div data-sec="Welcome" data-key="welcome" data-theme="light">
+        <HeroStage />
+      </div>
+      <div data-sec="Who we are" data-key="about" data-theme="light">
+        <WhoWeAre />
+      </div>
+      <div data-sec="Projects" data-key="projects" data-theme="light">
+        <PortfolioSection />
+      </div>
+      <div id="why-us" data-sec="Why choose us" data-key="why" data-theme="dark">
         <WhyChooseUs />
       </div>
-      <Testimonials />
-      <TeamExperts />
-      <LandownerSection />
+      <div data-sec="Testimonials" data-key="testimonials" data-theme="light">
+        <Testimonials />
+      </div>
+      <div data-sec="Team" data-key="team" data-theme="light">
+        <TeamExperts />
+      </div>
+      <div data-sec="Partner with us" data-key="land" data-theme="light">
+        <LandownerSection />
+      </div>
     </main>
   );
 }
@@ -80,6 +74,7 @@ function Shell() {
   const detail = pathname.startsWith('/projects/') || pathname.startsWith('/interiors/');
   return (
     <div className="relative min-h-screen overflow-x-clip bg-[#FAF8F5] font-sans text-[#111827] selection:bg-[#C6F00C] selection:text-black">
+      <SectionWatcher />
       <SiteNav />
       <ButterflyLayer />
       <Routes>
@@ -93,7 +88,7 @@ function Shell() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <SiteFooter />
-      {!detail && <Dock />}
+      {!detail && <SectionDock />}
     </div>
   );
 }

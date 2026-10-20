@@ -1,7 +1,7 @@
 // client/src/components/home/SkylineParallax.jsx
 // Faint line-drawing skyline that stands on the footer edge under the Partner panel. Two layers move at different
-// speeds as you scroll (parallax), so the city seems to rise out of the footer. Desktop only (lg+), transform-only,
-// static when the visitor prefers reduced motion. Decorative.
+// speeds as you scroll (parallax), so the city seems to rise out of the footer. Desktop only (lg+).
+// Each layer is its own composited <div> (transform on a div, not on SVG <g>), still when reduced motion is on. Decorative.
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 
@@ -33,16 +33,19 @@ export default function SkylineParallax() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] });
   const back = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [70, 0]);
   const front = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [35, 0]);
+  const svgCls = 'absolute bottom-0 h-full w-full';
   return (
     <div ref={ref} aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-[150px] overflow-hidden lg:block">
-      <svg viewBox="0 0 1440 220" preserveAspectRatio="xMidYMax slice" className="absolute bottom-0 h-full w-full">
-        <motion.g style={{ y: back }}>
+      <motion.div className="absolute inset-0 will-change-transform" style={{ y: back }}>
+        <svg viewBox="0 0 1440 220" preserveAspectRatio="xMidYMax slice" className={svgCls}>
           <Layer items={BACK} opacity={0.1} windows />
-        </motion.g>
-        <motion.g style={{ y: front }}>
+        </svg>
+      </motion.div>
+      <motion.div className="absolute inset-0 will-change-transform" style={{ y: front }}>
+        <svg viewBox="0 0 1440 220" preserveAspectRatio="xMidYMax slice" className={svgCls}>
           <Layer items={FRONT} opacity={0.16} windows={false} />
-        </motion.g>
-      </svg>
+        </svg>
+      </motion.div>
     </div>
   );
 }

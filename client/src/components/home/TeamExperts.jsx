@@ -8,6 +8,7 @@ import { team, teamSection as S } from '../../data/siteContent';
 import { Eyebrow, Reveal } from '../portfolio/shared';
 import TeamCard, { TEAM_CSS, ESPRESSO, IVORY } from './TeamCard';
 import TeamBuildingMark from './TeamBuildingMark';
+import TeamBackdrop from './TeamBackdrop';
 
 export default function TeamExperts() {
   const sorted = [...team].sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
@@ -22,6 +23,7 @@ export default function TeamExperts() {
       style={{ background: IVORY }}
     >
       <style>{TEAM_CSS}</style>
+      <TeamBackdrop />
       <div
         aria-hidden
         className="sm-team-grid pointer-events-none absolute inset-0"
