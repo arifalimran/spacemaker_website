@@ -12,6 +12,8 @@ import HeroStage from './components/home/HeroStage';
 import WhoWeAre from './components/home/WhoWeAre';
 import WhyChooseUs from './components/home/WhyChooseUs';
 import Testimonials from './components/home/Testimonials';
+import TeamExperts from './components/home/TeamExperts';
+import TeamPage from './components/home/TeamPage';
 import LandownerSection from './components/home/LandownerSection';
 import Careers from './components/home/Careers';
 import PortfolioSection from './components/portfolio/PortfolioSection';
@@ -54,6 +56,7 @@ function Home() {
         <WhyChooseUs />
       </div>
       <Testimonials />
+      <TeamExperts />
       <LandownerSection />
     </main>
   );
@@ -85,6 +88,7 @@ function Shell() {
         <Route path="/projects/:slug" element={<ProjectPage />} />
         <Route path="/interiors" element={<InteriorsIndex />} />
         <Route path="/interiors/:slug" element={<InteriorPage />} />
+        <Route path="/team" element={<TeamPage />} />
         <Route path="/careers" element={<main className="pt-24"><Careers /></main>} />
         <Route path="*" element={<NotFound />} />
       </Routes>

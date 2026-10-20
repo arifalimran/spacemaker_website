@@ -1,14 +1,14 @@
 // client/src/components/layout/SiteFooter.jsx
-// Light-green footer (#EEF4DD), olive links (#5C6E0A -> #1B4332 on hover), espresso text.
+// Solid espresso footer (#2A1F1A), ivory text, lime hover accents.
 // Also the "Contact" target in the nav. Everything comes from CONTACT / BRAND in data/portfolio.js.
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BRAND, CONTACT, GENERAL_MESSAGE } from '../../data/portfolio';
 import { waLink, trackLead } from '../../lib/leads';
 
-const head = "font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.22em] text-[#2A1F1A]/60";
-const lk = 'text-sm text-[#5C6E0A] transition-colors hover:text-[#1B4332]';
-const sub = 'text-[11px] uppercase tracking-wider text-[#2A1F1A]/55';
+const head = "font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.22em] text-[#F5F0E6]/55";
+const lk = 'text-sm text-[#F5F0E6]/80 transition-colors hover:text-[#C6F00C]';
+const sub = 'text-[11px] uppercase tracking-wider text-[#F5F0E6]/45';
 
 const QUICK_LINKS = [
   { label: 'Projects', to: '/projects' },
@@ -61,13 +61,13 @@ function SocialRow({ items = [] }) {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={s.label}
-                className={`${box} border-[#5C6E0A]/30 text-[#5C6E0A] hover:border-[#1B4332] hover:bg-[#1B4332] hover:text-[#EEF4DD]`}
+                className={`${box} border-[#F5F0E6]/30 text-[#F5F0E6]/80 hover:border-[#C6F00C] hover:bg-[#C6F00C] hover:text-[#2A1F1A]`}
               >
                 {icon}
               </a>
             ) : (
               // placeholder until the real page URL is added in the admin / data file
-              <span title={`[${s.label} link]`} aria-hidden className={`${box} border-[#2A1F1A]/15 text-[#2A1F1A]/30`}>
+              <span title={`[${s.label} link]`} aria-hidden className={`${box} border-[#F5F0E6]/15 text-[#F5F0E6]/30`}>
                 {icon}
               </span>
             )}
@@ -81,29 +81,23 @@ function SocialRow({ items = [] }) {
 export default function SiteFooter() {
   const waDisplay = CONTACT.whatsappDisplay || `+${CONTACT.whatsapp}`;
   return (
-    <footer id="contact" className="relative overflow-hidden bg-[#EEF4DD] text-[#2A1F1A]">
-      <img
-        src={BRAND.emblem}
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute -right-16 -top-10 w-[360px] select-none opacity-[0.05]"
-      />
+    <footer id="contact" className="relative overflow-hidden bg-[#2A1F1A] text-[#F5F0E6]">
 
       <div className="relative mx-auto max-w-7xl px-5 pb-8 pt-16 sm:px-8 sm:pt-20">
         {/* visit CTA */}
-        <div className="flex flex-col gap-6 border-b border-[#2A1F1A]/10 pb-10 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-6 border-b border-[#F5F0E6]/12 pb-10 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.08] tracking-tight text-[#2A1F1A] sm:text-4xl">
+            <h2 className="font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.08] tracking-tight text-[#F5F0E6] sm:text-4xl">
               Let us show you around.
             </h2>
-            <p className="mt-3 max-w-md text-[#2A1F1A]/75">Visit a site, see the drawings, ask anything. We answer personally.</p>
+            <p className="mt-3 max-w-md text-[#F5F0E6]/75">Visit a site, see the drawings, ask anything. We answer personally.</p>
           </div>
           <a
             href={waLink(GENERAL_MESSAGE)}
             target="_blank"
             rel="noreferrer"
             onClick={() => trackLead({ channel: 'whatsapp', kind: 'footer-visit' })}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1B4332] px-5 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#14342A] sm:w-auto"
+            className="relative isolate inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl border-[1.5px] border-[#F5F0E6] px-5 py-3.5 text-sm font-semibold text-[#F5F0E6] transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#F5F0E6] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0 sm:w-auto"
           >
             <span className="h-2 w-2 rounded-full bg-[#C6F00C]" />
             Book a visit on WhatsApp
@@ -114,12 +108,12 @@ export default function SiteFooter() {
           {/* brand */}
           <div className="lg:col-span-4">
             <Link to="/" className="inline-flex items-center gap-3" aria-label="Space Maker home">
-              <img src={BRAND.icon} alt="" className="h-11 w-auto" loading="lazy" />
-              <span className="font-['Space_Grotesk'] text-xl font-extrabold tracking-tight text-[#1B4332]">Space Maker</span>
+              <span className="rounded-lg bg-[#F5F0E6] p-1.5"><img src={BRAND.icon} alt="" className="h-9 w-auto" loading="lazy" /></span>
+              <span className="font-['Space_Grotesk'] text-xl font-extrabold tracking-tight text-[#F5F0E6]">Space Maker</span>
             </Link>
-            {CONTACT.tagline && <p className="mt-4 font-serif text-lg italic text-[#2A1F1A]/80">{CONTACT.tagline}</p>}
+            {CONTACT.tagline && <p className="mt-4 font-serif text-lg italic text-[#F5F0E6]/80">{CONTACT.tagline}</p>}
             {CONTACT.footerLine && (
-              <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#2A1F1A]/70">{CONTACT.footerLine}</p>
+              <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#F5F0E6]/65">{CONTACT.footerLine}</p>
             )}
             <SocialRow items={CONTACT.social} />
           </div>
@@ -142,8 +136,8 @@ export default function SiteFooter() {
             <ul className="mt-4 grid gap-5">
               {CONTACT.offices.map((o) => (
                 <li key={o.name}>
-                  <div className="text-sm font-semibold text-[#2A1F1A]">{o.name}</div>
-                  <div className="mt-1 text-sm leading-relaxed text-[#2A1F1A]/70">{o.address}</div>
+                  <div className="text-sm font-semibold text-[#F5F0E6]">{o.name}</div>
+                  <div className="mt-1 text-sm leading-relaxed text-[#F5F0E6]/65">{o.address}</div>
                 </li>
               ))}
             </ul>
@@ -184,9 +178,9 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-2 border-t border-[#2A1F1A]/10 pt-6 text-xs text-[#2A1F1A]/65 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-2 border-t border-[#F5F0E6]/12 pt-6 text-xs text-[#F5F0E6]/55 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} Space Maker Limited. All rights reserved.</span>
-          <Link to="/projects" className="text-[#5C6E0A] transition-colors hover:text-[#1B4332]">All projects →</Link>
+          <Link to="/projects" className="text-[#C6F00C] transition-opacity hover:opacity-75">All projects →</Link>
         </div>
       </div>
     </footer>

@@ -117,3 +117,164 @@ export const testimonials = [
     isSample: true,
   },
 ];
+
+/* ---------- Team of experts (SAMPLE content: replace names, roles, text and photos) ----------
+   photo: optional, e.g. "/images/samples/team/team-1.jpg". With no photo a drawn sample portrait is shown.
+   featured: true = shown in the row on the home page (first four). group: filter chip on /team.
+   Every field is optional-safe; the section hides itself if the list is empty. */
+export const teamSection = {
+  label: "TEAM OF EXPERTS",
+  heading: "The people behind every address.",
+  intro: "From first sketch to final handover.",
+  linkLabel: "Meet all our experts",
+  pageHeading: "Meet all our experts.",
+  pageIntro:
+    "Architects, engineers and project managers working as one team. Every discipline under one roof, so your home is designed, built and handed over by people who talk to each other.",
+};
+
+export const team = [
+  {
+    id: "m-1",
+    name: "[Name]",
+    role: "Principal Architect",
+    group: "Architecture",
+    expertise:
+      "Sample text. Replace with this person's expertise: residential design, space planning and the detailing that makes a home feel calm and bright.",
+    photo: "",
+    order: 1,
+    featured: true,
+    isSample: true,
+  },
+  {
+    id: "m-2",
+    name: "[Name]",
+    role: "Design Architect",
+    group: "Architecture",
+    expertise:
+      "Sample text. Replace with this person's expertise: facade design, natural light and ventilation studies, and the finishing details buyers notice first.",
+    photo: "",
+    order: 2,
+    featured: false,
+    isSample: true,
+  },
+  {
+    id: "m-3",
+    name: "[Name]",
+    role: "Structural Engineer",
+    group: "Structural",
+    expertise:
+      "Sample text. Replace with this person's expertise: foundation and frame design, material testing and safe, code-compliant construction.",
+    photo: "",
+    order: 3,
+    featured: true,
+    isSample: true,
+  },
+  {
+    id: "m-4",
+    name: "[Name]",
+    role: "Structural Engineer",
+    group: "Structural",
+    expertise:
+      "Sample text. Replace with this person's expertise: soil investigation, earthquake-resistant design and independent checks at every pour.",
+    photo: "",
+    order: 4,
+    featured: false,
+    isSample: true,
+  },
+  {
+    id: "m-5",
+    name: "[Name]",
+    role: "MEP Engineer",
+    group: "MEP",
+    expertise:
+      "Sample text. Replace with this person's expertise: plumbing, ventilation and fire safety planned in from day one, not added later.",
+    photo: "",
+    order: 5,
+    featured: true,
+    isSample: true,
+  },
+  {
+    id: "m-6",
+    name: "[Name]",
+    role: "MEP Engineer",
+    group: "MEP",
+    expertise:
+      "Sample text. Replace with this person's expertise: water supply, drainage and lift systems designed so they stay quiet and trouble-free.",
+    photo: "",
+    order: 6,
+    featured: false,
+    isSample: true,
+  },
+  {
+    id: "m-7",
+    name: "[Name]",
+    role: "Electrical Engineer",
+    group: "Electrical",
+    expertise:
+      "Sample text. Replace with this person's expertise: safe wiring, lighting layouts and power backup designed for everyday family life.",
+    photo: "",
+    order: 7,
+    featured: false,
+    isSample: true,
+  },
+  {
+    id: "m-8",
+    name: "[Name]",
+    role: "Electrical Engineer",
+    group: "Electrical",
+    expertise:
+      "Sample text. Replace with this person's expertise: load planning, earthing and smart-ready conduits so your home is ready for what comes next.",
+    photo: "",
+    order: 8,
+    featured: false,
+    isSample: true,
+  },
+  {
+    id: "m-9",
+    name: "[Name]",
+    role: "Project Manager",
+    group: "Management",
+    expertise:
+      "Sample text. Replace with this person's expertise: site schedules, quality checks and the discipline that keeps every handover on time.",
+    photo: "",
+    order: 9,
+    featured: true,
+    isSample: true,
+  },
+  {
+    id: "m-10",
+    name: "[Name]",
+    role: "Site Manager",
+    group: "Management",
+    expertise:
+      "Sample text. Replace with this person's expertise: daily site supervision, safety on site and clear weekly progress updates for buyers.",
+    photo: "",
+    order: 10,
+    featured: false,
+    isSample: true,
+  },
+  {
+    id: "m-11",
+    name: "[Name]",
+    role: "Sales & Client Relations",
+    group: "Sales",
+    expertise:
+      "Sample text. Replace with this person's expertise: honest guidance on choosing a flat, clear paperwork and support long after you move in.",
+    photo: "",
+    order: 11,
+    featured: false,
+    isSample: true,
+  },
+  {
+    id: "m-12",
+    name: "[Name]",
+    role: "After-sales Support",
+    group: "Sales",
+    expertise:
+      "Sample text. Replace with this person's expertise: handover, registration help and quick fixes in the first year after you move in.",
+    photo: "",
+    order: 12,
+    featured: false,
+    isSample: true,
+  },
+];

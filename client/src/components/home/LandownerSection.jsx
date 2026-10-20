@@ -1,30 +1,101 @@
 // client/src/components/home/LandownerSection.jsx
-// "Partner with us" and "Why landowners choose Space Maker" merged into one calm, compact section.
-// Kept quieter than the footer: light background, smaller type, the form is the CTA.
+// "Partner with us" (landowners): compact. Heading + one line + Call / WhatsApp / Email pills on the left,
+// a slim espresso-bordered form on the right (notes hidden behind "+ Add a note"). A fine plot drawing
+// draws itself once next to the pills (tablet and up) and a small coffee cup steams next to the heading.
+// Submit logic unchanged: VITE_LAND_URL endpoint, else WhatsApp fallback so a lead is never lost.
+// The old "why landowners choose us" cards stay in data/portfolio.js but are no longer shown here.
+import SkylineParallax from './SkylineParallax';
 import React, { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { LANDOWNER as L, CONTACT } from '../../data/portfolio';
 import { waLink, landMessage, trackLead } from '../../lib/leads';
 import { Eyebrow, Reveal } from '../portfolio/shared';
 
-const field =
-  'w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-[#111827] placeholder:text-neutral-400 focus:border-[#1B4332] focus:outline-none focus:ring-2 focus:ring-[#C6F00C]/50';
-const label = "mb-1.5 block font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.18em] text-neutral-600";
+const ESPRESSO = '#2A1F1A';
+const SHORT = 'Share your plot. Our engineering director will call you back.';
 
-function Contact({ icon, title, children }) {
+const field =
+  'w-full rounded-lg border border-[#2A1F1A]/25 bg-white px-3.5 py-2.5 text-base text-[#2A1F1A] placeholder:text-[#2A1F1A]/40 focus:border-[#2A1F1A] focus:outline-none focus:ring-2 focus:ring-[#2A1F1A]/10';
+const label = "mb-1 block font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.18em] text-[#6B5446]";
+
+const CSS = `
+@keyframes smSteam{0%{transform:translateY(2px);opacity:0}30%{opacity:.7}100%{transform:translateY(-9px);opacity:0}}
+.sm-steam{animation:smSteam 2.8s ease-in-out infinite}
+.sm-steam:nth-child(2){animation-delay:.9s}
+.sm-steam:nth-child(3){animation-delay:1.8s}
+@media (prefers-reduced-motion:reduce){.sm-steam{animation:none;opacity:.5}}
+`;
+
+function Cup() {
   return (
-    <div className="flex items-start gap-3">
-      <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-[#1B4332]/[0.07] text-[#1B4332]">{icon}</span>
-      <div className="min-w-0">
-        <div className="font-['Space_Grotesk'] text-sm font-bold text-[#111827]">{title}</div>
-        <div className="mt-0.5 break-words text-sm text-[#374151]">{children}</div>
-      </div>
-    </div>
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke={ESPRESSO} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="flex-none">
+      <path d="M7 16h16v6a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-6Z" />
+      <path d="M23 18h2.5a2.5 2.5 0 0 1 0 5H23" />
+      <path d="M5 30h20" />
+      <path className="sm-steam" d="M12 12c-1.4-1.4 1.4-2.6 0-4" opacity=".6" />
+      <path className="sm-steam" d="M16 12c-1.4-1.4 1.4-2.6 0-4" opacity=".6" />
+      <path className="sm-steam" d="M20 12c-1.4-1.4 1.4-2.6 0-4" opacity=".6" />
+    </svg>
   );
 }
+
+function PlotDrawing() {
+  const reduce = useReducedMotion();
+  const draw = (delay = 0) =>
+    reduce
+      ? {}
+      : {
+          initial: { pathLength: 0 },
+          whileInView: { pathLength: 1 },
+          viewport: { once: true, margin: '-40px' },
+          transition: { duration: 1.6, ease: 'easeInOut', delay },
+        };
+  return (
+    <svg viewBox="0 0 260 112" width="100%" aria-hidden="true" className="h-auto max-w-[260px]" fill="none" stroke={ESPRESSO} strokeLinecap="round" strokeLinejoin="round">
+      {/* the plot */}
+      <motion.path d="M30 84 L52 26 L196 18 L226 78 Z" strokeWidth="1.5" opacity=".75" {...draw(0)} />
+      {/* dimension line + ticks */}
+      <motion.path d="M30 100 L226 94" strokeWidth="1" opacity=".5" {...draw(0.5)} />
+      <path d="M30 95 V105 M226 89 V99" strokeWidth="1" opacity=".5" />
+      {/* building footprint */}
+      <motion.path d="M82 70 L90 44 L160 40 L172 66 Z" strokeWidth="1" strokeDasharray="3 3" opacity=".45" {...draw(0.9)} />
+      <text x="128" y="110" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="8" letterSpacing="1.6" fill={ESPRESSO} stroke="none" opacity=".6">
+        YOUR PLOT
+      </text>
+      {/* north mark */}
+      <path d="M244 40 V18 M244 18 l-4 6 M244 18 l4 6" strokeWidth="1" opacity=".5" />
+      <text x="244" y="52" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="8" fill={ESPRESSO} stroke="none" opacity=".55">
+        N
+      </text>
+    </svg>
+  );
+}
+
+function Pill({ href, children, external, icon, live }) {
+  return (
+    <a
+      href={href}
+      {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
+      className="inline-flex items-center gap-2 rounded-full border-[1.5px] border-[#2A1F1A] px-4 py-2 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#2A1F1A] before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#2A1F1A] before:transition-transform before:duration-300 hover:before:translate-y-0 relative isolate overflow-hidden transition-colors duration-300 hover:text-[#F5F0E6]"
+    >
+      {icon}
+      {children}
+      {live && (
+        <span aria-hidden className="relative ml-0.5 flex h-2 w-2">
+          <span className="absolute inline-flex h-full w-full rounded-full bg-[#C6F00C] opacity-75 motion-safe:animate-ping" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-[#C6F00C] ring-1 ring-[#2A1F1A]/40" />
+        </span>
+      )}
+    </a>
+  );
+}
+
+const ic = { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true };
 
 export default function LandownerSection() {
   const [state, setState] = useState('idle'); // idle | busy | ok | fallback
   const [lastMsg, setLastMsg] = useState('');
+  const [note, setNote] = useState(false);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -54,139 +125,160 @@ export default function LandownerSection() {
   }
 
   return (
-    <section
-      id="land"
-      className="relative py-16 sm:py-20"
-      style={{ background: 'linear-gradient(to bottom, #F3EFE6 0%, #FAF8F5 100%)' }}
-    >
-      <div className="relative mx-auto grid max-w-7xl items-start gap-10 px-5 sm:px-8 lg:grid-cols-12 lg:gap-14">
-        {/* header + promises + contacts */}
-        <div className="lg:col-span-5">
-          <Reveal>
-            <Eyebrow>{L.eyebrow}</Eyebrow>
-            <h2 className="mt-4 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.1] tracking-tight text-[#111827] sm:text-4xl">
-              {L.title}
+    <section id="land" className="relative overflow-hidden pb-14 pt-10 sm:pb-16 sm:pt-12 lg:pb-[150px]" style={{ background: '#FAF6EE' }}>
+      <SkylineParallax />
+      <style>{CSS}</style>
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      <div
+        className="relative grid gap-7 rounded-[20px] border-[1.5px] px-5 py-8 sm:px-10 sm:py-10 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-5"
+        style={{ background: '#EEE5D4', borderColor: ESPRESSO }}
+      >
+        {/* heading + one line */}
+        <Reveal className="lg:col-span-5">
+          <Eyebrow>{L.eyebrow}</Eyebrow>
+          <div className="mt-3 flex items-start gap-3">
+            <h2 className="font-['Space_Grotesk'] text-[1.7rem] font-extrabold leading-[1.12] tracking-tight sm:text-4xl" style={{ color: ESPRESSO }}>
+              {L.title.slice(0, L.title.lastIndexOf(' ', L.title.length - 3) + 1)}
+              <span className="lime-mark">{L.title.slice(L.title.lastIndexOf(' ', L.title.length - 3) + 1)}</span>
             </h2>
-            <p className="mt-4 text-base leading-[1.75] text-[#374151]">{L.intro}</p>
-          </Reveal>
+            <span className="mt-1 hidden sm:block">
+              <Cup />
+            </span>
+          </div>
+          <p className="mt-3 text-[15px] leading-[1.7] text-[#4B3F37]">{SHORT}</p>
+        </Reveal>
 
-          <Reveal className="mt-8">
-            <h3 className="font-['Space_Grotesk'] text-base font-bold text-[#1B4332]">{L.whyTitle}</h3>
-            {L.slogan && <p className="mt-1 font-serif text-base italic text-[#1B4332]/75">{L.slogan}</p>}
-            <ul className="mt-4 grid gap-x-6 gap-y-4 sm:grid-cols-2">
-              {L.cards.map((c, i) => (
-                <li key={c.title} className="border-t border-[#1B4332]/15 pt-3">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-['JetBrains_Mono'] text-[11px] font-semibold text-[#1B4332]/60">0{i + 1}</span>
-                    <span className="font-['Space_Grotesk'] text-sm font-bold text-[#111827]">{c.title}</span>
+        {/* form */}
+        <Reveal className="lg:col-span-7 lg:row-span-2">
+          <div className="relative">
+            <div aria-hidden className="absolute inset-0 rounded-[10px] border" style={{ borderColor: 'rgba(42,31,26,.3)', transform: 'translate(6px, 6px)' }} />
+            <div className="relative rounded-[10px] border-[1.5px] bg-[#FFFDF8] p-5 sm:p-6" style={{ borderColor: ESPRESSO }}>
+              {state === 'ok' || state === 'fallback' ? (
+                <div className="py-6 text-center">
+                  <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#C6F00C]" style={{ color: ESPRESSO }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
                   </div>
-                  <p className="mt-1 text-[13px] leading-relaxed text-[#374151]">{c.text}</p>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
+                  <h3 className="mt-4 font-['Space_Grotesk'] text-xl font-bold" style={{ color: ESPRESSO }}>Thank you.</h3>
+                  <p className="mx-auto mt-2 max-w-sm text-[15px] text-[#4B3F37]">
+                    {state === 'ok'
+                      ? 'Our engineering director will call you back directly.'
+                      : 'We could not send this automatically. Please tap below to send it on WhatsApp.'}
+                  </p>
+                  {state === 'fallback' && (
+                    <a
+                      href={waLink(lastMsg)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-4 inline-block text-sm font-medium underline decoration-[#C6F00C] decoration-2 underline-offset-[6px]"
+                      style={{ color: ESPRESSO }}
+                    >
+                      Send on WhatsApp →
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <form onSubmit={onSubmit}>
+                  <h3 className="font-['Space_Grotesk'] text-lg font-bold tracking-tight sm:text-xl" style={{ color: ESPRESSO }}>
+                    Request a feasibility study
+                  </h3>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className={label} htmlFor="ls-name">Your name</label>
+                      <input id="ls-name" name="name" required autoComplete="name" placeholder="Your name" className={field} />
+                    </div>
+                    <div>
+                      <label className={label} htmlFor="ls-phone">Phone / WhatsApp</label>
+                      <input id="ls-phone" name="phone" required type="tel" inputMode="tel" autoComplete="tel" placeholder="+880 1..." className={field} />
+                    </div>
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-3">
+                    <div>
+                      <label className={label} htmlFor="ls-loc">Plot location</label>
+                      <input id="ls-loc" name="location" placeholder="e.g. Jolshiri" className={field} />
+                    </div>
+                    <div>
+                      <label className={label} htmlFor="ls-size">Plot size</label>
+                      <input id="ls-size" name="size" placeholder="e.g. 5 Katha" className={field} />
+                    </div>
+                  </div>
 
-          <Reveal className="mt-8 grid gap-4">
-            <Contact
-              title={L.hotline.label}
+                  {note ? (
+                    <div className="mt-3">
+                      <label className={label} htmlFor="ls-notes">Note</label>
+                      <textarea id="ls-notes" name="notes" rows={2} autoFocus placeholder="Anything we should know about the plot..." className={field} />
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setNote(true)}
+                      aria-expanded="false"
+                      className="mt-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#6B5446] underline decoration-[#2A1F1A]/30 underline-offset-4 transition-colors hover:text-[#2A1F1A] hover:decoration-[#2A1F1A]"
+                    >
+                      + Add a note
+                    </button>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={state === 'busy'}
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border-[1.5px] border-[#2A1F1A] px-6 py-3.5 text-sm font-semibold text-[#2A1F1A] before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#2A1F1A] before:transition-transform before:duration-300 hover:before:translate-y-0 relative isolate overflow-hidden transition-colors duration-300 hover:text-[#F5F0E6] disabled:opacity-60"
+                  >
+                    {state === 'busy' ? 'Sending...' : 'Submit land details'}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="m22 2-7 20-4-9-9-4Z" />
+                      <path d="M22 2 11 13" />
+                    </svg>
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </Reveal>
+
+        {/* contact pills + plot drawing */}
+        <Reveal className="lg:col-span-5">
+          <div className="flex flex-wrap gap-2">
+            <Pill
+              live
+              href={`tel:${L.hotline.tel}`}
               icon={
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg {...ic}>
                   <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
                 </svg>
               }
             >
-              <a href={`tel:${L.hotline.tel}`} className="hover:text-[#1B4332] hover:underline">
-                {L.hotline.display}
-              </a>
-            </Contact>
-            <Contact
-              title={L.emailLabel}
+              Call
+            </Pill>
+            <Pill
+              external
+              href={waLink('Hello Space Maker, I own a plot and would like to discuss it with you.')}
               icon={
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg {...ic}>
+                  <path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-5A8.5 8.5 0 1 1 21 11.5Z" />
+                </svg>
+              }
+            >
+              WhatsApp
+            </Pill>
+            <Pill
+              href={`mailto:${CONTACT.email}`}
+              icon={
+                <svg {...ic}>
                   <rect x="3" y="5" width="18" height="14" rx="2" />
                   <path d="m3 7 9 6 9-6" />
                 </svg>
               }
             >
-              <a href={`mailto:${CONTACT.email}`} className="hover:text-[#1B4332] hover:underline">
-                {CONTACT.email}
-              </a>
-            </Contact>
-          </Reveal>
-        </div>
-
-        {/* form = the CTA */}
-        <Reveal className="lg:col-span-7">
-          <div className="rounded-2xl border border-[#1B4332]/10 bg-white p-5 shadow-[0_18px_40px_-28px_rgba(27,67,50,0.45)] sm:p-8">
-            {state === 'ok' || state === 'fallback' ? (
-              <div className="py-8 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#C6F00C] text-[#111827]">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 6 9 17l-5-5" />
-                  </svg>
-                </div>
-                <h3 className="mt-5 font-['Space_Grotesk'] text-2xl font-bold text-[#111827]">Thank you.</h3>
-                <p className="mx-auto mt-2 max-w-sm text-neutral-600">
-                  {state === 'ok'
-                    ? 'Our engineering director will call you back directly.'
-                    : 'We could not send this automatically. Please tap below to send it on WhatsApp.'}
-                </p>
-                {state === 'fallback' && (
-                  <a
-                    href={waLink(lastMsg)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-5 inline-block text-sm font-medium text-[#1B4332] underline decoration-[#C6F00C] decoration-2 underline-offset-[6px]"
-                  >
-                    Send on WhatsApp →
-                  </a>
-                )}
-              </div>
-            ) : (
-              <form onSubmit={onSubmit}>
-                <h3 className="font-['Space_Grotesk'] text-xl font-bold tracking-tight text-[#111827] sm:text-2xl">
-                  Request Feasibility Study
-                </h3>
-                <p className="mt-1 text-sm text-neutral-600">
-                  Fill in your plot details; our engineering director will call you back directly.
-                </p>
-                <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label className={label} htmlFor="ls-name">Your name</label>
-                    <input id="ls-name" name="name" required placeholder="e.g. Major Akhtaruzzaman" className={field} />
-                  </div>
-                  <div>
-                    <label className={label} htmlFor="ls-phone">Phone / WhatsApp</label>
-                    <input id="ls-phone" name="phone" required placeholder="+880 1..." className={field} />
-                  </div>
-                  <div>
-                    <label className={label} htmlFor="ls-loc">Plot location</label>
-                    <input id="ls-loc" name="location" placeholder="e.g. Sector 13, Jolshiri" className={field} />
-                  </div>
-                  <div>
-                    <label className={label} htmlFor="ls-size">Plot size</label>
-                    <input id="ls-size" name="size" placeholder="e.g. 5 Katha / 10 Katha" className={field} />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label className={label} htmlFor="ls-notes">Notes / requirements</label>
-                    <textarea id="ls-notes" name="notes" rows={3} placeholder="Tell us about your expectations..." className={field} />
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  disabled={state === 'busy'}
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#1B4332] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#14331f] disabled:opacity-60"
-                >
-                  {state === 'busy' ? 'Sending...' : 'Submit Land Details'}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C6F00C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="m22 2-7 20-4-9-9-4Z" />
-                    <path d="M22 2 11 13" />
-                  </svg>
-                </button>
-              </form>
-            )}
+              Email
+            </Pill>
+          </div>
+          <div className="mt-7 hidden md:block">
+            <PlotDrawing />
           </div>
         </Reveal>
+      </div>
       </div>
     </section>
   );
