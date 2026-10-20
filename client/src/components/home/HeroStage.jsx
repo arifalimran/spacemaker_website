@@ -1,305 +1,224 @@
-// client/src/components/home/HeroSection.jsx
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-  useReducedMotion,
-} from 'framer-motion';
+// client/src/components/home/HeroStage.jsx
+// Hero: dark espresso stage. The Sector 13 tower stands on the right with a floating facade close-up in front;
+// outlined "SPACE MAKER" lettering drifts behind. Layers move at different speeds on scroll (desktop), the headline
+// rises word by word, "Dhaka." gets a hand-drawn lime underline. One preloaded photo (WebP, two sizes) + a tiny
+// blurred placeholder so the first paint is instant. transform/opacity only; no blur, no filters.
+// Phones: one photo, no parallax. Reduced motion: everything is simply there.
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { introWillPlay } from '../../lib/intro';
 
-/* ---------- Logo paths (your uploaded files) ----------
-   Tip: rename to logo-text.png / logo-icon.png and folder 00_brand to avoid
-   spaces in URLs. Until then the encoded versions below work. */
-const LOGO_ICON = '/assets/00_brand/emblem-watermark.svg';
+const ESPRESSO = '#2A1F1A';
+const STAGE = '#3B2B22'; // warmer and lighter than the buttons' espresso, so it sits well with the dusk photo
+const LIME = '#C6F00C';
+const IVORY = '#F5F0E6';
 
-const CANVAS = '#FAF8F5';
+const MAIN = '/assets/01_hero/hero-main';
+const DETAIL = '/assets/01_hero/hero-detail';
+const LQIP = 'data:image/webp;base64,UklGRu4AAABXRUJQVlA4IOIAAACwBQCdASoYABgAPu1ur1KppiQiqAgBMB2JZgCdMoM3nBQu4uykTACwT41UWOTE7xnjSVOgUIAA8BviaDcGSMqrdx9RkU9XJqtVuGVyMzaAbtsCVBTQcxtJZ45rm45PyRu+vEpMZNl3Fto3GOwn62LwM1+h7A0DgZZBvvbs4ZSGHU5bs9oCiZve55fYKzjqEKHc+0B9naaCcVOiIPFk1fCUQurGgyWeO5qlB1aILBT/Ofcn2fSgSDyYquIl45n2grEKFngKeNfnPAOm5dRGI860+wYjsacvhMWI1/pdnEZiHgAA';
 
-/* ---------- Demo slides: swap for /assets/01_hero/hero-1.jpg etc. ---------- */
-const slides = [
-  {
-    src: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80',
-    title: 'FORM & SPACE',
-    place: 'Jolshiri Abashon',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1800&q=80',
-    title: 'Platinum Kusumbag',
-    place: 'Sabujbag',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1800&q=80',
-    title: 'Moon Residence',
-    place: 'Dinajpur Central',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=80',
-    title: 'Marchent Mahua',
-    place: 'Jolshiri, Sector 16',
-  },
-];
-
-const AUTOPLAY_MS = 5500;
-
-/* ---------- Quiet information row (replaces the two big CTA buttons) ---------- */
-const residences = [
-  { area: 'Jolshiri Abashon', note: '3 & 4 bed residences' },
-  { area: 'Sabujbag', note: 'Luxury suites' },
-  { area: 'Dhanmondi Edge', note: 'Boutique address' },
-];
 const WHATSAPP =
   'https://wa.me/8801916100416?text=Hello%20Space%20Maker,%20I%20would%20like%20to%20arrange%20a%20private%20visit.';
 
-/* ---------- Butterfly ---------- */
-function Butterfly({ size = 46, hue = '#C6F00C', delay = 0, duration = 34, reverse = false, topStart = 55 }) {
-  const reduce = useReducedMotion();
-  if (reduce) return null;
+const AREAS = ['Jolshiri Abashon', 'Sabujbag', 'Dhanmondi'];
+// from your existing assurances; swap in real counters (projects delivered, families at home) whenever you have them
+const PROOF = ['Documented approvals', 'Earthquake-engineered structure', 'Our own site engineers'];
 
-  const xs = reverse
-    ? ['110vw', '78vw', '50vw', '22vw', '-12vw']
-    : ['-12vw', '22vw', '50vw', '78vw', '110vw'];
-
-  return (
-    <motion.div
-      aria-hidden
-      className="pointer-events-none absolute z-30"
-      style={{ top: `${topStart}%`, left: 0, width: size, height: size }}
-      initial={{ x: xs[0], y: 0, rotate: 0 }}
-      animate={{
-        x: xs,
-        y: [0, -90, 30, -70, -20],
-        rotate: reverse ? [-18, 12, -10, 16, -8] : [18, -12, 10, -16, 8],
-      }}
-      transition={{
-        duration,
-        delay,
-        ease: 'easeInOut',
-        repeat: Infinity,
-        repeatDelay: 2,
-      }}
-    >
-      {/* gentle bob */}
-      <motion.div
-        animate={{ y: [0, -8, 0, 6, 0] }}
-        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ transform: reverse ? 'scaleX(-1)' : undefined }}
-      >
-        <svg viewBox="0 0 100 100" width={size} height={size} style={{ overflow: 'visible' }}>
-          {/* left wing */}
-          <motion.g
-            style={{ transformBox: 'fill-box', transformOrigin: 'right center' }}
-            animate={{ scaleX: [1, 0.2, 1] }}
-            transition={{ duration: 0.42, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <path d="M50 48 C30 10, 4 14, 8 40 C10 58, 34 62, 50 52 Z" fill={hue} opacity="0.9" />
-            <path d="M50 54 C32 58, 14 74, 26 86 C38 94, 48 72, 50 58 Z" fill={hue} opacity="0.7" />
-            <circle cx="24" cy="36" r="4" fill="#1B4332" opacity="0.55" />
-          </motion.g>
-          {/* right wing */}
-          <motion.g
-            style={{ transformBox: 'fill-box', transformOrigin: 'left center' }}
-            animate={{ scaleX: [1, 0.2, 1] }}
-            transition={{ duration: 0.42, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <path d="M50 48 C70 10, 96 14, 92 40 C90 58, 66 62, 50 52 Z" fill={hue} opacity="0.9" />
-            <path d="M50 54 C68 58, 86 74, 74 86 C62 94, 52 72, 50 58 Z" fill={hue} opacity="0.7" />
-            <circle cx="76" cy="36" r="4" fill="#1B4332" opacity="0.55" />
-          </motion.g>
-          {/* body + antennae */}
-          <rect x="48.5" y="40" width="3" height="26" rx="1.5" fill="#111827" />
-          <path d="M50 40 C46 30, 42 28, 40 26 M50 40 C54 30, 58 28, 60 26" stroke="#111827" strokeWidth="1.2" fill="none" />
-        </svg>
-      </motion.div>
-    </motion.div>
-  );
-}
+const LINES = [['Find', 'Your', 'Sanctuary'], ['in', 'Dhaka.']];
 
 export default function HeroStage() {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const sectionRef = useRef(null);
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  const base = reduce ? 0 : introWillPlay ? 1.35 : 0.15; // wait for the curtain on the first visit
+  const t = (d) => (reduce ? { duration: 0 } : { duration: 0.9, delay: base + d, ease: [0.22, 1, 0.36, 1] });
 
-  /* auto transition — stops while the mouse is over the image */
-  useEffect(() => {
-    if (paused) return;
-    const t = setInterval(() => setIndex((i) => (i + 1) % slides.length), AUTOPLAY_MS);
-    return () => clearInterval(t);
-  }, [paused]);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+  const photoY = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['0%', '14%']);
+  const detailY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -90]);
+  const wordX = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['0%', '-22%']);
+  const contentY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, 60]);
 
-  /* parallax: watermark drifts slower than the page */
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end start'],
-  });
-  const wmY1 = useTransform(scrollYProgress, [0, 1], ['0%', '18%']);
-  const wmY2 = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '8%']);
-
-  const slide = slides[index];
+  let w = 0;
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative overflow-hidden min-h-[100vh]"
-      style={{
-        background: `linear-gradient(to bottom, ${CANVAS} 0%, #F6F2EA 70%, #F3EFE6 100%)`,
-      }}
-    >
-      {/* ---------- Parallax logo watermarks, sitting in the empty spaces ---------- */}
-      <motion.img
-        src={LOGO_ICON}
-        alt=""
-        aria-hidden
-        style={{ y: wmY1 }}
-        className="pointer-events-none select-none absolute z-0 left-[-6%] bottom-[-4%] w-[420px] md:w-[560px] opacity-[0.07]"
-      />
-      <motion.img
-        src={LOGO_ICON}
-        alt=""
-        aria-hidden
-        style={{ y: wmY2 }}
-        className="pointer-events-none select-none absolute z-0 right-[4%] top-[10%] w-[200px] md:w-[260px] opacity-[0.05] rotate-6"
-      />
-      {/* faint blueprint dots */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 opacity-[0.035]"
-        style={{
-          backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
-        }}
-      />
+    <section ref={ref} className="relative isolate min-h-[100svh] overflow-hidden" style={{ background: STAGE, color: IVORY }}>
+      {/* soft light from the top-left + faint dot grid */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-0" style={{ background: 'radial-gradient(ellipse 55% 70% at 78% 38%, rgba(226,158,96,.38) 0%, rgba(226,158,96,0) 70%), radial-gradient(ellipse 70% 60% at 12% 8%, #5A4234 0%, rgba(59,43,34,0) 70%)' }} />
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-0 opacity-[0.07]" style={{ backgroundImage: `radial-gradient(${LIME} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
 
-      {/* ---------- Blended image stage ---------- */}
+      {/* outlined lettering drifting sideways (desktop) */}
       <motion.div
-        style={{
-          y: imgY,
-          /* feathered edges: image dissolves into the background on every side */
-          WebkitMaskImage:
-            'radial-gradient(ellipse 78% 72% at 62% 48%, #000 38%, rgba(0,0,0,0.55) 62%, transparent 100%)',
-          maskImage:
-            'radial-gradient(ellipse 78% 72% at 62% 48%, #000 38%, rgba(0,0,0,0.55) 62%, transparent 100%)',
-        }}
-        className="absolute z-[1] right-0 top-[8%] h-[82%] w-full md:w-[72%] opacity-40 md:opacity-100"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
+        aria-hidden
+        style={{ x: wordX, WebkitTextStroke: '1.5px rgba(245,240,230,.10)', color: 'transparent' }}
+        className="pointer-events-none absolute bottom-[6%] left-[2%] z-0 hidden select-none whitespace-nowrap font-['Space_Grotesk'] text-[17vw] font-extrabold uppercase leading-none tracking-tight lg:block"
       >
-        <AnimatePresence mode="sync">
-          <motion.img
-            key={slide.src}
-            src={slide.src}
-            alt={slide.title}
-            initial={{ opacity: 0, scale: 1.06 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.4, ease: 'easeInOut' }}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        </AnimatePresence>
-        {/* colour wash so every photo shares the brand's warm-green tone */}
-        <div
-          className="absolute inset-0 mix-blend-soft-light"
-          style={{ background: 'linear-gradient(120deg, #EDF4EC 0%, #F3EFE6 100%)', opacity: 0.55 }}
-        />
-        {/* left fade so the headline can sit over the photo's edge */}
-        <div
-          className="absolute inset-0"
-          style={{ background: `linear-gradient(to right, ${CANVAS} 0%, ${CANVAS}CC 22%, transparent 55%)` }}
+        Space Maker
+      </motion.div>
+
+      {/* main photo: right half on desktop, full background on phones */}
+      <motion.div
+        className="sm-photo absolute inset-0 z-[1] overflow-hidden lg:left-auto lg:w-[60%]"
+        style={{ y: photoY, backgroundImage: `url(${LQIP})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+      >
+        <motion.img
+          src={`${MAIN}-1000.webp`}
+          srcSet={`${MAIN}-1000.webp 1000w, ${MAIN}-2000.webp 2000w`}
+          sizes="(min-width: 1024px) 60vw, 100vw"
+          width="2000"
+          height="2000"
+          alt="Artist's impression of a Space Maker residential tower with balcony gardens at dusk, Sector 13"
+          fetchPriority="high"
+          decoding="async"
+          initial={reduce ? false : { scale: 1.14 }}
+          animate={{ scale: 1 }}
+          transition={reduce ? { duration: 0 } : { duration: 2.6, delay: base - 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="h-full w-full object-cover object-[50%_18%] lg:object-[50%_30%]"
         />
       </motion.div>
 
-      {/* ---------- Butterflies flow over the whole hero ---------- */}
-      <Butterfly size={52} hue="#C6F00C" duration={36} topStart={58} />
-      <Butterfly size={34} hue="#9CCB7A" duration={44} delay={6} reverse topStart={30} />
-
-      {/* ---------- Text ---------- */}
-      <div className="relative z-20 mx-auto max-w-6xl px-6 pt-40 md:pt-48 pb-28">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 backdrop-blur border border-neutral-200/80 text-[11px] font-semibold text-neutral-700 uppercase tracking-[0.2em] mb-7">
-          <span className="w-2 h-2 rounded-full bg-[#C6F00C] ring-4 ring-[#C6F00C]/20 animate-pulse" />
-          Residences &middot; Dhaka
+      {/* floating facade close-up in front (desktop) */}
+      <motion.figure
+        style={{ y: detailY }}
+        initial={reduce ? false : { opacity: 0, x: 40 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={t(0.9)}
+        className="absolute bottom-[12%] right-[5%] z-[5] hidden w-[17vw] max-w-[260px] lg:block"
+      >
+        <div className="overflow-hidden rounded-[14px] border-[1.5px]" style={{ borderColor: IVORY, boxShadow: '10px 10px 0 rgba(198,240,12,.9)' }}>
+          <img src={`${DETAIL}-700.webp`} srcSet={`${DETAIL}-700.webp 700w, ${DETAIL}-1400.webp 1400w`} sizes="260px" width="700" height="960" alt="Close-up of a Space Maker facade with planted balconies" loading="lazy" decoding="async" className="aspect-[3/4] w-full object-cover" />
         </div>
+        <figcaption className="mt-5 font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em]" style={{ color: 'rgba(245,240,230,.7)' }}>
+          Balcony gardens
+        </figcaption>
+      </motion.figure>
 
-        <h1 className="font-['Space_Grotesk'] font-extrabold tracking-tight leading-[1.04] text-[#111827] text-5xl sm:text-6xl md:text-7xl max-w-3xl">
-          Find Your Sanctuary
-          <br />
-          <span className="font-serif italic font-normal text-[#1B4332]/80">in Dhaka.</span>
-        </h1>
+      {/* text */}
+      <motion.div style={{ y: contentY }} className="relative z-10 mx-auto max-w-7xl px-5 pb-28 pt-[44svh] sm:px-8 lg:pb-32 lg:pt-44">
+        <div className="max-w-[44rem]">
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={t(0)}
+            className="inline-flex items-center gap-2.5 rounded-full border px-3.5 py-1.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em]"
+            style={{ borderColor: 'rgba(245,240,230,.28)' }}
+          >
+            <span className="relative h-2 w-2">
+              <span className="absolute inset-0 rounded-full motion-safe:animate-ping" style={{ background: LIME, opacity: 0.6 }} />
+              <span className="absolute inset-0 rounded-full" style={{ background: LIME }} />
+            </span>
+            Residences &middot; Dhaka
+          </motion.div>
 
-        {/* immediately after the heading: a quiet, editorial index instead of buttons */}
-        <div className="mt-10 max-w-xl">
-          <p className="text-neutral-600 text-base md:text-lg leading-[1.75]">
-            Homes shaped around sunlight, cross-breeze and calm &mdash; engineered
-            to stand for generations.
-          </p>
+          <h1 style={{ textShadow: '0 2px 28px rgba(30,20,15,.35)' }} className="mt-6 font-['Space_Grotesk'] text-[2.9rem] font-extrabold leading-[1.02] tracking-tight sm:text-6xl lg:text-[5rem] xl:text-[5.5rem]">
+            {LINES.map((line, li) => (
+              <span key={li} className="block">
+                {line.map((word) => {
+                  const i = w++;
+                  const last = li === 1 && word === 'Dhaka.';
+                  return (
+                    <span key={word} className="mr-[0.22em] inline-block overflow-hidden pb-[0.14em] align-top">
+                      <motion.span
+                        className={`relative inline-block ${li === 1 ? "font-serif font-normal italic" : ''}`}
+                        style={li === 1 ? { color: LIME } : undefined}
+                        initial={reduce ? false : { y: '110%' }}
+                        animate={{ y: 0 }}
+                        transition={t(0.1 + i * 0.09)}
+                      >
+                        {word}
+                        {last && (
+                          <svg aria-hidden viewBox="0 0 200 14" preserveAspectRatio="none" className="absolute -bottom-1 left-0 h-3 w-full overflow-visible">
+                            <motion.path
+                              d="M2 9 C 40 2, 120 13, 198 4"
+                              fill="none"
+                              stroke={LIME}
+                              strokeWidth="3"
+                              strokeLinecap="round"
+                              initial={reduce ? false : { pathLength: 0 }}
+                              animate={{ pathLength: 1 }}
+                              transition={reduce ? { duration: 0 } : { duration: 0.9, delay: base + 0.9, ease: 'easeInOut' }}
+                            />
+                          </svg>
+                        )}
+                      </motion.span>
+                    </span>
+                  );
+                })}
+              </span>
+            ))}
+          </h1>
 
-          <ul className="mt-8 divide-y divide-neutral-300/60 border-y border-neutral-300/60">
-            {residences.map((r) => (
-              <li key={r.area}>
+          <motion.p
+            initial={reduce ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={t(0.55)}
+            className="mt-6 max-w-lg text-base leading-[1.75] sm:text-lg"
+            style={{ color: 'rgba(245,240,230,.78)' }}
+          >
+            Homes shaped around sunlight, cross-breeze and calm, engineered to stand for generations.
+          </motion.p>
+
+          <motion.div initial={reduce ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={t(0.7)} className="mt-8 flex flex-wrap items-center gap-3">
+            <a
+              href="#projects"
+              className="group relative inline-flex items-center gap-3 rounded-full py-1.5 pl-6 pr-1.5 text-sm font-bold transition-transform duration-300 active:scale-[0.97]"
+              style={{ background: LIME, color: ESPRESSO }}
+            >
+              Explore residences
+              <span className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full" style={{ background: ESPRESSO, color: LIME }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="absolute transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:translate-x-7"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="absolute -translate-x-7 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:translate-x-0"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </span>
+            </a>
+            <a
+              href={WHATSAPP}
+              target="_blank"
+              rel="noreferrer"
+              className="relative isolate inline-flex items-center gap-2 overflow-hidden rounded-full border-[1.5px] px-6 py-3.5 text-sm font-semibold transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#F5F0E6] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
+              style={{ borderColor: IVORY }}
+            >
+              Book a private visit
+            </a>
+          </motion.div>
+
+          <motion.ul initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={t(0.85)} className="mt-6 flex flex-wrap gap-2">
+            {AREAS.map((a) => (
+              <li key={a}>
                 <a
                   href="#projects"
-                  className="group flex items-baseline justify-between gap-4 py-3 transition"
+                  className="inline-block rounded-full border px-3.5 py-1.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.14em] transition-colors duration-300 hover:border-[#C6F00C] hover:text-[#C6F00C]"
+                  style={{ borderColor: 'rgba(245,240,230,.28)', color: 'rgba(245,240,230,.85)' }}
                 >
-                  <span className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-neutral-500 group-hover:text-[#1B4332] transition">
-                    {r.area}
-                  </span>
-                  <span className="text-sm text-neutral-700 flex items-center gap-2">
-                    {r.note}
-                    <span className="inline-block translate-x-0 opacity-40 group-hover:translate-x-1 group-hover:opacity-100 transition">
-                      &rarr;
-                    </span>
-                  </span>
+                  {a}
                 </a>
               </li>
             ))}
-          </ul>
+          </motion.ul>
 
-          <a
-            href={WHATSAPP}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-5 inline-block text-xs text-neutral-500 hover:text-[#1B4332] underline underline-offset-4 decoration-neutral-300 hover:decoration-[#1B4332] transition"
-          >
-            Prefer to see it in person? Arrange a private visit
-          </a>
+          <motion.ul initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={t(1)} className="mt-9 grid max-w-xl gap-2.5 border-t pt-5 sm:grid-cols-3" style={{ borderColor: 'rgba(245,240,230,.16)' }}>
+            {PROOF.map((p) => (
+              <li key={p} className="flex items-start gap-2.5 text-[13px] leading-snug" style={{ color: 'rgba(245,240,230,.85)' }}>
+                <span className="mt-[5px] h-1.5 w-1.5 flex-none rounded-full" style={{ background: LIME }} />
+                {p}
+              </li>
+            ))}
+          </motion.ul>
         </div>
-      </div>
+      </motion.div>
 
-      {/* ---------- Slide caption + progress, tucked bottom-right ---------- */}
-      <div className="absolute z-20 bottom-8 right-6 md:right-12 text-right">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={slide.title}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-neutral-500">
-              {slide.place}
-            </div>
-            <div className="font-['Space_Grotesk'] font-bold text-lg text-[#111827]">{slide.title}</div>
-          </motion.div>
-        </AnimatePresence>
-        <div className="mt-3 flex justify-end gap-2">
-          {slides.map((s, i) => (
-            <button
-              key={s.src}
-              aria-label={`Show ${s.title}`}
-              onClick={() => setIndex(i)}
-              className={`h-[3px] rounded-full transition-all duration-500 ${
-                i === index ? 'w-10 bg-[#111827]' : 'w-5 bg-neutral-400/50 hover:bg-neutral-500'
-              }`}
-            />
-          ))}
-        </div>
+      {/* scroll cue + image note */}
+      <div className="absolute bottom-6 left-5 z-10 flex items-center gap-3 sm:left-8">
+        <span className="relative h-10 w-[2px] overflow-hidden rounded-full" style={{ background: 'rgba(245,240,230,.2)' }}>
+          <span className="sm-cue absolute left-0 top-0 h-3 w-full rounded-full" style={{ background: LIME }} />
+        </span>
+        <span className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.22em]" style={{ color: 'rgba(245,240,230,.7)' }}>Scroll</span>
       </div>
+      <div className="absolute bottom-6 right-5 z-10 text-right font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.18em] sm:right-8" style={{ color: 'rgba(245,240,230,.6)' }}>
+        Artist&rsquo;s impression &middot; Sector 13
+      </div>
+      <style>{`.sm-photo{-webkit-mask-image:linear-gradient(to bottom,#000 38%,transparent 82%);mask-image:linear-gradient(to bottom,#000 38%,transparent 82%)}@media (min-width:1024px){.sm-photo{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 32%),linear-gradient(to top,transparent 0%,#000 12%);mask-image:linear-gradient(to right,transparent 0%,#000 32%),linear-gradient(to top,transparent 0%,#000 12%);-webkit-mask-composite:source-in;mask-composite:intersect}}.sm-cue{animation:smCue 2.2s cubic-bezier(.65,0,.35,1) infinite}@keyframes smCue{0%{transform:translateY(-100%)}70%,100%{transform:translateY(340%)}}@media (prefers-reduced-motion:reduce){.sm-cue{animation:none;transform:translateY(60%)}}`}</style>
 
-      {/* bottom dissolve into the next section */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute bottom-0 left-0 right-0 h-40 z-[15]"
-        style={{ background: 'linear-gradient(to bottom, transparent, #F3EFE6)' }}
-      />
+      {/* the page rises over the hero's lower edge */}
+      <div aria-hidden className="absolute inset-x-0 bottom-0 z-[12] h-6 rounded-t-[28px]" style={{ background: '#F3EFE6' }} />
     </section>
   );
 }

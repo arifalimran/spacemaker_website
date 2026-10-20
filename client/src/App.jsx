@@ -11,6 +11,7 @@ import ButterflyLayer from './components/layout/ButterflyLayer';
 import SectionWatcher from './components/layout/SectionWatcher';
 import SectionDock from './components/layout/SectionDock';
 import HeroStage from './components/home/HeroStage';
+import PageIntro from './components/home/PageIntro';
 import WhoWeAre from './components/home/WhoWeAre';
 import WhyChooseUs from './components/home/WhyChooseUs';
 import Testimonials from './components/home/Testimonials';
@@ -31,7 +32,7 @@ function Home() {
   // data-sec / data-key / data-theme tell SectionWatcher which section is under the top bar
   return (
     <main>
-      <div data-sec="Welcome" data-key="welcome" data-theme="light">
+      <div data-sec="Welcome" data-key="welcome" data-theme="dark">
         <HeroStage />
       </div>
       <div data-sec="Who we are" data-key="about" data-theme="light">
@@ -74,6 +75,7 @@ function Shell() {
   const detail = pathname.startsWith('/projects/') || pathname.startsWith('/interiors/');
   return (
     <div className="relative min-h-screen overflow-x-clip bg-[#FAF8F5] font-sans text-[#111827] selection:bg-[#C6F00C] selection:text-black">
+      <PageIntro />
       <SectionWatcher />
       <SiteNav />
       <ButterflyLayer />
