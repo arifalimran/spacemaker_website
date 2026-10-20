@@ -32,7 +32,7 @@ function Home() {
   // data-sec / data-key / data-theme tell SectionWatcher which section is under the top bar
   return (
     <main>
-      <div data-sec="Welcome" data-key="welcome" data-theme="dark">
+      <div data-sec="Welcome" data-key="welcome" data-theme="light">
         <HeroStage />
       </div>
       <div data-sec="Who we are" data-key="about" data-theme="light">
