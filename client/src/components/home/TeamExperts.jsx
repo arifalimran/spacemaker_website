@@ -20,7 +20,7 @@ export default function TeamExperts() {
       id="team"
       aria-labelledby="team-heading"
       className="relative overflow-hidden border-t border-[#2A1F1A]/15 py-14 sm:py-16"
-      style={{ background: IVORY }}
+      style={{ background: 'linear-gradient(180deg, #F5F9EE 0%, #EEF4E3 100%)' }}
     >
       <style>{TEAM_CSS}</style>
       <TeamBackdrop />
@@ -35,7 +35,7 @@ export default function TeamExperts() {
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-20"
-        style={{ background: 'linear-gradient(to bottom, #F3EFE6, rgba(250,246,238,0))' }}
+        style={{ background: 'linear-gradient(to bottom, #EAF1DF, rgba(245,249,238,0))' }}
       />
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">

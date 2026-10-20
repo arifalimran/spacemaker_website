@@ -19,7 +19,7 @@ import TestimonialsTree from './TestimonialsTree';
 import TestimonialsFallenLeaves from './TestimonialsFallenLeaves';
 import TestimonialsFallingLeaves from './TestimonialsFallingLeaves';
 
-const BG = '#F3EFE6'; // "Who we are" warm off-white
+const BG = '#EAF1DF'; // soft sage (solid: the photo rings use it as their gap colour)
 const ESPRESSO = '#2A1F1A';
 const ring = (w) => `0 0 0 3px ${BG}, 0 0 0 ${w}px ${ESPRESSO}`;
 const GLOW = 520;
@@ -237,7 +237,7 @@ export default function Testimonials({ items = testimonials }) {
                   <figure
                     tabIndex={0}
                     aria-label={t.name ? `Testimonial from ${t.name}` : 'Client testimonial'}
-                    className="flex h-full cursor-default flex-col items-start border-l-[#2A1F1A] outline-none transition-[opacity,box-shadow] duration-[350ms] focus-visible:ring-2 focus-visible:ring-[#1B4332]/40 focus-visible:ring-offset-4 focus-visible:ring-offset-[#F3EFE6]"
+                    className="flex h-full cursor-default flex-col items-start border-l-[#2A1F1A] outline-none transition-[opacity,box-shadow] duration-[350ms] focus-visible:ring-2 focus-visible:ring-[#1B4332]/40 focus-visible:ring-offset-4 focus-visible:ring-offset-[#EAF1DF]"
                     style={{
                       opacity: dim ? 0.75 : 1,
                       borderLeftStyle: 'solid',

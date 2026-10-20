@@ -125,13 +125,13 @@ export default function LandownerSection() {
   }
 
   return (
-    <section id="land" className="relative overflow-hidden pb-14 pt-10 sm:pb-16 sm:pt-12 lg:pb-[150px]" style={{ background: '#FAF6EE' }}>
+    <section id="land" className="relative overflow-hidden pb-14 pt-10 sm:pb-16 sm:pt-12 lg:pb-[150px]" style={{ background: 'linear-gradient(180deg, #EEF4E3 0%, #F4F7EA 45%, #FAF6EE 100%)' }}>
       <SkylineParallax />
       <style>{CSS}</style>
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
       <div
         className="relative grid gap-7 rounded-[20px] border-[1.5px] px-5 py-8 sm:px-10 sm:py-10 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-5"
-        style={{ background: '#EEE5D4', borderColor: ESPRESSO }}
+        style={{ background: '#F5F9EE', borderColor: ESPRESSO }}
       >
         {/* heading + one line */}
         <Reveal className="lg:col-span-5">
