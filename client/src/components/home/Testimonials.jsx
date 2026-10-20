@@ -1,7 +1,7 @@
 // client/src/components/home/Testimonials.jsx
 // "In their words" (v3), directly after Why Choose Us.
 // Background = the same warm off-white + faint dot grid as "Who we are". Top = clean straight edge
-// against the espresso above; the last ~120px blend into pale lime #EEF4DD (ready for Team).
+// against the espresso above; it ends in plain cream and the Team section below blends in softly.
 // Decor (aria-hidden, behind the text unless noted): golden glow (eased follow), swaying tree (trunk enters from the right
 // edge two-thirds of the way down on desktop, top-right on tablet/mobile; no lawn), wind-blown leaves (back layer behind / front layer above the text).
 // v4 tree: nested branch groups (each sways from its own joint, carrying its twigs + leaves).
@@ -20,9 +20,8 @@ import TestimonialsFallenLeaves from './TestimonialsFallenLeaves';
 import TestimonialsFallingLeaves from './TestimonialsFallingLeaves';
 
 const BG = '#F3EFE6'; // "Who we are" warm off-white
-const PALE_LIME = '#EEF4DD';
-const LIME = '#C6F00C';
-const ring = (w) => `0 0 0 3px ${BG}, 0 0 0 ${w}px ${LIME}`;
+const ESPRESSO = '#2A1F1A';
+const ring = (w) => `0 0 0 3px ${BG}, 0 0 0 ${w}px ${ESPRESSO}`;
 const GLOW = 520;
 
 /* decor CSS: tree size/sway, live-leaf flutter, grass wave, pause + static states */
@@ -212,12 +211,6 @@ export default function Testimonials({ items = testimonials }) {
         className="pointer-events-none absolute inset-0 z-0 opacity-[0.035]"
         style={{ backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)', backgroundSize: '32px 32px' }}
       />
-      {/* last ~120px blend into pale lime */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[120px]"
-        style={{ background: `linear-gradient(to bottom, rgba(243,239,230,0), ${PALE_LIME})` }}
-      />
       {/* golden glow while an item is active (one composited div, moved with translate3d) */}
       <div ref={glowRef} aria-hidden className="sm-glow" style={{ opacity: active !== null ? 1 : 0 }} />
 
@@ -244,13 +237,13 @@ export default function Testimonials({ items = testimonials }) {
                   <figure
                     tabIndex={0}
                     aria-label={t.name ? `Testimonial from ${t.name}` : 'Client testimonial'}
-                    className="flex h-full cursor-default flex-col items-start border-l-[#C6F00C] outline-none transition-[opacity,box-shadow] duration-[350ms] focus-visible:ring-2 focus-visible:ring-[#1B4332]/40 focus-visible:ring-offset-4 focus-visible:ring-offset-[#F3EFE6]"
+                    className="flex h-full cursor-default flex-col items-start border-l-[#2A1F1A] outline-none transition-[opacity,box-shadow] duration-[350ms] focus-visible:ring-2 focus-visible:ring-[#1B4332]/40 focus-visible:ring-offset-4 focus-visible:ring-offset-[#F3EFE6]"
                     style={{
-                      opacity: dim ? 0.5 : 1,
+                      opacity: dim ? 0.75 : 1,
                       borderLeftStyle: 'solid',
                       borderLeftWidth: 2,
                       paddingLeft: 18,
-                      boxShadow: on ? 'inset 2px 0 0 #C6F00C' : 'inset 0 0 0 transparent', // bar thickens, text stays put
+                      boxShadow: on ? 'inset 2px 0 0 #2A1F1A' : 'inset 0 0 0 transparent', // bar thickens, text stays put
                     }}
                     onPointerDown={(e) => {
                       pointer.current = e.pointerType;
