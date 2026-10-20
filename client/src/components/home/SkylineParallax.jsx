@@ -13,10 +13,10 @@ const FRONT = [[20,90,80],[130,70,120],[230,100,70],[360,75,135],[470,95,90],[60
 
 function Layer({ items, opacity, windows }) {
   return (
-    <g stroke={INK} strokeWidth="1.2" fill="none" opacity={opacity}>
+    <g stroke={INK} strokeWidth="1.2" fill="none" strokeOpacity={opacity}>
       {items.map(([x, w, h], i) => (
         <g key={i}>
-          <rect x={x} y={220 - h} width={w} height={h} />
+          <rect x={x} y={220 - h} width={w} height={h} fill="#FAF6EE" />
           {windows &&
             Array.from({ length: Math.floor(h / 22) }).map((_, r) => (
               <path key={r} d={`M${x + 8} ${220 - h + 12 + r * 22} h${w - 16}`} strokeDasharray="6 6" />
@@ -34,7 +34,7 @@ export default function SkylineParallax() {
   const back = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [70, 0]);
   const front = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [35, 0]);
   return (
-    <div ref={ref} aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-[200px] overflow-hidden lg:block">
+    <div ref={ref} aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-[150px] overflow-hidden lg:block">
       <svg viewBox="0 0 1440 220" preserveAspectRatio="xMidYMax slice" className="absolute bottom-0 h-full w-full">
         <motion.g style={{ y: back }}>
           <Layer items={BACK} opacity={0.1} windows />
