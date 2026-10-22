@@ -85,11 +85,19 @@ function useFirstWorking(list) {
 const SHIFT_Y = [-64, 44, -34, 76];
 const SHIFT_X = [-20, -7, 7, 20];
 
-function Slice({ i, src, progress, still }) {
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+
+function Slice({ i, src, progress, enter, still }) {
   const k = still ? 0 : 1;
-  const y = useTransform(progress, [0.1, 1], [0, SHIFT_Y[i] * k]);
-  const x = useTransform(progress, [0.1, 1], [0, SHIFT_X[i] * k]);
-  const opacity = useTransform(progress, [0.18 + i * 0.05, 0.82 + i * 0.05], [1, 0]);
+  // arrives from a small offset and settles into one picture as the ribbons above vanish, then drifts away on the way out
+  const y = useTransform([progress, enter], ([p, e]) => k * (SHIFT_Y[i] * clamp01((p - 0.1) / 0.9) - SHIFT_Y[i] * 0.7 * (1 - e)));
+  const x = useTransform([progress, enter], ([p, e]) => k * (SHIFT_X[i] * clamp01((p - 0.1) / 0.9) - SHIFT_X[i] * 0.7 * (1 - e)));
+  const opacity = useTransform([progress, enter], ([p, e]) => {
+    const a = 0.18 + i * 0.05;
+    const b = 0.82 + i * 0.05;
+    const out = 1 - clamp01((p - a) / (b - a));
+    return out * (still ? 1 : 0.25 + 0.75 * clamp01(e));
+  });
 
   return (
     <motion.div
@@ -123,15 +131,40 @@ function SlicedPhoto({ src, className = '' }) {
   const reduce = useReducedMotion();
   // 0 while the photo is in the reading zone (one whole picture), up to 1 as it leaves the top
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.15', 'end 0.05'] });
+  // 0 as the photo rises into view, 1 once it is in the reading zone
+  const { scrollYProgress: enter } = useScroll({ target: ref, offset: ['start end', 'start 0.45'] });
   const slices = useMemo(() => Array.from({ length: COUNT }, (_, i) => i), []);
   return (
     <div ref={ref} className={`relative flex ${className}`}>
       {slices.map((i) => (
-        <Slice key={i} i={i} src={src} progress={scrollYProgress} still={reduce} />
+        <Slice key={i} i={i} src={src} progress={scrollYProgress} enter={enter} still={reduce} />
       ))}
     </div>
   );
 }
+
+/* One stack of five touching ribbons straddling the hero / Who we are boundary (drawn in a 1440 x 200 box, boundary at y = 130).
+   Each is a slanted band (left lower, same direction as the Projects edge); p 0..1 sands it away from its low left end,
+   thinning it while its lower edge stays put. */
+const DROP = 50;
+const bandPath = (yTopLeft, thick, p = 0) => {
+  const k = -DROP / 1440;
+  const x0 = Math.min(1640, -200 + 1900 * p);
+  const x1 = 1640;
+  const bot = (x) => yTopLeft + thick + k * x;
+  const thin = thick * (1 - 0.55 * p);
+  return `M${x0} ${bot(x0) - thin} L${x1} ${bot(x1) - thin} L${x1} ${bot(x1)} L${x0} ${bot(x0)} Z`;
+};
+// ribbons, top to bottom: [top edge at the left, thickness, fill]
+const BANDS = [
+  [100, 12, 'rgba(42,31,26,.34)'],
+  [112, 18, 'rgba(42,31,26,.64)'],
+  [130, 28, '#2A1F1A'],
+  [158, 8, 'rgba(42,31,26,.30)'],
+  [166, 5, 'rgba(42,31,26,.16)'],
+];
+const STACK_BOTTOM_LEFT = 171;
+const CREAM_FILL = '#F3EFE6';
 
 /* The quiet second beat: the story on the left, one elevation cut into four slices on the right. */
 export default function WhoWeAre() {
@@ -139,11 +172,44 @@ export default function WhoWeAre() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const markY = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['-6%', '14%']);
+  // progress of the join: 0 when this section's top enters the bottom of the screen, 1 when it reaches the top
+  const { scrollYProgress: join } = useScroll({ target: ref, offset: ['start end', 'start 0'] });
+  const mv = (a, b) => (reduce ? [0, 0] : [a, b]);
+  const w0 = (from, to) => useTransform(join, [from, to], reduce ? [0, 0] : [0, 1]);
+  const p0 = w0(0.2, 0.55);
+  const p1 = w0(0.3, 0.65);
+  const p2 = w0(0.4, 0.8);
+  const p3 = w0(0.5, 0.9);
+  const p4 = w0(0.6, 1);
+  const d0 = useTransform(p0, (p) => bandPath(BANDS[0][0], BANDS[0][1], p));
+  const d1 = useTransform(p1, (p) => bandPath(BANDS[1][0], BANDS[1][1], p));
+  const d2 = useTransform(p2, (p) => bandPath(BANDS[2][0], BANDS[2][1], p));
+  const d3 = useTransform(p3, (p) => bandPath(BANDS[3][0], BANDS[3][1], p));
+  const d4 = useTransform(p4, (p) => bandPath(BANDS[4][0], BANDS[4][1], p));
+  // the whole stack drifts down together, so no gap ever opens between ribbons
+  const stackY = useTransform(join, [0, 1], reduce ? [0, 0] : [0, 36]);
+  const stackX = useTransform(join, [0, 1], reduce ? [0, 0] : [0, -40]);
   const pillars = c.pillars || [];
   const list = useMemo(() => (c.sliceImage ? [c.sliceImage, ...CANDIDATES] : CANDIDATES), []);
   const src = useFirstWorking(list);
 
+  const fillD = `M-200 ${STACK_BOTTOM_LEFT + (200 * DROP) / 1440} L1640 ${STACK_BOTTOM_LEFT - (1640 * DROP) / 1440} V200 H-200 Z`;
+
   return (
+    <>
+    {/* the five-ribbon stack: a zero-height strip at the section's top edge; the drawing rises into the hero and falls into this section */}
+    <div aria-hidden className="pointer-events-none relative z-20 h-0" style={{ '--stack-h': 'clamp(120px, 13vw, 190px)' }}>
+      <svg viewBox="0 0 1440 200" preserveAspectRatio="none" className="absolute inset-x-0 block w-full" style={{ height: 'var(--stack-h)', top: 'calc(var(--stack-h) * -0.65)' }}>
+        <path d={fillD} fill={CREAM_FILL} />
+        <motion.g style={{ x: stackX, y: stackY }}>
+          <motion.path d={d0} fill={BANDS[0][2]} />
+          <motion.path d={d1} fill={BANDS[1][2]} />
+          <motion.path d={d2} fill={BANDS[2][2]} />
+          <motion.path d={d3} fill={BANDS[3][2]} />
+          <motion.path d={d4} fill={BANDS[4][2]} />
+        </motion.g>
+      </svg>
+    </div>
     <section ref={ref} id="about" className="sec-about relative z-10 overflow-hidden">
       <motion.img
         src={BRAND.emblem}
@@ -158,7 +224,7 @@ export default function WhoWeAre() {
         style={{ backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)', backgroundSize: '32px 32px' }}
       />
 
-      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-32 md:grid-cols-12 md:gap-10">
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-5 pb-16 pt-32 sm:px-8 sm:pb-24 sm:pt-36 md:grid-cols-12 md:gap-10">
         <Reveal className="md:col-span-6">
           <Eyebrow>Who we are</Eyebrow>
           <h2 className="f-display mt-5 text-3xl font-bold leading-[1.08] text-[#111827] sm:text-5xl">{c.title}</h2>
@@ -196,6 +262,11 @@ export default function WhoWeAre() {
           </motion.li>
         ))}
       </ul>
+      <svg aria-hidden viewBox="0 0 1440 80" preserveAspectRatio="none" className="pointer-events-none absolute inset-x-0 bottom-0 z-0 block h-[clamp(36px,5vw,80px)] w-full">
+        <path d="M0 52 L1440 4 V80 H0 Z" fill="rgba(42,31,26,.07)" />
+        <path d="M0 68 L1440 28 V80 H0 Z" fill="rgba(42,31,26,.12)" />
+      </svg>
     </section>
+    </>
   );
 }

@@ -28,14 +28,13 @@ export default function HeroStage() {
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const tagY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -60]);
-
   let w = 0;
 
   return (
-    <section ref={ref} className="relative isolate flex min-h-[100svh] flex-col overflow-hidden" style={{ background: CREAM, color: ESPRESSO }}>
+    <section ref={ref} className="relative isolate flex min-h-[104svh] flex-col overflow-hidden lg:min-h-[112svh]" style={{ background: `linear-gradient(180deg, ${CREAM} 50%, ${ESPRESSO} 100%)`, color: ESPRESSO }}>
       {/* photo: full colour, edge to edge, nothing on top of it */}
       <div
-        className="absolute inset-x-0 top-0 z-0 h-[62svh] overflow-hidden lg:inset-y-0 lg:h-auto"
+        className="absolute inset-x-0 top-0 z-0 h-[66svh] overflow-hidden lg:inset-y-0 lg:h-auto"
         style={{ backgroundImage: `url(${LQIP})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
         <motion.img
@@ -74,7 +73,7 @@ export default function HeroStage() {
       </motion.div>
 
       {/* the one frosted panel, behind all the text */}
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 items-end px-4 pb-10 pt-[34svh] sm:px-8 lg:items-center lg:pb-10 lg:pt-28">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 items-end px-4 pb-[calc(10vw+1.5rem)] pt-[34svh] sm:px-8 lg:items-center lg:pb-[calc(10vw+1rem)] lg:pt-28">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -170,11 +169,11 @@ export default function HeroStage() {
         </motion.div>
       </div>
 
-      <p className="absolute right-4 top-[calc(62svh-2rem)] z-10 rounded-full bg-white/90 px-3 py-1 font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.16em] sm:right-8 lg:right-6 lg:top-auto lg:bottom-5 xl:right-10" style={{ color: 'rgba(42,31,26,.8)' }}>
+      <p className="absolute right-4 top-[calc(62svh-2rem)] z-10 rounded-full bg-white/90 px-3 py-1 font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.16em] sm:right-8 lg:right-6 lg:top-auto lg:bottom-[calc(10vw+0.75rem)] xl:right-10" style={{ color: 'rgba(42,31,26,.8)' }}>
         Artist&rsquo;s impression &middot; Sector 13
       </p>
 
-      <style>{`.sm-glass{background:rgba(42,31,26,.9);box-shadow:0 20px 50px rgba(20,12,8,.35)}@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.sm-glass{background:rgba(42,31,26,.6);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}}@media (min-width:1024px){.sm-hero-img{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 14%);mask-image:linear-gradient(to right,transparent 0%,#000 14%)}}`}</style>
+      <style>{`.sm-glass{background:rgba(42,31,26,.9);box-shadow:0 20px 50px rgba(20,12,8,.35)}@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.sm-glass{background:rgba(42,31,26,.66);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}}@media (min-width:1024px){.sm-hero-img{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 14%);mask-image:linear-gradient(to right,transparent 0%,#000 14%)}}`}</style>
     </section>
   );
 }
