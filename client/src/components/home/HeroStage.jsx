@@ -79,7 +79,8 @@ export default function HeroStage() {
           initial={reduce ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={t(-0.05)}
-          className="sm-glass w-full max-w-[31rem] rounded-[24px] border border-white/70 p-5 sm:p-7 lg:p-8"
+          className="sm-glass w-full max-w-[31rem] rounded-[24px] border border-white/15 p-5 sm:p-7 lg:p-8"
+          style={{ color: '#F5F0E6' }}
         >
           <h1 className="font-['Space_Grotesk'] text-[2.6rem] font-extrabold leading-[1.03] tracking-tight sm:text-6xl lg:text-[3.3rem]">
             {LINES.map((line, li) => (
@@ -91,17 +92,18 @@ export default function HeroStage() {
                     <span key={word} className="mr-[0.22em] inline-block overflow-hidden pb-[0.16em] align-top">
                       <motion.span
                         className={`relative inline-block ${li === 1 ? 'font-serif font-normal italic' : ''}`}
+                        style={li === 1 ? { color: LIME } : undefined}
                         initial={reduce ? false : { y: '110%' }}
                         animate={{ y: 0 }}
                         transition={t(0.1 + i * 0.09)}
                       >
                         {last && (
-                          <svg aria-hidden viewBox="0 0 200 20" preserveAspectRatio="none" className="absolute inset-x-[-4px] bottom-[2px] -z-10 h-[0.42em] w-[calc(100%+8px)]">
+                          <svg aria-hidden viewBox="0 0 200 20" preserveAspectRatio="none" className="absolute inset-x-0 -bottom-[0.02em] h-[0.2em] w-full overflow-visible">
                             <motion.path
                               d="M2 12 C 50 6, 140 16, 198 9"
                               fill="none"
                               stroke={LIME}
-                              strokeWidth="16"
+                              strokeWidth="7"
                               strokeLinecap="round"
                               initial={reduce ? false : { pathLength: 0 }}
                               animate={{ pathLength: 1 }}
@@ -123,7 +125,7 @@ export default function HeroStage() {
             animate={{ opacity: 1, y: 0 }}
             transition={t(0.55)}
             className="mt-3 max-w-sm text-[15px] leading-[1.6] sm:text-base"
-            style={{ color: 'rgba(42,31,26,.82)' }}
+            style={{ color: 'rgba(245,240,230,.86)' }}
           >
             Homes shaped around sunlight, cross-breeze and calm, engineered to stand for generations.
           </motion.p>
@@ -132,10 +134,10 @@ export default function HeroStage() {
             <a
               href="#projects"
               className="group relative inline-flex items-center gap-3 rounded-full py-1 pl-5 pr-1 text-sm font-bold transition-transform duration-300 active:scale-[0.97]"
-              style={{ background: ESPRESSO, color: '#F5F0E6' }}
+              style={{ background: LIME, color: ESPRESSO }}
             >
               Explore residences
-              <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full" style={{ background: LIME, color: ESPRESSO }}>
+              <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full" style={{ background: ESPRESSO, color: LIME }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="absolute transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:translate-x-7"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="absolute -translate-x-7 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:translate-x-0"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
               </span>
@@ -144,8 +146,8 @@ export default function HeroStage() {
               href={WHATSAPP}
               target="_blank"
               rel="noreferrer"
-              className="relative isolate inline-flex items-center gap-2 overflow-hidden rounded-full border-[1.5px] px-5 py-3 text-sm font-semibold transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#2A1F1A] before:transition-transform before:duration-300 hover:text-[#F5F0E6] hover:before:translate-y-0"
-              style={{ borderColor: ESPRESSO }}
+              className="relative isolate inline-flex items-center gap-2 overflow-hidden rounded-full border-[1.5px] px-5 py-3 text-sm font-semibold transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#F5F0E6] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
+              style={{ borderColor: '#F5F0E6' }}
             >
               Book a private visit
             </a>
@@ -156,8 +158,8 @@ export default function HeroStage() {
               <li key={a}>
                 <a
                   href="#projects"
-                  className="inline-block rounded-full border px-3 py-1 font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.14em] transition-colors duration-300 hover:border-[#5C6E0A] hover:bg-[#C6F00C]/40"
-                  style={{ borderColor: 'rgba(42,31,26,.3)' }}
+                  className="inline-block rounded-full border px-3 py-1 font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.14em] transition-colors duration-300 hover:border-[#C6F00C] hover:text-[#C6F00C]"
+                  style={{ borderColor: 'rgba(245,240,230,.35)' }}
                 >
                   {a}
                 </a>
@@ -172,7 +174,7 @@ export default function HeroStage() {
         Artist&rsquo;s impression &middot; Sector 13
       </p>
 
-      <style>{`.sm-glass{background:rgba(250,247,240,.9);box-shadow:0 20px 50px rgba(42,31,26,.16)}@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.sm-glass{background:rgba(250,247,240,.62);-webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1)}}@media (min-width:1024px){.sm-hero-img{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 14%);mask-image:linear-gradient(to right,transparent 0%,#000 14%)}}`}</style>
+      <style>{`.sm-glass{background:rgba(42,31,26,.9);box-shadow:0 20px 50px rgba(20,12,8,.35)}@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.sm-glass{background:rgba(42,31,26,.6);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}}@media (min-width:1024px){.sm-hero-img{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 14%);mask-image:linear-gradient(to right,transparent 0%,#000 14%)}}`}</style>
     </section>
   );
 }

@@ -1,159 +1,179 @@
-// client/src/components/home/WhoWeAre.jsx
-// "Who we are": same language as the hero (cream page, big rounded photo frames, espresso + lime).
-// The story on the left rises word by word; on the right two real photos are revealed like a curtain lifting,
-// then drift at different speeds as you scroll (parallax inside the frames). transform/opacity/clip-path only.
-import React, { useRef } from 'react';
-import { motion, useInView, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { aboutContent as c } from '../../data/siteContent';
-import { Eyebrow } from '../portfolio/shared';
+import { Eyebrow, Reveal } from '../portfolio/shared';
+import { BRAND } from '../../data/portfolio';
 
 const ESPRESSO = '#2A1F1A';
-const LIME = '#C6F00C';
-const CREAM = '#FAF8F5';
-const EASE = [0.22, 1, 0.36, 1];
+const COUNT = 4;
 
-const DETAIL = '/assets/01_hero/hero-detail';
-const SECOND = '/assets/01_hero/hero-rayerbazar';
+/* Drawn architectural elevation: the last-resort picture, so the slices are never blank. */
+function elevationSvg() {
+  const floors = 8;
+  const top = 150;
+  const fh = 90;
+  const left = 170;
+  const w = 460;
+  const ground = top + floors * fh;
+  let g = '';
+  for (let f = 0; f < floors; f += 1) {
+    const y = top + f * fh;
+    g += `<line x1='${left}' y1='${y}' x2='${left + w}' y2='${y}' stroke='#2A1F1A' stroke-width='1.2'/>`;
+    for (let k = 0; k < 4; k += 1) {
+      const x = left + 28 + k * 108;
+      g += `<rect x='${x}' y='${y + 18}' width='74' height='52' fill='#2A1F1A' fill-opacity='.10' stroke='#2A1F1A' stroke-width='1.4'/>`;
+      g += `<line x1='${x + 37}' y1='${y + 18}' x2='${x + 37}' y2='${y + 70}' stroke='#2A1F1A' stroke-width='.8'/>`;
+      g += `<line x1='${x - 6}' y1='${y + 76}' x2='${x + 80}' y2='${y + 76}' stroke='#2A1F1A' stroke-width='2'/>`;
+    }
+  }
+  const svg =
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'>` +
+    `<rect width='800' height='1000' fill='#EFE9DC'/>` +
+    `<rect x='${left}' y='${top}' width='${w}' height='${floors * fh}' fill='#FAF8F5' stroke='#2A1F1A' stroke-width='2.5'/>` +
+    `<rect x='${left - 14}' y='${top - 26}' width='${w + 28}' height='26' fill='#FAF8F5' stroke='#2A1F1A' stroke-width='2.5'/>` +
+    `<rect x='${left + 150}' y='${top - 70}' width='160' height='44' fill='#FAF8F5' stroke='#2A1F1A' stroke-width='2'/>` +
+    g +
+    `<rect x='${left + 190}' y='${ground - 70}' width='80' height='70' fill='#2A1F1A' fill-opacity='.22' stroke='#2A1F1A' stroke-width='2'/>` +
+    `<line x1='60' y1='${ground}' x2='740' y2='${ground}' stroke='#2A1F1A' stroke-width='3'/>` +
+    `<line x1='110' y1='${top}' x2='110' y2='${ground}' stroke='#2A1F1A' stroke-width='1'/>` +
+    `<line x1='102' y1='${top}' x2='118' y2='${top}' stroke='#2A1F1A' stroke-width='1.5'/>` +
+    `<line x1='102' y1='${ground}' x2='118' y2='${ground}' stroke='#2A1F1A' stroke-width='1.5'/>` +
+    `<text x='84' y='${(top + ground) / 2}' font-family='monospace' font-size='15' fill='#2A1F1A' transform='rotate(-90 84 ${(top + ground) / 2})' text-anchor='middle'>G+M+8 ELEVATION</text>` +
+    `</svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
 
-export default function WhoWeAre() {
-  const reduce = useReducedMotion();
-  const sectionRef = useRef(null);
-  const stageRef = useRef(null);
-  const textRef = useRef(null);
-  const seen = useInView(stageRef, { once: true, margin: '0px 0px -15% 0px' });
-  const textSeen = useInView(textRef, { once: true, margin: '0px 0px -12% 0px' });
+/* Tries your real project renders first, in order, then the drawn elevation.
+   Override: add  sliceImage: '/assets/...'  to aboutContent in siteContent.js */
+const CANDIDATES = [
+  '/assets/03_developments/ongoing/form-and-space/hero/render.jpg',
+  '/assets/03_developments/flagships/moon-residence/hero/facade.jpg',
+  '/assets/03_developments/ongoing/platinum-kusumbag/hero/render.jpg',
+];
 
-  const { scrollYProgress } = useScroll({ target: stageRef, offset: ['start end', 'end start'] });
-  const mainImgY = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['-7%', '7%']);
-  const secondY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [50, -50]);
-  const secondImgY = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['6%', '-6%']);
+function useFirstWorking(list) {
+  const [src, setSrc] = useState(null);
+  const key = list.join('|');
+  useEffect(() => {
+    let dead = false;
+    (async () => {
+      for (const url of list) {
+        // a missing file under Vite returns index.html with status 200: Image() still fails, so this is safe
+        const ok = await new Promise((res) => {
+          const im = new Image();
+          im.onload = () => res(true);
+          im.onerror = () => res(false);
+          im.src = url;
+        });
+        if (dead) return;
+        if (ok) {
+          setSrc(url);
+          return;
+        }
+      }
+      if (!dead) setSrc(elevationSvg());
+    })();
+    return () => {
+      dead = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+  return src;
+}
 
-  const pillars = c.pillars || [];
-  const words = String(c.title || '').split(' ');
+/* Scroll-linked offsets: slice i drifts and fades while you scroll down, realigns when you scroll up */
+const SHIFT_Y = [-64, 44, -34, 76];
+const SHIFT_X = [-20, -7, 7, 20];
 
-  const wipe = (delay) =>
-    reduce
-      ? { initial: false }
-      : {
-          initial: { clipPath: 'inset(0 0 100% 0 round 32px)' },
-          animate: seen ? { clipPath: 'inset(0 0 0% 0 round 32px)' } : undefined,
-          transition: { duration: 1.2, delay, ease: [0.76, 0, 0.24, 1] },
-        };
-  const zoom = (delay) =>
-    reduce
-      ? { initial: false }
-      : {
-          initial: { scale: 1.3 },
-          animate: seen ? { scale: 1 } : undefined,
-          transition: { duration: 2, delay, ease: EASE },
-        };
+function Slice({ i, src, progress, still }) {
+  const k = still ? 0 : 1;
+  const y = useTransform(progress, [0.1, 1], [0, SHIFT_Y[i] * k]);
+  const x = useTransform(progress, [0.1, 1], [0, SHIFT_X[i] * k]);
+  const opacity = useTransform(progress, [0.18 + i * 0.05, 0.82 + i * 0.05], [1, 0]);
 
   return (
-    <section ref={sectionRef} id="about" className="sec-about relative z-10 overflow-hidden" style={{ background: CREAM }}>
-      <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-32 lg:grid-cols-12 lg:gap-10">
-        {/* story */}
-        <div ref={textRef} className="lg:col-span-6">
+    <motion.div
+      style={{ x, y, opacity, willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
+      className="relative h-full flex-1 overflow-hidden"
+    >
+      {/* the same photo on every slice, shifted so the four pieces join into one picture */}
+      <div
+        className="absolute top-0 h-full"
+        style={{
+          width: `${COUNT * 100}%`,
+          left: `-${i * 100}%`,
+          backgroundColor: '#DCE9DA',
+          backgroundImage: src ? `url("${src}")` : 'linear-gradient(135deg,#DCE9DA,#EDF4EC)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+      {/* espresso tint: a plain overlay (no blend mode), cheap to paint while the slices move */}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{ background: `linear-gradient(to top, ${ESPRESSO}8C, ${ESPRESSO}47 55%, ${ESPRESSO}33)` }}
+      />
+    </motion.div>
+  );
+}
+
+function SlicedPhoto({ src, className = '' }) {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  // 0 while the photo is in the reading zone (one whole picture), up to 1 as it leaves the top
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.15', 'end 0.05'] });
+  const slices = useMemo(() => Array.from({ length: COUNT }, (_, i) => i), []);
+  return (
+    <div ref={ref} className={`relative flex ${className}`}>
+      {slices.map((i) => (
+        <Slice key={i} i={i} src={src} progress={scrollYProgress} still={reduce} />
+      ))}
+    </div>
+  );
+}
+
+/* The quiet second beat: the story on the left, one elevation cut into four slices on the right. */
+export default function WhoWeAre() {
+  const reduce = useReducedMotion();
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  const markY = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['-6%', '14%']);
+  const pillars = c.pillars || [];
+  const list = useMemo(() => (c.sliceImage ? [c.sliceImage, ...CANDIDATES] : CANDIDATES), []);
+  const src = useFirstWorking(list);
+
+  return (
+    <section ref={ref} id="about" className="sec-about relative z-10 overflow-hidden">
+      <motion.img
+        src={BRAND.emblem}
+        alt=""
+        aria-hidden
+        style={{ y: markY }}
+        className="pointer-events-none absolute -left-[6%] bottom-[8%] z-0 w-[440px] select-none opacity-[0.07] md:w-[560px]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.035]"
+        style={{ backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)', backgroundSize: '32px 32px' }}
+      />
+
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-32 md:grid-cols-12 md:gap-10">
+        <Reveal className="md:col-span-6">
           <Eyebrow>Who we are</Eyebrow>
-
-          <h2 className="f-display mt-5 text-3xl font-bold leading-[1.08] text-[#111827] sm:text-5xl">
-            {words.map((wd, i) => (
-              <span key={i} className="mr-[0.25em] inline-block overflow-hidden pb-[0.12em] align-top">
-                <motion.span
-                  className="inline-block"
-                  initial={reduce ? false : { y: '110%' }}
-                  animate={textSeen ? { y: 0 } : undefined}
-                  transition={{ duration: 0.9, delay: i * 0.06, ease: EASE }}
-                >
-                  {wd}
-                </motion.span>
-              </span>
-            ))}
-          </h2>
-
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 24 }}
-            animate={textSeen ? { opacity: 1, y: 0 } : undefined}
-            transition={{ duration: 0.9, delay: 0.5, ease: EASE }}
-            className="mt-8 max-w-xl space-y-5 text-base leading-relaxed text-[#374151] sm:text-lg"
-          >
-            {(c.paragraphs || []).map((p, i) => (
+          <h2 className="f-display mt-5 text-3xl font-bold leading-[1.08] text-[#111827] sm:text-5xl">{c.title}</h2>
+          <div className="mt-8 max-w-xl space-y-5 text-base leading-relaxed text-[#374151] sm:text-lg">
+            {c.paragraphs.map((p, i) => (
               <p key={i}>{p}</p>
             ))}
-          </motion.div>
+          </div>
+          <blockquote className="mt-10 max-w-xl border-l-4 border-[#C6F00C] pl-6">
+            <p className="f-serif text-xl italic leading-snug text-[#1B4332] sm:text-2xl">“{c.quote}”</p>
+          </blockquote>
+        </Reveal>
 
-          <motion.blockquote
-            initial={reduce ? false : { opacity: 0, y: 24 }}
-            animate={textSeen ? { opacity: 1, y: 0 } : undefined}
-            transition={{ duration: 0.9, delay: 0.75, ease: EASE }}
-            className="relative mt-10 max-w-xl pl-6"
-          >
-            <motion.span
-              aria-hidden
-              className="absolute left-0 top-0 h-full w-1 origin-top rounded-full"
-              style={{ background: LIME }}
-              initial={reduce ? false : { scaleY: 0 }}
-              animate={textSeen ? { scaleY: 1 } : undefined}
-              transition={{ duration: 0.9, delay: 0.95, ease: EASE }}
-            />
-            <p className="f-serif text-xl italic leading-snug text-[#1B4332] sm:text-2xl">&ldquo;{c.quote}&rdquo;</p>
-          </motion.blockquote>
-        </div>
-
-        {/* two frames, revealed like a curtain, drifting at different speeds */}
-        <div ref={stageRef} className="relative h-[520px] sm:h-[660px] lg:col-span-6 lg:h-[700px]">
-          <motion.div
-            {...wipe(0)}
-            className="absolute right-0 top-0 h-[86%] w-[74%] overflow-hidden rounded-[32px] shadow-[0_30px_70px_rgba(42,31,26,.22)]"
-            style={{ background: '#C9D8E6' }}
-          >
-            <motion.div style={{ y: mainImgY }} className="absolute inset-x-0 -inset-y-[9%]">
-              <motion.img
-                {...zoom(0)}
-                src={`${DETAIL}-700.webp`}
-                srcSet={`${DETAIL}-700.webp 700w, ${DETAIL}-1400.webp 1400w`}
-                sizes="(min-width: 1024px) 36vw, 74vw"
-                width="700"
-                height="960"
-                alt="Close-up of a Space Maker facade with planted balconies"
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover"
-              />
-            </motion.div>
-          </motion.div>
-
-          <motion.div style={{ y: secondY }} className="absolute bottom-0 left-0 z-10 w-[58%]">
-            <motion.div
-              {...wipe(0.35)}
-              className="aspect-[5/4] overflow-hidden rounded-[28px] border-[6px] shadow-[0_24px_60px_rgba(42,31,26,.25)]"
-              style={{ borderColor: CREAM, background: '#2B6CB0' }}
-            >
-              <motion.div style={{ y: secondImgY }} className="h-[112%] w-full">
-                <motion.img
-                  {...zoom(0.35)}
-                  src={`${SECOND}-800.webp`}
-                  srcSet={`${SECOND}-800.webp 800w, ${SECOND}-1600.webp 1600w`}
-                  sizes="(min-width: 1024px) 28vw, 58vw"
-                  width="800"
-                  height="640"
-                  alt="Artist's impression of a Space Maker apartment tower with planted terraces"
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover"
-                />
-              </motion.div>
-            </motion.div>
-          </motion.div>
-
-          {/* small lime mark on the frame corner, ties the section to the hero */}
-          <motion.span
-            aria-hidden
-            className="absolute right-[-6px] top-[10%] z-10 h-3.5 w-3.5 rounded-full ring-8"
-            style={{ background: LIME, '--tw-ring-color': 'rgba(198,240,12,.35)' }}
-            initial={reduce ? false : { scale: 0 }}
-            animate={seen ? { scale: 1 } : undefined}
-            transition={{ duration: 0.6, delay: 1.2, ease: EASE }}
-          />
+        <div className="md:col-span-6">
+          <SlicedPhoto src={src} className="h-[420px] sm:h-[560px]" />
         </div>
       </div>
 
@@ -161,23 +181,14 @@ export default function WhoWeAre() {
         {pillars.map((p, i) => (
           <motion.li
             key={p.title}
-            initial={reduce ? false : { opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.7, delay: i * 0.1, ease: EASE }}
-            className="relative pt-5"
+            transition={{ duration: 0.6, delay: i * 0.08 }}
+            className="border-t border-[#1B4332]/20 pt-5"
           >
-            <motion.span
-              aria-hidden
-              className="absolute left-0 top-0 h-px w-full origin-left"
-              style={{ background: 'rgba(27,67,50,.25)' }}
-              initial={reduce ? false : { scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 1, delay: i * 0.1, ease: EASE }}
-            />
-            <span className="font-['JetBrains_Mono'] text-xs font-semibold" style={{ color: ESPRESSO }}>
-              <span className="mr-2 inline-block h-2 w-2 rounded-full ring-4" style={{ background: LIME, '--tw-ring-color': 'rgba(198,240,12,.25)' }} />
+            <span className="font-['JetBrains_Mono'] text-xs font-semibold text-[#111827]">
+              <span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#C6F00C] ring-4 ring-[#C6F00C]/25" />
               {String(i + 1).padStart(2, '0')}
             </span>
             <h3 className="f-display mt-3 text-xl font-semibold text-[#1B4332]">{p.title}</h3>
