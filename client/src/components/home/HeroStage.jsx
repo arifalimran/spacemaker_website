@@ -24,18 +24,27 @@ export default function HeroStage() {
   const ref = useRef(null);
   const reduce = useReducedMotion();
   const base = reduce ? 0 : introWillPlay ? 1.35 : 0.15;
-  const t = (d) => (reduce ? { duration: 0 } : { duration: 0.9, delay: base + d, ease: [0.22, 1, 0.36, 1] });
+  // the card waits for the building to be fully revealed, then a short pause
+  const cardBase = reduce ? 0 : introWillPlay ? base + 0.8 : base + 1.0;
+  const t = (d) => (reduce ? { duration: 0 } : { duration: 0.9, delay: cardBase + d, ease: [0.22, 1, 0.36, 1] });
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const tagY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -60]);
+  // camera: the whole photo pushes in towards the balconies first (before the ribbons start to clear)
+  const camScale = useTransform(scrollYProgress, [0, 0.32, 1], reduce ? [1, 1, 1] : [1, 1.14, 1.2]);
+  const camY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -40]);
+  // the card glides up and fades out early, so its blur never has to follow a moving photo for long
+  const cardO = useTransform(scrollYProgress, [0, 0.2], reduce ? [1, 1] : [1, 0]);
+  const cardY = useTransform(scrollYProgress, [0, 0.2], reduce ? [0, 0] : [0, -50]);
+  const tagO = useTransform(scrollYProgress, [0, 0.15], reduce ? [1, 1] : [1, 0]);
   let w = 0;
 
   return (
     <section ref={ref} className="relative isolate flex min-h-[104svh] flex-col overflow-hidden lg:min-h-[112svh]" style={{ background: `linear-gradient(180deg, ${CREAM} 50%, ${ESPRESSO} 100%)`, color: ESPRESSO }}>
       {/* photo: full colour, edge to edge, nothing on top of it */}
-      <div
+      <motion.div
         className="absolute inset-x-0 top-0 z-0 h-[66svh] overflow-hidden lg:inset-y-0 lg:h-auto"
-        style={{ backgroundImage: `url(${LQIP})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+        style={{ backgroundImage: `url(${LQIP})`, backgroundSize: 'cover', backgroundPosition: 'center', scale: camScale, y: camY, transformOrigin: '60% 38%', willChange: 'transform' }}
       >
         <motion.img
           src={`${MAIN}-1000.webp`}
@@ -51,16 +60,23 @@ export default function HeroStage() {
           transition={reduce ? { duration: 0 } : { duration: 2.4, delay: base - 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="sm-hero-img h-full w-full object-cover object-[50%_20%] lg:absolute lg:left-[20%] lg:w-full lg:max-w-none lg:object-[50%_32%]"
         />
-      </div>
+      </motion.div>
+
+      {/* returning visitors: one clean reveal, an espresso panel sliding away along the slant of the ribbons */}
+      {!reduce && !introWillPlay && (
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-[7]"
+          style={{ background: ESPRESSO }}
+          initial={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 106%)' }}
+          animate={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% -8%, 0% -2%)' }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.76, 0, 0.24, 1] }}
+        />
+      )}
 
       {/* solid project tag on the tower (desktop) */}
-      <motion.div
-        style={{ y: tagY }}
-        initial={reduce ? false : { opacity: 0, y: 24 }}
-        animate={{ opacity: 1 }}
-        transition={t(1)}
-        className="absolute right-6 top-[40%] z-[5] hidden lg:block xl:right-10"
-      >
+      <motion.div style={{ y: tagY, opacity: tagO }} className="absolute right-6 top-[40%] z-[5] hidden lg:block xl:right-10">
+        <motion.div initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={t(0.95)}>
         <div className="flex items-center gap-3.5 rounded-2xl bg-white py-3 pl-3 pr-5 shadow-[0_12px_30px_rgba(42,31,26,.2)]">
           <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: ESPRESSO, color: LIME }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M12 21s7-6.1 7-11a7 7 0 10-14 0c0 4.9 7 11 7 11z" /><circle cx="12" cy="10" r="2.5" /></svg>
@@ -70,10 +86,12 @@ export default function HeroStage() {
             <span className="mt-1 block font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.16em]" style={{ color: 'rgba(42,31,26,.7)' }}>G+M+8 &middot; Under construction</span>
           </span>
         </div>
+        </motion.div>
       </motion.div>
 
       {/* the one frosted panel, behind all the text */}
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 items-end px-4 pb-[calc(10vw+1.5rem)] pt-[34svh] sm:px-8 lg:items-center lg:pb-[calc(10vw+1rem)] lg:pt-28">
+        <motion.div style={{ opacity: cardO, y: cardY, willChange: 'transform, opacity' }} className="w-full max-w-[31rem]">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -106,7 +124,7 @@ export default function HeroStage() {
                               strokeLinecap="round"
                               initial={reduce ? false : { pathLength: 0 }}
                               animate={{ pathLength: 1 }}
-                              transition={reduce ? { duration: 0 } : { duration: 0.9, delay: base + 0.9, ease: 'easeInOut' }}
+                              transition={reduce ? { duration: 0 } : { duration: 0.9, delay: cardBase + 0.9, ease: 'easeInOut' }}
                             />
                           </svg>
                         )}
@@ -166,6 +184,7 @@ export default function HeroStage() {
             ))}
           </motion.ul>
 
+        </motion.div>
         </motion.div>
       </div>
 

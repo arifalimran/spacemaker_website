@@ -39,15 +39,15 @@ export default function PageIntro() {
           <motion.div
             className="absolute inset-0"
             style={{ background: LIME }}
-            initial={{ y: 0 }}
-            exit={{ y: '-100%' }}
+            initial={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 106%)' }}
+            exit={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% -8%, 0% -2%)' }}
             transition={{ duration: 0.75, delay: 0.08, ease: EASE }}
           />
           <motion.div
             className="absolute inset-0 flex flex-col items-center justify-center"
             style={{ background: ESPRESSO }}
-            initial={{ y: 0 }}
-            exit={{ y: '-100%' }}
+            initial={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 106%)' }}
+            exit={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% -8%, 0% -2%)' }}
             transition={{ duration: 0.7, ease: EASE }}
           >
             <div className="flex overflow-hidden px-4 pb-2">
