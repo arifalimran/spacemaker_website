@@ -3,17 +3,36 @@
 // On-time delivery is a vertical milestone track: the lime line fills top to bottom and each milestone lights up in turn.
 // Plain gradients/rgba only (no CSS filters). Reduced motion: track shown complete.
 import React, { useRef } from 'react';
-import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { useInView, useReducedMotion } from 'framer-motion';
 import { WHY_US } from '../../data/portfolio';
 import { Eyebrow, Reveal } from '../portfolio/shared';
 
 const LIME = '#C6F00C';
 
-// On-time delivery track. Loops by itself while on screen (9s cycle): a glowing lime pulse runs from Design down to
-// Handover, each milestone lights up and sends out a ring as it passes, Handover glows, then the track fades and restarts.
-// transform/opacity/colour only. Reduced motion: finished track, no pulse.
+// On-time delivery track. Loops by itself while on screen (9s cycle): a lime pulse runs from Design down to Handover,
+// each milestone lights up and sends out a ring as it passes, Handover glows, then the track fades and restarts.
+// Pure CSS keyframes on transform + opacity only, so the browser runs it off the main thread and scrolling stays smooth
+// (no JS animation frames, no colour/shadow repaints). Paused while off screen. Reduced motion: finished track, no pulse.
 const CYCLE = 9;
 const SWEEP = 0.72; // fraction of the cycle the pulse takes to reach the last milestone
+const pc = (x) => `${+(x * 100).toFixed(2)}%`;
+
+function trackCss(n) {
+  let s = `
+@keyframes smFill{0%{transform:scaleY(0);opacity:1}${pc(SWEEP)}{transform:scaleY(1);opacity:1}90%{transform:scaleY(1);opacity:1}94%{transform:scaleY(0);opacity:0}100%{transform:scaleY(0);opacity:1}}
+@keyframes smHead{0%{transform:translate3d(0,0,0);opacity:1}${pc(SWEEP)}{transform:translate3d(0,var(--h),0);opacity:1}${pc(SWEEP + 0.08)}{transform:translate3d(0,var(--h),0);opacity:0}100%{transform:translate3d(0,var(--h),0);opacity:0}}
+.sm-trk-fill{transform-origin:top;will-change:transform,opacity}
+.sm-trk-head{will-change:transform,opacity}
+`;
+  for (let i = 0; i < n; i++) {
+    const t = Math.max(0.001, (SWEEP * i) / (n - 1));
+    const t2 = t + 0.02;
+    s += `@keyframes smOn${i}{0%{opacity:0}${pc(t)}{opacity:0}${pc(t2)}{opacity:1}88%{opacity:1}94%{opacity:0}100%{opacity:0}}`;
+    s += `@keyframes smLab${i}{0%{opacity:.4}${pc(t)}{opacity:.4}${pc(t2)}{opacity:1}88%{opacity:1}94%{opacity:.4}100%{opacity:.4}}`;
+    s += `@keyframes smRing${i}{0%{opacity:0;transform:scale(1)}${pc(t)}{opacity:.9;transform:scale(1)}${pc(Math.min(0.99, t + 0.06))}{opacity:0;transform:scale(2.8)}100%{opacity:0;transform:scale(2.8)}}`;
+  }
+  return s;
+}
 
 function Track({ items: raw }) {
   const items = raw[0] === 'Design' ? raw : ['Design', ...raw];
@@ -26,70 +45,61 @@ function Track({ items: raw }) {
   React.useLayoutEffect(() => {
     if (olRef.current) setH(Math.max(40, olRef.current.offsetHeight - 18));
   }, [n]);
-  const on = inView && !reduce;
-  const loop = { duration: CYCLE, repeat: Infinity, ease: 'linear' };
-  const DARK = '#2A1F1A';
+  const css = React.useMemo(() => trackCss(n), [n]);
+  const run = !reduce;
+  const play = inView ? 'running' : 'paused';
+  const an = (name) => (run ? { animation: `${name} ${CYCLE}s linear infinite`, animationPlayState: play } : undefined);
 
   return (
     <div ref={ref} className="relative mt-5 pl-8">
+      {run && <style>{css}</style>}
       {/* rail */}
       <div aria-hidden className="absolute bottom-[9px] left-[7px] top-[9px] w-[2px] bg-[#FAF8F5]/15" />
       {/* lime fill that follows the pulse */}
-      <motion.div
+      <div
         aria-hidden
-        className="absolute bottom-[9px] left-[7px] top-[9px] w-[2px] origin-top"
-        style={{ background: LIME, scaleY: reduce ? 1 : 0 }}
-        animate={on ? { scaleY: [0, 1, 1, 0, 0], opacity: [1, 1, 1, 0, 1] } : undefined}
-        transition={{ ...loop, times: [0, SWEEP, 0.9, 0.94, 1] }}
+        className="sm-trk-fill absolute bottom-[9px] left-[7px] top-[9px] w-[2px]"
+        style={{ background: LIME, transform: run ? 'scaleY(0)' : 'scaleY(1)', ...an('smFill') }}
       />
-      {/* glowing head */}
-      {!reduce && (
-        <motion.span
+      {/* glowing head (static glow, only moves and fades) */}
+      {run && (
+        <span
           aria-hidden
-          className="absolute left-[3px] top-[5px] h-[10px] w-[10px] rounded-full"
-          style={{ background: LIME, boxShadow: '0 0 14px 4px rgba(198,240,12,.65)', opacity: 0 }}
-          animate={on ? { y: [0, h, h, h], opacity: [1, 1, 0, 0] } : undefined}
-          transition={{ ...loop, times: [0, SWEEP, SWEEP + 0.08, 1] }}
+          className="sm-trk-head absolute left-[3px] top-[5px] h-[10px] w-[10px] rounded-full"
+          style={{ background: LIME, boxShadow: '0 0 14px 4px rgba(198,240,12,.65)', '--h': `${h}px`, ...an('smHead') }}
         />
       )}
       <ol ref={olRef} className="grid gap-4">
         {items.map((m, i) => {
           const last = i === n - 1;
-          const t = Math.max(0.001, (SWEEP * i) / (n - 1));
-          const lit = { times: [0, t, t + 0.02, 0.88, 0.94, 1] };
           return (
             <li key={m} className="relative flex items-center gap-3">
-              {/* dot */}
-              <motion.span
-                aria-hidden
-                className="absolute -left-8 h-4 w-4 rounded-full border-2"
-                style={{ borderColor: LIME, backgroundColor: reduce ? LIME : DARK }}
-                animate={on ? { backgroundColor: [DARK, DARK, LIME, LIME, DARK, DARK] } : undefined}
-                transition={{ ...loop, ...lit }}
-              />
+              {/* dot: dark ring, lime centre fades in as the pulse passes */}
+              <span aria-hidden className="absolute -left-8 h-4 w-4 rounded-full border-2 bg-[#2A1F1A]" style={{ borderColor: LIME }}>
+                <span
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: LIME, opacity: run ? 0 : 1, ...an(`smOn${i}`) }}
+                />
+              </span>
               {/* ring burst */}
-              {!reduce && (
-                <motion.span
+              {run && (
+                <span
                   aria-hidden
                   className="absolute -left-8 h-4 w-4 rounded-full border"
-                  style={{ borderColor: LIME, opacity: 0 }}
-                  animate={on ? { scale: [1, 1, 2.8, 2.8], opacity: [0, 0.9, 0, 0] } : undefined}
-                  transition={{ ...loop, times: [0, t, Math.min(0.99, t + 0.06), 1] }}
+                  style={{ borderColor: LIME, opacity: 0, ...an(`smRing${i}`) }}
                 />
               )}
               <span className="font-['JetBrains_Mono'] text-[10px] tracking-[0.18em] text-[#FAF8F5]/40">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <motion.span
+              <span
                 className={`font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] ${last ? 'font-semibold' : ''}`}
-                style={{ color: last ? LIME : '#FAF8F5', opacity: reduce ? 1 : 0.4 }}
-                animate={on ? { opacity: [0.4, 0.4, 1, 1, 0.4, 0.4] } : undefined}
-                transition={{ ...loop, ...lit }}
+                style={{ color: last ? LIME : '#FAF8F5', opacity: run ? 0.4 : 1, ...an(`smLab${i}`) }}
               >
                 {m}
-              </motion.span>
+              </span>
               {last && (
-                <motion.svg
+                <svg
                   aria-hidden
                   width="18"
                   height="18"
@@ -99,12 +109,10 @@ function Track({ items: raw }) {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  style={{ opacity: reduce ? 1 : 0, filter: 'none' }}
-                  animate={on ? { opacity: [0, 0, 1, 1, 0, 0], scale: [0.7, 0.7, 1.15, 1, 0.7, 0.7] } : undefined}
-                  transition={{ ...loop, ...lit }}
+                  style={{ opacity: run ? 0 : 1, ...an(`smOn${i}`) }}
                 >
                   <path d="M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6" />
-                </motion.svg>
+                </svg>
               )}
             </li>
           );
