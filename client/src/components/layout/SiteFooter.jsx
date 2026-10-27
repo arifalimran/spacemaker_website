@@ -1,22 +1,34 @@
 // client/src/components/layout/SiteFooter.jsx
-// Solid espresso footer (#2A1F1A), ivory text, lime hover accents.
-// Also the "Contact" target in the nav. Everything comes from CONTACT / BRAND in data/portfolio.js.
+// Compact sand footer. One slim "Find your home" strip (project filters + interiors, with live counts) sits on top and is hidden
+// on /projects and /interiors, where the page is already the finder. Then brand, links, offices, contact, and a wordmark that
+// bleeds off the bottom edge. Counts and links come from the data, so they follow the back end. Also the "Contact" target in the nav.
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { BRAND, CONTACT, GENERAL_MESSAGE } from '../../data/portfolio';
+import { Link, useLocation } from 'react-router-dom';
+import { CONTACT, GENERAL_MESSAGE, projects, upcoming, interiorProjects } from '../../data/portfolio';
 import { waLink, trackLead } from '../../lib/leads';
 
-const head = "font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.22em] text-[#F5F0E6]/70";
-const lk = 'inline-block text-sm text-[#F5F0E6]/90 transition-[color,text-shadow,transform] duration-300 hover:translate-x-0.5 hover:text-[#C6F00C] hover:[text-shadow:0_0_14px_rgba(198,240,12,.6)]';
-const sub = 'text-[11px] uppercase tracking-wider text-[#F5F0E6]/80';
+const head = "font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.22em] text-[#5F6B1F]";
+const lk = 'sm-fl relative inline-block text-sm font-medium text-[#2A1F1A]/85 transition-colors duration-300 hover:text-[#2A1F1A]';
+const sub = "font-['JetBrains_Mono'] text-[11px] font-medium uppercase tracking-[0.16em] text-[#2A1F1A]/60";
+
+const count = (list, fn) => list.filter(fn).length;
+
+// the heart of the footer: the project filters and the interiors, with counts
+const BROWSE = [
+  { label: 'Active', to: '/projects?status=active', n: count(projects, (p) => p.status === 'active') },
+  { label: 'Handed over', to: '/projects?status=completed', n: count(projects, (p) => p.status === 'completed') },
+  { label: 'Opening soon', to: '/projects?status=upcoming', n: upcoming.length },
+  { label: 'All projects', to: '/projects', n: projects.length + upcoming.length },
+];
+const BROWSE_INTERIORS = [{ label: 'Interiors', to: '/interiors', n: interiorProjects.length }];
 
 const QUICK_LINKS = [
-  { label: 'Projects', to: '/projects' },
-  { label: 'Interiors', to: '/interiors' },
   { label: 'About', to: { pathname: '/', hash: '#about' } },
   { label: 'Why Us', to: { pathname: '/', hash: '#why-us' } },
+  { label: 'Testimonials', to: { pathname: '/', hash: '#testimonials' } },
   { label: 'Landowners', to: { pathname: '/', hash: '#land' } },
   { label: 'Careers', to: '/careers' },
+  { label: 'Team', to: { pathname: '/', hash: '#team' } },
 ];
 
 // official brand colours (Instagram uses its gradient)
@@ -58,10 +70,10 @@ const SOCIAL_ICONS = {
 
 function SocialRow({ items = [] }) {
   if (!items.length) return null;
-  const box = 'flex h-10 w-10 items-center justify-center rounded-full text-white transition-transform duration-300';
+  const box = 'flex h-10 w-10 items-center justify-center rounded-full text-white shadow-sm transition-transform duration-300';
   return (
-    <ul className="sm-soc mt-6 flex flex-wrap gap-3">
-      <style>{`.sm-soc:hover .sm-soc-i:not(:hover){opacity:.55}.sm-soc-i{transition:opacity .3s,transform .3s,box-shadow .3s}.sm-soc-i:hover{box-shadow:var(--g);transform:translateY(-4px) scale(1.1)}`}</style>
+    <ul className="sm-soc mt-5 flex flex-wrap gap-3">
+      <style>{`.sm-soc:hover .sm-soc-i:not(:hover){opacity:.55}.sm-soc-i{transition:opacity .3s,transform .3s,box-shadow .3s}.sm-soc-i:hover{filter:brightness(1.12) saturate(1.1);box-shadow:var(--g),0 0 0 2px rgba(255,255,255,.55);transform:translateY(-4px) scale(1.1)}`}</style>
       {items.map((s) => {
         const icon = (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -76,14 +88,14 @@ function SocialRow({ items = [] }) {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={s.label}
-                style={{ background: BRAND_BG[s.key] || '#555', '--g': BRAND_GLOW[s.key] }}
+                style={{ background: BRAND_BG[s.key] || '#555', '--bgc': BRAND_BG[s.key] || '#555', '--g': BRAND_GLOW[s.key] }}
                 className={`${box} sm-soc-i`}
               >
                 {icon}
               </a>
             ) : (
               // placeholder until the real page URL is added in the admin / data file
-              <span title={`[${s.label} link]`} aria-hidden className={`${box} sm-soc-i`} style={{ background: BRAND_BG[s.key] || '#555', '--g': BRAND_GLOW[s.key] }}>
+              <span title={`[${s.label} link]`} aria-hidden className={`${box} sm-soc-i`} style={{ background: BRAND_BG[s.key] || '#555', '--bgc': BRAND_BG[s.key] || '#555', '--g': BRAND_GLOW[s.key] }}>
                 {icon}
               </span>
             )}
@@ -94,50 +106,74 @@ function SocialRow({ items = [] }) {
   );
 }
 
+const FOOTER_CSS = `
+.sm-fl::after{content:"";position:absolute;left:0;bottom:-3px;height:2px;width:0;background:#A9B957;transition:width .3s cubic-bezier(.22,1,.36,1)}
+.sm-fl:hover::after{width:100%}
+.sm-bp{transition:background-color .3s,color .3s,border-color .3s,transform .3s}
+.sm-bp .sm-bn{transition:background-color .3s,color .3s}
+.sm-bp:hover,.sm-bp:focus-visible{background:#2A1F1A;color:#F5F0E6;border-color:#2A1F1A;transform:translateY(-2px)}
+.sm-bp:hover .sm-bn,.sm-bp:focus-visible .sm-bn{background:#A9B957;color:#2A1F1A}
+@media (prefers-reduced-motion:reduce){.sm-bp,.sm-bp .sm-bn,.sm-soc-i{transition:none!important}}
+`;
+
+function BrowseStrip() {
+  const pill = 'sm-bp inline-flex items-center gap-2.5 rounded-full border border-[#2A1F1A]/25 bg-[#F3ECDF] py-1.5 pl-4 pr-1.5 text-sm font-semibold text-[#2A1F1A]';
+  const num = "sm-bn inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-full bg-[#2A1F1A] px-2 font-['JetBrains_Mono'] text-xs font-semibold text-[#F5F0E6]";
+  const Pill = ({ r }) => (
+    <Link to={r.to} className={pill}>
+      {r.label}
+      <span className={num}>{String(r.n).padStart(2, '0')}</span>
+    </Link>
+  );
+  return (
+    <div className="flex flex-col gap-4 rounded-3xl border border-[#2A1F1A]/12 bg-[#EEE6D8] p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex items-center gap-3 font-['Space_Grotesk'] text-xl font-extrabold tracking-tight text-[#2A1F1A] sm:text-2xl">
+        <span className="h-[2px] w-8 flex-none rounded-full bg-[#A9B957]" aria-hidden />
+        Find your home
+      </div>
+      <nav aria-label="Browse projects" className="flex flex-wrap items-center gap-2.5">
+        {BROWSE.map((r) => (
+          <Pill key={r.label} r={r} />
+        ))}
+        <span className="mx-1 hidden h-6 w-px bg-[#2A1F1A]/20 sm:block" aria-hidden />
+        {BROWSE_INTERIORS.map((r) => (
+          <Pill key={r.label} r={r} />
+        ))}
+      </nav>
+    </div>
+  );
+}
+
 export default function SiteFooter() {
   const waDisplay = CONTACT.whatsappDisplay || `+${CONTACT.whatsapp}`;
+  const { pathname } = useLocation();
+  // the two list pages are already the finder, so the strip would be redundant there
+  const showBrowse = !(pathname === '/projects' || pathname === '/interiors');
   return (
-    <footer id="contact" className="relative overflow-hidden bg-[#2A1F1A] text-[#F5F0E6]">
+    <footer id="contact" className="relative overflow-hidden border-t border-[#2A1F1A]/10 text-[#2A1F1A]" style={{ background: '#E5DBCD' }}>
+      <style>{FOOTER_CSS}</style>
 
-      <div className="relative mx-auto max-w-7xl px-5 pb-8 pt-16 sm:px-8 sm:pt-20">
-        {/* visit CTA */}
-        <div className="flex flex-col gap-6 border-b border-[#F5F0E6]/12 pb-10 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.08] tracking-tight text-[#F5F0E6] sm:text-4xl">
-              Let us show you around.
-            </h2>
-            <p className="mt-3 max-w-md text-[#F5F0E6]/85">Visit a site, see the drawings, ask anything. We answer personally.</p>
-          </div>
-          <a
-            href={waLink(GENERAL_MESSAGE)}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => trackLead({ channel: 'whatsapp', kind: 'footer-visit' })}
-            className="relative isolate inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl border-[1.5px] border-[#F5F0E6] px-5 py-3.5 text-sm font-semibold text-[#F5F0E6] transition-[color,box-shadow] duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#F5F0E6] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:shadow-[0_0_24px_rgba(198,240,12,.45)] hover:before:translate-y-0 sm:w-auto"
-          >
-            <span className="h-2 w-2 rounded-full bg-[#C6F00C]" />
-            Book a visit on WhatsApp
-          </a>
-        </div>
+      <div className="relative mx-auto max-w-7xl px-5 pt-10 sm:px-8 sm:pt-12">
+        {showBrowse && <BrowseStrip />}
 
-        <div className="grid gap-10 pt-12 sm:grid-cols-2 lg:grid-cols-12">
+        <div className={`grid gap-9 sm:grid-cols-2 lg:grid-cols-12 ${showBrowse ? 'pt-10' : 'pt-2'}`}>
           {/* brand */}
           <div className="lg:col-span-4">
             <Link to="/" className="inline-flex items-center gap-3" aria-label="Space Maker home">
-              <span className="rounded-lg bg-[#F5F0E6] p-1.5"><img src={BRAND.icon} alt="" className="h-9 w-auto" loading="lazy" /></span>
-              <span className="font-['Space_Grotesk'] text-xl font-extrabold tracking-tight text-[#F5F0E6]">Space Maker</span>
+              <img src="/assets/00_brand/logo-mark.png" alt="" className="h-[68px] w-auto" loading="lazy" />
+              <span className="flex flex-col">
+                <img src="/assets/00_brand/logo-word.png" alt="Space Maker" className="h-[54px] w-auto" loading="lazy" />
+                <span className="mt-1 text-[11px] font-semibold tracking-[0.03em] text-[#2A1F1A]">where space defines luxury</span>
+              </span>
             </Link>
-            {CONTACT.tagline && <p className="mt-4 font-serif text-lg italic text-[#F5F0E6]/90">{CONTACT.tagline}</p>}
-            {CONTACT.footerLine && (
-              <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#F5F0E6]/80">{CONTACT.footerLine}</p>
-            )}
+            {CONTACT.footerLine && <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#2A1F1A]/75">{CONTACT.footerLine}</p>}
             <SocialRow items={CONTACT.social} />
           </div>
 
           {/* quick links */}
           <nav aria-label="Footer" className="lg:col-span-2">
             <div className={head}>Explore</div>
-            <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5 sm:grid-cols-1">
+            <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-1">
               {QUICK_LINKS.map((l) => (
                 <li key={l.label}>
                   <Link to={l.to} className={lk}>{l.label}</Link>
@@ -149,11 +185,11 @@ export default function SiteFooter() {
           {/* offices */}
           <div className="lg:col-span-3">
             <div className={head}>Offices</div>
-            <ul className="mt-4 grid gap-5">
+            <ul className="mt-4 grid gap-4">
               {CONTACT.offices.map((o) => (
                 <li key={o.name}>
-                  <div className="text-sm font-semibold text-[#F5F0E6]">{o.name}</div>
-                  <div className="mt-1 text-sm leading-relaxed text-[#F5F0E6]/80">{o.address}</div>
+                  <div className="text-sm font-semibold text-[#2A1F1A]">{o.name}</div>
+                  <div className="mt-0.5 text-sm leading-relaxed text-[#2A1F1A]/75">{o.address}</div>
                 </li>
               ))}
             </ul>
@@ -162,7 +198,7 @@ export default function SiteFooter() {
           {/* contact */}
           <div className="lg:col-span-3">
             <div className={head}>Talk to us</div>
-            <ul className="mt-4 grid gap-3.5">
+            <ul className="mt-4 grid gap-3">
               <li>
                 <div className={sub}>WhatsApp</div>
                 <a
@@ -185,19 +221,36 @@ export default function SiteFooter() {
                 <div className={sub}>Email</div>
                 <a href={`mailto:${CONTACT.email}`} className={`${lk} break-all font-semibold`}>{CONTACT.email}</a>
               </li>
-              {CONTACT.messenger && (
-                <li>
-                  <a href={CONTACT.messenger} target="_blank" rel="noreferrer" className={lk}>Message on Facebook →</a>
-                </li>
-              )}
             </ul>
+            <a
+              href={waLink(GENERAL_MESSAGE)}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackLead({ channel: 'whatsapp', kind: 'footer-visit' })}
+              className="relative isolate mt-5 inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl border-[1.5px] border-[#2A1F1A] bg-[#2A1F1A] px-5 py-3 text-sm font-semibold text-[#F5F0E6] transition-[color] duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#A9B957] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
+            >
+              <span className="h-2 w-2 rounded-full bg-[#A9B957]" />
+              Book a visit
+            </a>
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-2 border-t border-[#F5F0E6]/12 pt-6 text-xs text-[#F5F0E6]/70 sm:flex-row sm:items-center sm:justify-between">
+        {/* bottom bar */}
+        <div className="mt-9 flex flex-col gap-2 border-t border-[#2A1F1A]/15 pt-5 text-xs text-[#2A1F1A]/70 sm:flex-row sm:items-center sm:justify-between sm:pr-36">
           <span>© {new Date().getFullYear()} Space Maker Limited. All rights reserved.</span>
-          <Link to="/projects" className="text-[#C6F00C] transition-opacity hover:opacity-75">All projects →</Link>
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="sm-fl self-start font-semibold text-[#2A1F1A] sm:self-auto"
+          >
+            Back to top ↑
+          </button>
         </div>
+      </div>
+
+      {/* the wordmark bleeds off the bottom edge: one tone a little deeper than the sand, top of the letters only */}
+      <div aria-hidden className="pointer-events-none mt-6 h-[clamp(84px,13vw,160px)] select-none overflow-hidden">
+        <img src="/assets/00_brand/logo-word-sand.png" alt="" className="mx-auto w-full max-w-4xl px-5" loading="lazy" />
       </div>
     </footer>
   );
