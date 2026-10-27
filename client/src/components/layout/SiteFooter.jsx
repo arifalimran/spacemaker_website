@@ -7,9 +7,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { CONTACT, GENERAL_MESSAGE, projects, upcoming, interiorProjects } from '../../data/portfolio';
 import { waLink, trackLead } from '../../lib/leads';
 
-const head = "font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C7D17F]";
-const lk = 'sm-fl relative inline-block text-sm font-medium text-[#F5F0E6]/85 transition-colors duration-300 hover:text-[#C7D17F]';
-const sub = "font-['JetBrains_Mono'] text-[11px] font-medium uppercase tracking-[0.16em] text-[#F5F0E6]/60";
+const head = "font-['JetBrains_Mono'] text-xs font-semibold uppercase tracking-[0.22em] text-[#C7D17F]";
+const lk = 'sm-fl relative inline-block text-base font-medium text-[#F5F0E6]/85 transition-colors duration-300 hover:text-[#C7D17F]';
+const sub = "font-['JetBrains_Mono'] text-xs font-medium uppercase tracking-[0.16em] text-[#F5F0E6]/60";
 
 const count = (list, fn) => list.filter(fn).length;
 
@@ -70,13 +70,13 @@ const SOCIAL_ICONS = {
 
 function SocialRow({ items = [] }) {
   if (!items.length) return null;
-  const box = 'flex h-10 w-10 items-center justify-center rounded-full text-white shadow-sm transition-transform duration-300';
+  const box = 'flex h-12 w-12 items-center justify-center rounded-full text-white shadow-sm transition-transform duration-300';
   return (
-    <ul className="sm-soc mt-5 flex flex-wrap gap-3">
+    <ul className="sm-soc mt-8 flex flex-wrap gap-3.5">
       <style>{`.sm-soc:hover .sm-soc-i:not(:hover){opacity:.55}.sm-soc-i{transition:opacity .3s,transform .3s,box-shadow .3s}.sm-soc-i:hover{filter:brightness(1.12) saturate(1.1);box-shadow:var(--g),0 0 0 2px rgba(255,255,255,.55);transform:translateY(-4px) scale(1.1)}`}</style>
       {items.map((s) => {
         const icon = (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             {SOCIAL_ICONS[s.key] || <circle cx="12" cy="12" r="8" />}
           </svg>
         );
@@ -117,8 +117,8 @@ const FOOTER_CSS = `
 `;
 
 function BrowseStrip() {
-  const pill = 'sm-bp inline-flex items-center gap-2.5 rounded-full border border-[#F5F0E6]/25 py-1.5 pl-4 pr-1.5 text-sm font-semibold text-[#F5F0E6]';
-  const num = "sm-bn inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-full bg-[#A9B957] px-2 font-['JetBrains_Mono'] text-xs font-semibold text-[#2A1F1A]";
+  const pill = 'sm-bp inline-flex items-center gap-3 rounded-full border border-[#F5F0E6]/25 py-2 pl-5 pr-2 text-base font-semibold text-[#F5F0E6]';
+  const num = "sm-bn inline-flex h-9 min-w-[2.25rem] items-center justify-center rounded-full bg-[#A9B957] px-2 font-['JetBrains_Mono'] text-sm font-semibold text-[#2A1F1A]";
   const Pill = ({ r }) => (
     <Link to={r.to} className={pill}>
       {r.label}
@@ -126,16 +126,18 @@ function BrowseStrip() {
     </Link>
   );
   return (
-    <div className="flex flex-col gap-4 rounded-3xl border border-[#F5F0E6]/12 bg-[#241A15] p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
-      <div className="flex items-center gap-3 font-['Space_Grotesk'] text-xl font-extrabold tracking-tight text-[#F5F0E6] sm:text-2xl">
-        <span className="h-[2px] w-8 flex-none rounded-full bg-[#A9B957]" aria-hidden />
-        Find your home
+    <div className="rounded-3xl border border-[#F5F0E6]/12 bg-[#241A15] px-6 py-10 sm:px-12 sm:py-14">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex items-center gap-4 whitespace-nowrap font-['Space_Grotesk'] text-3xl font-extrabold tracking-tight text-[#F5F0E6] sm:text-5xl">
+          <span className="h-[2px] w-10 flex-none rounded-full bg-[#A9B957]" aria-hidden />
+          Find your home
+        </div>
+        <p className="max-w-sm text-base leading-relaxed text-[#F5F0E6]/65 lg:text-right">Every Space Maker home, sorted by where it stands today.</p>
       </div>
-      <nav aria-label="Browse projects" className="flex flex-wrap items-center gap-2.5">
+      <nav aria-label="Browse projects" className="mt-8 flex flex-wrap items-center gap-3 border-t border-[#F5F0E6]/12 pt-8 sm:mt-10 sm:pt-10">
         {BROWSE.map((r) => (
           <Pill key={r.label} r={r} />
         ))}
-        <span className="mx-1 hidden h-6 w-px bg-[#F5F0E6]/20 sm:block" aria-hidden />
         {BROWSE_INTERIORS.map((r) => (
           <Pill key={r.label} r={r} />
         ))}
@@ -153,23 +155,23 @@ export default function SiteFooter() {
     <footer id="contact" className="relative overflow-hidden text-[#F5F0E6]" style={{ background: '#2A1F1A' }}>
       <style>{FOOTER_CSS}</style>
 
-      <div className="relative mx-auto max-w-7xl px-5 pt-10 sm:px-8 sm:pt-12">
+      <div className="relative mx-auto max-w-7xl px-5 pt-24 sm:px-8 sm:pt-40">
         {showBrowse && <BrowseStrip />}
 
-        <div className={`grid gap-9 sm:grid-cols-2 lg:grid-cols-12 ${showBrowse ? 'pt-10' : 'pt-2'}`}>
+        <div className={`grid gap-12 sm:grid-cols-2 lg:grid-cols-12 ${showBrowse ? 'pt-20' : 'pt-4'}`}>
           {/* brand */}
           <div className="lg:col-span-4">
             <Link to="/" className="inline-block" aria-label="Space Maker home">
-              <img src="/assets/00_brand/logo-lockup-light.png" alt="Space Maker, where space defines luxury" className="h-24 w-auto sm:h-28" loading="lazy" />
+              <img src="/assets/00_brand/logo-lockup-light.png" alt="Space Maker, where space defines luxury" className="h-28 w-auto sm:h-36" loading="lazy" />
             </Link>
-            {CONTACT.footerLine && <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#F5F0E6]/75">{CONTACT.footerLine}</p>}
+            {CONTACT.footerLine && <p className="mt-6 max-w-sm text-base leading-relaxed text-[#F5F0E6]/75">{CONTACT.footerLine}</p>}
             <SocialRow items={CONTACT.social} />
           </div>
 
           {/* quick links */}
           <nav aria-label="Footer" className="lg:col-span-2">
             <div className={head}>Explore</div>
-            <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-1">
+            <ul className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-1">
               {QUICK_LINKS.map((l) => (
                 <li key={l.label}>
                   <Link to={l.to} className={lk}>{l.label}</Link>
@@ -181,11 +183,11 @@ export default function SiteFooter() {
           {/* offices */}
           <div className="lg:col-span-3">
             <div className={head}>Offices</div>
-            <ul className="mt-4 grid gap-4">
+            <ul className="mt-6 grid gap-6">
               {CONTACT.offices.map((o) => (
                 <li key={o.name}>
-                  <div className="text-sm font-semibold text-[#F5F0E6]">{o.name}</div>
-                  <div className="mt-0.5 text-sm leading-relaxed text-[#F5F0E6]/75">{o.address}</div>
+                  <div className="text-base font-semibold text-[#F5F0E6]">{o.name}</div>
+                  <div className="mt-1 text-base leading-relaxed text-[#F5F0E6]/75">{o.address}</div>
                 </li>
               ))}
             </ul>
@@ -194,7 +196,7 @@ export default function SiteFooter() {
           {/* contact */}
           <div className="lg:col-span-3">
             <div className={head}>Talk to us</div>
-            <ul className="mt-4 grid gap-3">
+            <ul className="mt-6 grid gap-4">
               <li>
                 <div className={sub}>WhatsApp</div>
                 <a
@@ -223,7 +225,7 @@ export default function SiteFooter() {
               target="_blank"
               rel="noreferrer"
               onClick={() => trackLead({ channel: 'whatsapp', kind: 'footer-visit' })}
-              className="relative isolate mt-5 inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl border-[1.5px] border-[#F5F0E6] bg-[#F5F0E6] px-5 py-3 text-sm font-semibold text-[#2A1F1A] transition-[color] duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#A9B957] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
+              className="relative isolate mt-8 inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl border-[1.5px] border-[#F5F0E6] bg-[#F5F0E6] px-7 py-4 text-base font-semibold text-[#2A1F1A] transition-[color] duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#A9B957] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
             >
               <span className="h-2 w-2 rounded-full bg-[#A9B957]" />
               Book a visit
@@ -232,7 +234,7 @@ export default function SiteFooter() {
         </div>
 
         {/* bottom bar */}
-        <div className="mt-9 flex flex-col gap-2 border-t border-[#F5F0E6]/12 pt-5 text-xs text-[#F5F0E6]/65 sm:flex-row sm:items-center sm:justify-between sm:pr-36">
+        <div className="mt-20 flex flex-col gap-2 border-t border-[#F5F0E6]/12 pt-6 text-sm text-[#F5F0E6]/65 sm:flex-row sm:items-center sm:justify-between sm:pr-36">
           <span>© {new Date().getFullYear()} Space Maker Limited. All rights reserved.</span>
           <button
             type="button"
@@ -242,12 +244,19 @@ export default function SiteFooter() {
             Back to top ↑
           </button>
         </div>
+
+        {/* "SPACE MAKER" on one line, inside the page margins, dissolving downward into the espresso */}
+        <div aria-hidden className="pointer-events-none mt-14 select-none pb-8 sm:mt-20 sm:pb-12">
+          <img
+            src="/assets/00_brand/logo-oneline-dissolve.png"
+            alt=""
+            className="block h-auto w-full"
+            style={{ WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,.6) 45%, transparent 100%)', maskImage: 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,.6) 45%, transparent 100%)' }}
+            loading="lazy"
+          />
+        </div>
       </div>
 
-      {/* "SPACE MAKER" on one line, bleeding off the bottom edge: one tone a little lighter than the espresso */}
-      <div aria-hidden className="pointer-events-none mt-8 select-none overflow-hidden">
-        <img src="/assets/00_brand/logo-oneline-dark.png" alt="" className="mx-auto block w-full max-w-6xl px-5" style={{ marginBottom: '-3.3%' }} loading="lazy" />
-      </div>
     </footer>
   );
 }
