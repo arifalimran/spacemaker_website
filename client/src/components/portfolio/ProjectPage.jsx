@@ -10,171 +10,41 @@ import {
   CHAPTERS,
   CHAPTER_ORDER,
   ARCHITECT,
-  CONTACT,
   BRAND,
 } from '../../data/portfolio';
 import { scrollToEl } from '../../lib/scroll';
 import Lightbox from './Lightbox';
+import { Gallery, PlanExplorer, ArchitectBlock, EnquiryBlock, Wash, normalizePlans } from './ProjectSections';
 import {
   BlendedPhoto,
-  Shot,
-  Frame,
-  HStrip,
   Eyebrow,
   TypeTag,
   Reveal,
   Facts,
   LeadLink,
   ActionRow,
-  DarkBand,
   StickyBar,
   linkCls,
-  quietCls,
-  featherMask,
 } from './shared';
 
-/* Each chapter gets its own look, so the page never repeats itself */
-const TR = {
-  exterior: ['carved', 'duotone', 'blur'],
-  interior: ['arch', 'duotone', 'notch', 'blur'],
-  balcony: ['notch', 'blur', 'duotone'],
-  views: ['blur', 'duotone', 'notch'],
-};
-const tr = (k, i) => TR[k][i % TR[k].length];
-
-/* ---------------- chapter layouts ---------------- */
-function ExteriorChapter({ photos, open }) {
-  const [main, ...rest] = photos;
-  return (
-    <div className="mx-auto grid max-w-7xl items-center gap-4 px-5 sm:px-8 md:grid-cols-12 md:gap-6">
-      <div className={rest.length ? 'md:col-span-8' : 'md:col-span-12'}>
-        <Frame photo={main} onOpen={open} ratio="aspect-[16/10]" treatment="carved" />
-      </div>
-      {rest.length > 0 && (
-        <div className="grid gap-6 md:col-span-4">
-          {rest.slice(0, 2).map((p, i) => (
-            <Frame key={p.src + p.caption} photo={p} onOpen={open} ratio="aspect-[4/3]" treatment={tr('exterior', i + 1)} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* Rooftop: the photo is split and the chapter line sits in the gap */
-function RooftopChapter({ photos, open, title }) {
-  const p = photos[0];
-  return (
-    <div className="mx-auto max-w-7xl px-5 sm:px-8">
-      <button
-        type="button"
-        onClick={() => open(p)}
-        aria-label="Open rooftop photo"
-        className="block aspect-[16/10] w-full cursor-zoom-in text-left md:aspect-[21/9]"
-      >
-        <Shot treatment="band" src={p.src} alt={p.caption || 'Rooftop'} from={40} to={62}>
-          <span className="block w-full px-4 font-serif text-xl italic text-[#1B4332] sm:px-8 sm:text-3xl">
-            {p.caption || title}
-          </span>
-        </Shot>
-      </button>
-      {photos.slice(1).map((ph) => (
-        <div key={ph.src + ph.caption} className="mt-6">
-          <Frame photo={ph} onOpen={open} ratio="aspect-[21/9]" treatment="frame" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function StripChapter({ photos, open }) {
-  return (
-    <HStrip>
-      {photos.map((p, i) => (
-        <div key={p.src + p.caption} className="w-[72vw] flex-none snap-start sm:w-[380px]">
-          <Frame photo={p} onOpen={open} ratio="aspect-[4/5]" treatment={tr('interior', i)} />
-        </div>
-      ))}
-    </HStrip>
-  );
-}
-
-function PairChapter({ photos, open, k }) {
-  return (
-    <div className="mx-auto grid max-w-7xl gap-6 px-5 sm:px-8 md:grid-cols-2 lg:grid-cols-3">
-      {photos.map((p, i) => (
-        <div key={p.src + p.caption} className={i % 2 ? 'md:mt-14' : ''}>
-          <Frame photo={p} onOpen={open} ratio="aspect-[4/3]" treatment={tr(k, i)} />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function PlanChapter({ photos, open }) {
-  const [i, setI] = useState(0);
-  const p = photos[Math.min(i, photos.length - 1)];
-  const m = 'radial-gradient(ellipse 96% 94% at 50% 50%, #000 70%, transparent 100%)';
-  return (
-    <div className="mx-auto max-w-5xl px-5 sm:px-8">
-      {photos.length > 1 && (
-        <div className="mb-6 flex flex-wrap gap-x-7 gap-y-2">
-          {photos.map((ph, idx) => (
-            <button
-              key={ph.src + ph.caption}
-              type="button"
-              onClick={() => setI(idx)}
-              className={`border-b-2 pb-1 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] transition ${
-                idx === i ? 'border-[#C6F00C] text-[#111827]' : 'border-transparent text-neutral-500 hover:text-[#1B4332]'
-              }`}
-            >
-              {ph.caption || `Plan ${idx + 1}`}
-            </button>
-          ))}
-        </div>
-      )}
-      <button
-        type="button"
-        onClick={() => open(p)}
-        className="block aspect-[16/10] w-full cursor-zoom-in bg-[#F6F8F5]"
-        style={{ WebkitMaskImage: m, maskImage: m }}
-        aria-label="Open floor plan"
-      >
-        <AnimatePresence mode="wait">
-          <motion.img
-            key={p.src}
-            src={p.src}
-            alt={p.caption || 'Floor plan'}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="h-full w-full object-contain mix-blend-multiply"
-          />
-        </AnimatePresence>
-      </button>
-    </div>
-  );
-}
-
-function ChapterHead({ n, keyName, note }) {
+function ChapterHead({ n, keyName, note, title }) {
   const c = CHAPTERS[keyName];
   return (
-    <div className="mx-auto max-w-7xl px-5 pb-10 sm:px-8">
+    <div className="mx-auto max-w-7xl px-5 pb-8 sm:px-8 sm:pb-10">
       <Eyebrow>
         {String(n).padStart(2, '0')} · {c.label}
       </Eyebrow>
-      <h2 className="mt-4 max-w-2xl font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.1] tracking-tight text-[#111827] sm:text-5xl">
-        {c.title}
+      <h2 className="mt-5 max-w-3xl font-['Space_Grotesk'] text-[36px] font-bold leading-[1.14] tracking-[-0.015em] text-[#1A120E] sm:text-[46px] lg:text-[58px]">
+        {title || c.title}
       </h2>
-      {note && <p className="mt-4 max-w-xl text-neutral-600">{note}</p>}
+      <span aria-hidden className="mt-6 block h-[4px] w-20 rounded-full" style={{ background: 'linear-gradient(90deg, #5C6E0A, #C6F00C)' }} />
+      {note && <p className="mt-5 max-w-xl text-neutral-600">{note}</p>}
     </div>
   );
 }
 
-/* floating index of chapters (large screens) */
-function ChapterIndex({ chapters, hasUnits }) {
-  const ids = [...chapters.map((c) => c.key), ...(hasUnits ? ['units'] : [])];
+const INDEX_LABEL = { units: 'Homes', plan: 'Floor plans', architect: 'Architect', enquire: 'Enquire' };
+function ChapterIndex({ ids }) {
   const [active, setActive] = useState(ids[0]);
 
   useEffect(() => {
@@ -203,7 +73,7 @@ function ChapterIndex({ chapters, hasUnits }) {
               active === k ? 'text-[#1B4332] opacity-100' : 'text-neutral-500 opacity-0 group-hover:opacity-100'
             }`}
           >
-            {k === 'units' ? 'Homes' : CHAPTERS[k].label}
+            {INDEX_LABEL[k] || CHAPTERS[k].label}
           </span>
           <span
             className={`h-2 w-2 rounded-full transition ${
@@ -216,22 +86,6 @@ function ChapterIndex({ chapters, hasUnits }) {
   );
 }
 
-function Portrait() {
-  const [failed, setFailed] = useState(false);
-  const m = featherMask('center');
-  return (
-    <div className="h-48 w-40 shrink-0" style={{ WebkitMaskImage: m, maskImage: m }}>
-      {failed ? (
-        <div className="flex h-full w-full items-center justify-center bg-[#3A2B23] font-['Space_Grotesk'] text-4xl font-bold text-[#C6F00C]">
-          HA
-        </div>
-      ) : (
-        <img src={ARCHITECT.photo} alt={ARCHITECT.name} onError={() => setFailed(true)} className="h-full w-full object-cover" />
-      )}
-    </div>
-  );
-}
-
 /* ---------------- the page ---------------- */
 function ProjectView({ project }) {
   const [lb, setLb] = useState(-1);
@@ -239,12 +93,22 @@ function ProjectView({ project }) {
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, 'change', (v) => setShowBar(v > window.innerHeight * 0.7));
 
-  const chapters = CHAPTER_ORDER.map((k) => ({
-    key: k,
-    photos: project.photos.filter((p) => p.chapter === k),
-  })).filter((c) => c.photos.length);
-  const all = chapters.flatMap((c) => c.photos);
-  const open = (photo) => setLb(Math.max(0, all.indexOf(photo)));
+  const plans = normalizePlans(project);
+  const chapters = CHAPTER_ORDER.filter((k) => k !== 'plan')
+    .map((k) => ({ key: k, photos: project.photos.filter((p) => p.chapter === k) }))
+    .filter((c) => c.photos.length);
+  const planPhotos = plans.map((p) => ({ src: p.image, caption: p.label }));
+  const all = [...chapters.flatMap((c) => c.photos.slice(0, 5)), ...planPhotos];
+  const open = (photo) => setLb(Math.max(0, all.findIndex((p) => p.src === photo.src)));
+  const [layout, setLayout] = useState('');
+  const [inEnq, setInEnq] = useState(false);
+  useEffect(() => {
+    const el = document.getElementById('ch-enquire');
+    if (!el) return undefined;
+    const io = new IntersectionObserver(([e]) => setInEnq(e.isIntersecting), { threshold: 0.12 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const idx = projects.findIndex((p) => p.id === project.id);
   const next = projects[(idx + 1) % projects.length];
@@ -255,24 +119,23 @@ function ProjectView({ project }) {
     (u, i) => units.findIndex((v) => v.label === u.label && v.size === u.size) === i
   );
   const showUnits = hasUnits || project.status === 'active';
-
-  const renderChapter = (c) => {
-    switch (c.key) {
-      case 'exterior':
-        return <ExteriorChapter photos={c.photos} open={open} />;
-      case 'rooftop':
-        return <RooftopChapter photos={c.photos} open={open} title={CHAPTERS.rooftop.title} />;
-      case 'interior':
-        return <StripChapter photos={c.photos} open={open} />;
-      case 'plan':
-        return <PlanChapter photos={c.photos} open={open} />;
-      default:
-        return <PairChapter photos={c.photos} open={open} k={c.key} />;
-    }
+  const showArch = project.architect !== false;
+  const showEnq = project.enquiry !== false;
+  const layoutOptions = plans.length ? plans.map((p) => p.label) : layouts.map((u) => [u.label, u.size].filter(Boolean).join(' · '));
+  const askAbout = (l) => {
+    setLayout(l);
+    scrollToEl('#ch-enquire', -80);
   };
+  const indexIds = [
+    ...chapters.map((c) => c.key),
+    ...(plans.length ? ['plan'] : []),
+    ...(showUnits ? ['units'] : []),
+    ...(showArch ? ['architect'] : []),
+    ...(showEnq ? ['enquire'] : []),
+  ];
 
   return (
-    <main className="relative" style={{ background: 'linear-gradient(to bottom, #FAF8F5 0%, #F3EFE6 22%, #EDF4EC 60%, #F6F8F5 100%)' }}>
+    <main className="relative" style={{ background: 'linear-gradient(to bottom, #FAF8F3 0%, #F7F3E8 60%, #F8F5EC 100%)' }}>
       {/* opening frame */}
       <section className="relative min-h-[92vh] overflow-hidden">
         <img
@@ -317,22 +180,38 @@ function ProjectView({ project }) {
         </div>
       </section>
 
-      <ChapterIndex chapters={chapters} hasUnits={showUnits} />
+      <ChapterIndex ids={indexIds} />
 
       {/* photo chapters */}
       {chapters.map((c, i) => (
-        <section key={c.key} id={`ch-${c.key}`} className="scroll-mt-24 py-16 sm:py-24">
-          <Reveal>
-            <ChapterHead n={i + 1} keyName={c.key} note={project.notes?.[c.key]} />
-          </Reveal>
-          {renderChapter(c)}
+        <section key={c.key} id={`ch-${c.key}`} className="relative scroll-mt-32 py-10 sm:py-14">
+          <Wash x={i % 2 ? '82%' : '14%'} y="38%" size={950} a={0.17} />
+          <div className="relative z-10">
+            <Reveal>
+              <ChapterHead n={i + 1} keyName={c.key} note={project.notes?.[c.key]} />
+            </Reveal>
+            <Gallery photos={c.photos} open={open} />
+          </div>
         </section>
       ))}
 
+      {/* floor plans, by layout */}
+      {plans.length > 0 && (
+        <section id="ch-plan" className="relative scroll-mt-32 py-10 sm:py-14">
+          <Wash x="88%" y="30%" size={800} a={0.09} />
+          <div className="relative z-10">
+            <Reveal>
+              <ChapterHead n={chapters.length + 1} keyName="plan" note={project.notes?.plan} />
+            </Reveal>
+            <PlanExplorer plans={plans} open={open} onAsk={showEnq ? askAbout : undefined} />
+          </div>
+        </section>
+      )}
+
       {/* available units */}
       {showUnits && (
-        <section id="ch-units" className="scroll-mt-24 py-16 sm:py-24">
-          <div className="mx-auto max-w-5xl px-5 sm:px-8">
+        <section id="ch-units" className="relative scroll-mt-32 py-10 sm:py-14">
+          <div className="relative z-10 mx-auto max-w-5xl px-5 sm:px-8">
             <Eyebrow>Homes on offer</Eyebrow>
             <h2 className="mt-4 font-['Space_Grotesk'] text-3xl font-extrabold tracking-tight text-[#111827] sm:text-5xl">
               Find the one that fits you.
@@ -366,52 +245,47 @@ function ProjectView({ project }) {
         </section>
       )}
 
-      {/* architect, on espresso */}
-      <DarkBand className="my-10">
-        <Reveal className="mx-auto flex max-w-4xl flex-col items-start gap-8 px-5 sm:flex-row sm:items-center sm:px-8">
-          <Portrait />
-          <div>
-            <Eyebrow dark>{ARCHITECT.role}</Eyebrow>
-            <p className="mt-4 font-serif text-2xl italic leading-snug text-[#F3EFE6] sm:text-3xl">
-              “{project.architectLine || ARCHITECT.line}”
-            </p>
-            <div className="mt-4 font-['Space_Grotesk'] text-base font-bold text-[#C6F00C]">{ARCHITECT.name}</div>
+      {/* architect */}
+      {showArch && (
+        <section id="ch-architect" className="relative scroll-mt-32 py-10 sm:py-14">
+          <Wash x="24%" y="52%" size={1150} a={0.34} drift={70} />
+          <Wash x="92%" y="12%" size={700} a={0.12} />
+          <div className="relative z-10">
+            <Reveal>
+              <ChapterHead n={indexIds.indexOf('architect') + 1} keyName="architect" />
+            </Reveal>
+            <ArchitectBlock project={project} />
           </div>
-        </Reveal>
-      </DarkBand>
+        </section>
+      )}
 
-      {/* closing frame */}
-      <section className="px-5 pb-28 pt-12 sm:px-8">
-        <Reveal className="mx-auto max-w-4xl text-center">
-          <h2 className="font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.05] tracking-tight text-[#111827] sm:text-6xl">
-            Ask about {project.title}.
-          </h2>
-          <p className="mx-auto mt-5 max-w-lg text-neutral-600">
-            Message us on WhatsApp or call. We reply personally, and we will gladly arrange a visit.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-            <LeadLink project={project} className={linkCls}>
-              Chat on WhatsApp →
-            </LeadLink>
-            {CONTACT.hotlines.map((h) => (
-              <a key={h.tel} href={`tel:${h.tel}`} className={quietCls}>
-                {h.display}
-              </a>
-            ))}
+      {/* enquiry */}
+      {showEnq && (
+        <section id="ch-enquire" className="relative scroll-mt-32 py-10 sm:py-14">
+          <Wash x="78%" y="48%" size={900} a={0.24} drift={60} />
+          <div className="relative z-10">
+            <Reveal>
+              <ChapterHead n={indexIds.indexOf('enquire') + 1} keyName="enquire" title={`Ask about ${project.title}.`} />
+            </Reveal>
+            <EnquiryBlock project={project} options={layoutOptions} layout={layout} setLayout={setLayout} />
           </div>
-          <div className="mt-16 border-t border-[#1B4332]/15 pt-8">
-            <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-neutral-500">Next project</div>
-            <Link
-              to={`/projects/${next.slug}`}
-              className="mt-2 inline-block font-['Space_Grotesk'] text-2xl font-bold text-[#1B4332] underline decoration-[#C6F00C] decoration-2 underline-offset-8"
-            >
-              {next.title} →
-            </Link>
-          </div>
-        </Reveal>
+        </section>
+      )}
+
+      {/* next project */}
+      <section className="px-5 pb-16 pt-2 sm:px-8">
+        <div className="mx-auto max-w-6xl border-t border-[#1B4332]/15 pt-8">
+          <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-neutral-500">Next project</div>
+          <Link
+            to={`/projects/${next.slug}`}
+            className="mt-2 inline-block font-['Space_Grotesk'] text-2xl font-bold text-[#1B4332] underline decoration-[#C6F00C] decoration-2 underline-offset-8"
+          >
+            {next.title} →
+          </Link>
+        </div>
       </section>
 
-      <StickyBar project={project} show={showBar} />
+      <StickyBar project={project} show={showBar && !inEnq} />
 
       <AnimatePresence>
         {lb >= 0 && <Lightbox photos={all} index={lb} onChange={setLb} onClose={() => setLb(-1)} />}

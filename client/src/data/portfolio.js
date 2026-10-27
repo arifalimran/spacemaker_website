@@ -63,6 +63,12 @@ export const ARCHITECT = {
   photo: '/assets/people/hasib-uddin-ahmed.jpg',
   // DRAFT line for his approval. Each project can override it with `architectLine`.
   line: 'I start with where the sun falls and where the breeze enters. The building follows.',
+  // DRAFT. Three short points shown under the quote. A project can override with `architectPoints`.
+  points: [
+    { k: 'Light and air', v: 'Every living room is planned around the sun and the cross-breeze.' },
+    { k: 'Structure and safety', v: 'Designed by our own engineers for the soil and seismic conditions of Bangladesh.' },
+    { k: 'Materials', v: 'Lab-tested concrete and rebar, inspected at every stage.' },
+  ],
 };
 
 export const STATUS_LABEL = {
@@ -88,6 +94,8 @@ export const CHAPTERS = {
   balcony: { label: 'Balcony & terrace', title: 'Morning tea, evening air.' },
   views: { label: 'Views & surroundings', title: 'What you see, and what is close by.' },
   plan: { label: 'Floor plans', title: 'Every square foot, thoughtfully drawn.' },
+  architect: { label: 'Architect', title: 'Designed by the people who build it.' },
+  enquire: { label: 'Enquire', title: 'Ask about this home.' },
 };
 
 /* ------------------------------------------------------------------ */

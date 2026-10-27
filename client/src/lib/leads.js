@@ -18,6 +18,20 @@ export function projectMessage(project, unit, kind = 'project') {
   return `Hello Space Maker, I would like to know more about ${project.title}, ${project.area}. Ref: ${project.ref}`;
 }
 
+export function enquiryMessage(project, f) {
+  return [
+    `Hello Space Maker, I would like to enquire about ${project.title}, ${project.area}.`,
+    f.name && `Name: ${f.name}`,
+    f.phone && `Phone: ${f.phone}`,
+    f.layout && `Layout: ${f.layout}`,
+    f.visit && `Preferred visit: ${f.visit}`,
+    f.notes && `Notes: ${f.notes}`,
+    `Ref: ${project.ref || project.id}`,
+  ]
+    .filter(Boolean)
+    .join('\n');
+}
+
 export function landMessage(f) {
   return [
     'Hello Space Maker, I would like a feasibility study for my land.',
