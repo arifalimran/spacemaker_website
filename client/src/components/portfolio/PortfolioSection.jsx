@@ -30,9 +30,9 @@ import {
 /* ---------------- Signature (flagships) ---------------- */
 function Signature({ project, index }) {
   const flip = index % 2 === 1;
-  const second =
-    project.photos.find((p) => p.chapter === 'interior') || project.photos.find((p) => p.chapter !== 'exterior');
-  const corner = flip ? 'br' : 'bl';
+  const cover = coverOf(project);
+  // a second, different exterior view (never a floor plan) for the small inset
+  const second = project.photos.find((p) => p.chapter === 'exterior' && p.src !== cover);
 
   return (
     <article className="group relative mx-auto grid max-w-7xl items-center gap-10 px-5 py-12 sm:px-8 md:grid-cols-12 md:gap-8">
@@ -41,30 +41,18 @@ function Signature({ project, index }) {
         aria-label={`Open ${project.title}`}
         className={`relative md:col-span-7 ${flip ? 'md:order-2' : ''}`}
       >
-        <div className="relative aspect-[4/3]">
-          <Shot treatment="carved" corner={corner} w={46} h={36} src={coverOf(project)} alt={project.title} drift>
-            {/* the title sits inside the carved corner, on the dark background */}
-            <div className="hidden pr-6 md:block">
-              <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.22em] text-[#C6F00C]">
-                {STATUS_LABEL[project.status]}
-              </div>
-              <div className="relative mt-2 font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.02] tracking-tight text-[#F3EFE6] lg:text-5xl">
-                {project.title}
-                <Flutter
-                  hue="#C6F00C"
-                  size={30}
-                  className="absolute -top-7 right-0 -translate-y-0 opacity-0 transition duration-500 group-hover:-translate-y-2 group-hover:opacity-100"
-                />
-              </div>
-            </div>
-          </Shot>
+        <div className="relative aspect-[4/3] sm:aspect-[16/11]">
+          <Shot treatment="clean" src={cover} alt={`${project.title}, ${project.area}`} />
+          <span className="absolute left-4 top-4 rounded-full bg-[#1A120E]/70 px-3 py-1 font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-[#C6F00C]">
+            {STATUS_LABEL[project.status]}
+          </span>
           {second && (
             <div
-              className={`absolute -bottom-6 hidden h-40 w-40 sm:block lg:h-52 lg:w-52 ${
+              className={`absolute -bottom-6 hidden w-[38%] aspect-[4/3] lg:block ${
                 flip ? '-left-6' : '-right-6'
-              } transition duration-700 group-hover:scale-105`}
+              } rounded-[18px] border-[5px] border-[#1A120E] transition duration-500 group-hover:-translate-y-1`}
             >
-              <Shot treatment="circle" src={second.src} alt="" />
+              <Shot treatment="clean" src={second.src} alt="" rounded="rounded-[13px]" />
             </div>
           )}
         </div>
@@ -72,15 +60,15 @@ function Signature({ project, index }) {
 
       <Reveal className={`md:col-span-5 ${flip ? 'md:order-1' : ''}`}>
         <div className="font-serif text-8xl italic leading-none text-[#C6F00C]/25">0{index + 1}</div>
-        <div className="md:hidden">
-          <TypeTag type={project.type} status={project.status} dark />
-          <h3 className="mt-3 font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.04] tracking-tight text-[#F3EFE6]">
-            {project.title}
-          </h3>
-        </div>
-        <div className="hidden md:block">
-          <TypeTag type={project.type} dark />
-        </div>
+        <TypeTag type={project.type} dark />
+        <h3 className="relative mt-3 font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.04] tracking-tight text-[#F3EFE6] lg:text-5xl">
+          {project.title}
+          <Flutter
+            hue="#C6F00C"
+            size={26}
+            className="absolute -top-6 right-0 opacity-0 transition duration-500 group-hover:-translate-y-1 group-hover:opacity-100"
+          />
+        </h3>
         <p className="mt-5 font-serif text-xl italic leading-snug text-[#F3EFE6]/85 sm:text-2xl">{project.line}</p>
         <Facts
           dark

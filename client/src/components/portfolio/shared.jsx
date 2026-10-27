@@ -395,6 +395,35 @@ function Circle({ src, alt, className = '', drift }) {
   );
 }
 
+/* 10. Clean: a plain, well-fitted frame. No tint, no cut corners, no zoom loop. */
+function Clean({ src, alt, className = '', rounded = 'rounded-[22px]', pos = '50% 50%' }) {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  const y = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['-2.5%', '2.5%']);
+  return (
+    <div
+      ref={ref}
+      className={`relative h-full w-full overflow-hidden bg-[#2A1F1A] ${rounded} ${className}`}
+      style={{ boxShadow: '0 18px 40px -18px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(243,239,230,0.14)' }}
+    >
+      <motion.div style={{ y, position: 'absolute', left: 0, right: 0, top: '-3%', bottom: '-3%' }}>
+        <Pic
+          src={src}
+          alt={alt}
+          fallback="#2A1F1A"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: '-5%' }}
+          transition={{ duration: 0.9, ease: 'easeOut' }}
+          className="h-full w-full object-cover"
+          style={{ objectPosition: pos }}
+        />
+      </motion.div>
+    </div>
+  );
+}
+
 const FeatherShot = ({ src, alt, side = 'center', fade = false, className = '', drift }) => (
   <BlendedPhoto src={src} alt={alt} side={side} fade={fade} drift={drift} className={`h-full w-full ${className}`} />
 );
@@ -409,6 +438,7 @@ const SHOTS = {
   blur: BlurShot,
   duotone: Duotone,
   circle: Circle,
+  clean: Clean,
 };
 
 /* One entry point:  <Shot treatment="arch" src=... />  ; `children` is the text for carved / band */
