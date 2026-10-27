@@ -1,5 +1,5 @@
 // client/src/components/layout/SiteFooter.jsx
-// Compact sand footer. One slim "Find your home" strip (project filters + interiors, with live counts) sits on top and is hidden
+// Compact espresso footer. One slim "Find your home" strip (project filters + interiors, with live counts) sits on top and is hidden
 // on /projects and /interiors, where the page is already the finder. Then brand, links, offices, contact, and a wordmark that
 // bleeds off the bottom edge. Counts and links come from the data, so they follow the back end. Also the "Contact" target in the nav.
 import React from 'react';
@@ -7,9 +7,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { CONTACT, GENERAL_MESSAGE, projects, upcoming, interiorProjects } from '../../data/portfolio';
 import { waLink, trackLead } from '../../lib/leads';
 
-const head = "font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.22em] text-[#5F6B1F]";
-const lk = 'sm-fl relative inline-block text-sm font-medium text-[#2A1F1A]/85 transition-colors duration-300 hover:text-[#2A1F1A]';
-const sub = "font-['JetBrains_Mono'] text-[11px] font-medium uppercase tracking-[0.16em] text-[#2A1F1A]/60";
+const head = "font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C7D17F]";
+const lk = 'sm-fl relative inline-block text-sm font-medium text-[#F5F0E6]/85 transition-colors duration-300 hover:text-[#C7D17F]';
+const sub = "font-['JetBrains_Mono'] text-[11px] font-medium uppercase tracking-[0.16em] text-[#F5F0E6]/60";
 
 const count = (list, fn) => list.filter(fn).length;
 
@@ -111,14 +111,14 @@ const FOOTER_CSS = `
 .sm-fl:hover::after{width:100%}
 .sm-bp{transition:background-color .3s,color .3s,border-color .3s,transform .3s}
 .sm-bp .sm-bn{transition:background-color .3s,color .3s}
-.sm-bp:hover,.sm-bp:focus-visible{background:#2A1F1A;color:#F5F0E6;border-color:#2A1F1A;transform:translateY(-2px)}
-.sm-bp:hover .sm-bn,.sm-bp:focus-visible .sm-bn{background:#A9B957;color:#2A1F1A}
+.sm-bp:hover,.sm-bp:focus-visible{background:#F5F0E6;color:#2A1F1A;border-color:#F5F0E6;transform:translateY(-2px)}
+.sm-bp:hover .sm-bn,.sm-bp:focus-visible .sm-bn{background:#2A1F1A;color:#F5F0E6}
 @media (prefers-reduced-motion:reduce){.sm-bp,.sm-bp .sm-bn,.sm-soc-i{transition:none!important}}
 `;
 
 function BrowseStrip() {
-  const pill = 'sm-bp inline-flex items-center gap-2.5 rounded-full border border-[#2A1F1A]/25 bg-[#F3ECDF] py-1.5 pl-4 pr-1.5 text-sm font-semibold text-[#2A1F1A]';
-  const num = "sm-bn inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-full bg-[#2A1F1A] px-2 font-['JetBrains_Mono'] text-xs font-semibold text-[#F5F0E6]";
+  const pill = 'sm-bp inline-flex items-center gap-2.5 rounded-full border border-[#F5F0E6]/25 py-1.5 pl-4 pr-1.5 text-sm font-semibold text-[#F5F0E6]';
+  const num = "sm-bn inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-full bg-[#A9B957] px-2 font-['JetBrains_Mono'] text-xs font-semibold text-[#2A1F1A]";
   const Pill = ({ r }) => (
     <Link to={r.to} className={pill}>
       {r.label}
@@ -126,8 +126,8 @@ function BrowseStrip() {
     </Link>
   );
   return (
-    <div className="flex flex-col gap-4 rounded-3xl border border-[#2A1F1A]/12 bg-[#EEE6D8] p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
-      <div className="flex items-center gap-3 font-['Space_Grotesk'] text-xl font-extrabold tracking-tight text-[#2A1F1A] sm:text-2xl">
+    <div className="flex flex-col gap-4 rounded-3xl border border-[#F5F0E6]/12 bg-[#241A15] p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex items-center gap-3 font-['Space_Grotesk'] text-xl font-extrabold tracking-tight text-[#F5F0E6] sm:text-2xl">
         <span className="h-[2px] w-8 flex-none rounded-full bg-[#A9B957]" aria-hidden />
         Find your home
       </div>
@@ -135,7 +135,7 @@ function BrowseStrip() {
         {BROWSE.map((r) => (
           <Pill key={r.label} r={r} />
         ))}
-        <span className="mx-1 hidden h-6 w-px bg-[#2A1F1A]/20 sm:block" aria-hidden />
+        <span className="mx-1 hidden h-6 w-px bg-[#F5F0E6]/20 sm:block" aria-hidden />
         {BROWSE_INTERIORS.map((r) => (
           <Pill key={r.label} r={r} />
         ))}
@@ -150,7 +150,7 @@ export default function SiteFooter() {
   // the two list pages are already the finder, so the strip would be redundant there
   const showBrowse = !(pathname === '/projects' || pathname === '/interiors');
   return (
-    <footer id="contact" className="relative overflow-hidden border-t border-[#2A1F1A]/10 text-[#2A1F1A]" style={{ background: '#E5DBCD' }}>
+    <footer id="contact" className="relative overflow-hidden text-[#F5F0E6]" style={{ background: '#2A1F1A' }}>
       <style>{FOOTER_CSS}</style>
 
       <div className="relative mx-auto max-w-7xl px-5 pt-10 sm:px-8 sm:pt-12">
@@ -159,14 +159,10 @@ export default function SiteFooter() {
         <div className={`grid gap-9 sm:grid-cols-2 lg:grid-cols-12 ${showBrowse ? 'pt-10' : 'pt-2'}`}>
           {/* brand */}
           <div className="lg:col-span-4">
-            <Link to="/" className="inline-flex items-center gap-3" aria-label="Space Maker home">
-              <img src="/assets/00_brand/logo-mark.png" alt="" className="h-[68px] w-auto" loading="lazy" />
-              <span className="flex flex-col">
-                <img src="/assets/00_brand/logo-word.png" alt="Space Maker" className="h-[54px] w-auto" loading="lazy" />
-                <span className="mt-1 text-[11px] font-semibold tracking-[0.03em] text-[#2A1F1A]">where space defines luxury</span>
-              </span>
+            <Link to="/" className="inline-block" aria-label="Space Maker home">
+              <img src="/assets/00_brand/logo-lockup-light.png" alt="Space Maker, where space defines luxury" className="h-24 w-auto sm:h-28" loading="lazy" />
             </Link>
-            {CONTACT.footerLine && <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#2A1F1A]/75">{CONTACT.footerLine}</p>}
+            {CONTACT.footerLine && <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#F5F0E6]/75">{CONTACT.footerLine}</p>}
             <SocialRow items={CONTACT.social} />
           </div>
 
@@ -188,8 +184,8 @@ export default function SiteFooter() {
             <ul className="mt-4 grid gap-4">
               {CONTACT.offices.map((o) => (
                 <li key={o.name}>
-                  <div className="text-sm font-semibold text-[#2A1F1A]">{o.name}</div>
-                  <div className="mt-0.5 text-sm leading-relaxed text-[#2A1F1A]/75">{o.address}</div>
+                  <div className="text-sm font-semibold text-[#F5F0E6]">{o.name}</div>
+                  <div className="mt-0.5 text-sm leading-relaxed text-[#F5F0E6]/75">{o.address}</div>
                 </li>
               ))}
             </ul>
@@ -227,7 +223,7 @@ export default function SiteFooter() {
               target="_blank"
               rel="noreferrer"
               onClick={() => trackLead({ channel: 'whatsapp', kind: 'footer-visit' })}
-              className="relative isolate mt-5 inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl border-[1.5px] border-[#2A1F1A] bg-[#2A1F1A] px-5 py-3 text-sm font-semibold text-[#F5F0E6] transition-[color] duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#A9B957] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
+              className="relative isolate mt-5 inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl border-[1.5px] border-[#F5F0E6] bg-[#F5F0E6] px-5 py-3 text-sm font-semibold text-[#2A1F1A] transition-[color] duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#A9B957] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
             >
               <span className="h-2 w-2 rounded-full bg-[#A9B957]" />
               Book a visit
@@ -236,21 +232,21 @@ export default function SiteFooter() {
         </div>
 
         {/* bottom bar */}
-        <div className="mt-9 flex flex-col gap-2 border-t border-[#2A1F1A]/15 pt-5 text-xs text-[#2A1F1A]/70 sm:flex-row sm:items-center sm:justify-between sm:pr-36">
+        <div className="mt-9 flex flex-col gap-2 border-t border-[#F5F0E6]/12 pt-5 text-xs text-[#F5F0E6]/65 sm:flex-row sm:items-center sm:justify-between sm:pr-36">
           <span>© {new Date().getFullYear()} Space Maker Limited. All rights reserved.</span>
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="sm-fl self-start font-semibold text-[#2A1F1A] sm:self-auto"
+            className="sm-fl self-start font-semibold text-[#F5F0E6] sm:self-auto"
           >
             Back to top ↑
           </button>
         </div>
       </div>
 
-      {/* the wordmark bleeds off the bottom edge: one tone a little deeper than the sand, top of the letters only */}
-      <div aria-hidden className="pointer-events-none mt-6 h-[clamp(84px,13vw,160px)] select-none overflow-hidden">
-        <img src="/assets/00_brand/logo-word-sand.png" alt="" className="mx-auto w-full max-w-4xl px-5" loading="lazy" />
+      {/* "SPACE MAKER" on one line, bleeding off the bottom edge: one tone a little lighter than the espresso */}
+      <div aria-hidden className="pointer-events-none mt-8 select-none overflow-hidden">
+        <img src="/assets/00_brand/logo-oneline-dark.png" alt="" className="mx-auto block w-full max-w-6xl px-5" style={{ marginBottom: '-3.3%' }} loading="lazy" />
       </div>
     </footer>
   );
