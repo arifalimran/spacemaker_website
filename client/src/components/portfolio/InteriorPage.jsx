@@ -1,56 +1,52 @@
 // client/src/components/portfolio/InteriorPage.jsx
-// Route: /interiors/:slug  (prototype of an interior project page)
+// Route: /interiors/:slug  (one interior project). Compact: short opening, brief + materials, a room grid, light closing band.
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { interiorProjects, getInterior, interiorCover, TYPE_LABEL, CONTACT } from '../../data/portfolio';
 import Lightbox from './Lightbox';
-import {
-  Shot,
-  Eyebrow,
-  Reveal,
-  Facts,
-  ActionRow,
-  DarkBand,
-  StickyBar,
-  LeadLink,
-  linkCls,
-  quietCls,
-} from './shared';
+import { Shot, Eyebrow, Reveal, Facts, ActionRow, StickyBar, LeadLink, linkCls } from './shared';
+import { Wash } from './ProjectSections';
 
+const MONO = "font-['JetBrains_Mono']";
+
+// Back end: a project holds at most MAX_ROOMS rooms (photo + title + specs each); fewer is fine.
+const MAX_ROOMS = 6;
 const ROOM_TREATMENTS = ['notch', 'arch', 'duotone', 'blur'];
 
 function Room({ room, i, onOpen }) {
   const t = ROOM_TREATMENTS[i % ROOM_TREATMENTS.length];
   const flip = i % 2 === 1;
   const ratio = t === 'arch' ? 'aspect-[4/5] max-w-md' : 'aspect-[4/3]';
-  const specs = (room.specs || '').split(',').map((s) => s.trim()).filter(Boolean);
+  const specs = (room.specs || '').split(',').map((x) => x.trim()).filter(Boolean);
 
   return (
-    <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-12 sm:px-8 md:grid-cols-12 md:gap-14">
+    <div className="mx-auto grid max-w-7xl items-center gap-6 px-5 py-10 sm:px-8 md:grid-cols-12 md:gap-0">
       <Reveal className={`md:col-span-7 ${flip ? 'md:order-2' : ''}`}>
         <button
           type="button"
           onClick={() => onOpen(i)}
           aria-label={`Open photo: ${room.title}`}
-          className={`mx-auto block w-full cursor-zoom-in ${ratio}`}
+          className={`block w-full cursor-zoom-in ${flip ? 'md:mr-auto' : 'md:ml-auto'} ${ratio}`}
         >
           <Shot treatment={t} src={room.image} alt={room.title} />
         </button>
       </Reveal>
-      <Reveal className={`md:col-span-5 ${flip ? 'md:order-1' : ''}`}>
+      <Reveal className={`md:col-span-5 ${flip ? 'md:order-1 md:pr-10' : 'md:pl-10'}`}>
+       <div>
         <div className="font-serif text-7xl italic leading-none text-[#C6F00C]">0{i + 1}</div>
         <h3 className="mt-3 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.06] tracking-tight text-[#111827] sm:text-4xl">
           {room.title}
         </h3>
         <ul className="mt-5 grid gap-2">
-          {specs.map((s) => (
-            <li key={s} className="flex items-start gap-3 text-base leading-relaxed text-[#374151]">
+          {specs.map((x) => (
+            <li key={x} className="flex items-start gap-3 text-base leading-relaxed text-[#374151]">
               <span className="mt-2.5 h-1.5 w-1.5 flex-none rounded-full bg-[#C6F00C]" />
-              {s}
+              {x}
             </li>
           ))}
         </ul>
+       </div>
       </Reveal>
     </div>
   );
@@ -62,45 +58,48 @@ function InteriorView({ p }) {
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, 'change', (v) => setShowBar(v > window.innerHeight * 0.7));
 
-  const photos = p.rooms.map((r) => ({ src: r.image, caption: r.title, chapter: 'interior' }));
+  const rooms = (p.rooms || []).slice(0, MAX_ROOMS);
+  const photos = rooms.map((r) => ({ src: r.image, caption: r.title, chapter: 'interior' }));
   const idx = interiorProjects.findIndex((x) => x.id === p.id);
   const next = interiorProjects[(idx + 1) % interiorProjects.length];
   const lead = { id: p.id, title: p.title, area: p.location, ref: p.ref };
-
   return (
-    <main style={{ background: 'linear-gradient(to bottom, #FAF8F5 0%, #F3EFE6 22%, #EDF4EC 60%, #F6F8F5 100%)' }}>
+    <main className="relative" style={{ background: 'linear-gradient(to bottom, #FAF8F3 0%, #F7F3E8 60%, #F8F5EC 100%)' }}>
       {/* opening */}
-      <section className="relative overflow-hidden">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 pb-20 pt-36 sm:px-8 md:grid-cols-12 md:pt-44">
-          <div className="md:col-span-6">
-            <Link
-              to="/interiors"
-              className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-neutral-500 transition hover:text-[#1B4332]"
-            >
+      <section className="relative">
+        <Wash x="80%" y="40%" size={950} a={0.2} />
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-8 px-5 pb-12 pt-28 sm:px-8 md:grid-cols-12 md:gap-8 md:pt-32">
+          <div className="md:col-span-5">
+            <Link to="/interiors" className={`${MONO} text-[11px] uppercase tracking-[0.2em] text-neutral-500 transition hover:text-[#1B4332]`}>
               ← All interiors
             </Link>
-            <div className="mt-8">
+            <div className="mt-6">
               <Eyebrow>{TYPE_LABEL[p.type]} interior</Eyebrow>
-              <h1 className="mt-5 font-['Space_Grotesk'] text-5xl font-extrabold leading-[1.03] tracking-tight text-[#111827] sm:text-7xl">
+              <h1 className="mt-4 font-['Space_Grotesk'] text-[34px] font-bold leading-[1.15] tracking-[-0.015em] text-[#1A120E] sm:text-[44px] lg:text-[52px]">
                 {p.title}
               </h1>
-              <p className="mt-6 font-serif text-2xl italic leading-snug text-[#1B4332]/85 sm:text-3xl">{p.line}</p>
+              <p className="mt-4 font-serif text-xl italic leading-snug text-[#1B4332]/85 sm:text-2xl">{p.line}</p>
               <Facts
-                className="mt-10"
+                className="mt-7"
                 items={[
                   { k: 'Client', v: p.client },
                   { k: 'Location', v: p.location },
                   { k: 'Area', v: p.area },
-                  { k: 'Rooms', v: String(p.rooms.length) },
+                  { k: 'Rooms', v: String(rooms.length) },
                 ]}
               />
-              <ActionRow project={lead} explore={false} kind="interior" className="mt-10" />
+              <ActionRow project={lead} explore={false} kind="interior" className="mt-7" />
             </div>
           </div>
-          <div className="md:col-span-6">
-            <div className="mx-auto aspect-[4/5] max-w-md">
-              <Shot treatment="arch" src={interiorCover(p)} alt={p.title} drift />
-            </div>
+          <div className="md:col-span-7">
+            <button
+              type="button"
+              onClick={() => setLb(0)}
+              aria-label={`Open photo: ${p.title}`}
+              className="block aspect-[4/3] w-full cursor-zoom-in"
+            >
+              <Shot treatment="clean" src={interiorCover(p)} alt={p.title} />
+            </button>
           </div>
         </div>
       </section>
@@ -133,45 +132,46 @@ function InteriorView({ p }) {
 
       {/* rooms */}
       <section className="py-6">
-        {p.rooms.map((room, i) => (
+        {rooms.map((room, i) => (
           <Room key={room.title} room={room} i={i} onOpen={setLb} />
         ))}
       </section>
 
-      {/* closing, on espresso */}
-      <DarkBand className="mt-10">
-        <Reveal className="mx-auto max-w-3xl px-5 text-center sm:px-8">
-          <h2 className="font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.05] tracking-tight text-[#F3EFE6] sm:text-6xl">
+      {/* closing: same layout as before, now on a light cream-and-lime ground so it does not clash with the footer */}
+      <section className="relative mt-10 overflow-hidden py-16 sm:py-24">
+        <Wash x="50%" y="50%" size={1200} a={0.28} />
+        <Reveal className="relative z-10 mx-auto max-w-3xl px-5 text-center sm:px-8">
+          <h2 className="font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.05] tracking-tight text-[#1A120E] sm:text-6xl">
             Planning an interior?
           </h2>
-          <p className="mx-auto mt-5 max-w-lg text-[#F3EFE6]/75">
+          <p className="mx-auto mt-5 max-w-lg text-neutral-600">
             Tell us about the space. We reply personally, and we will gladly visit and talk it through.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
             <LeadLink
               project={lead}
               kind="interior"
-              className="text-base font-medium text-[#F3EFE6] underline decoration-[#C6F00C] decoration-2 underline-offset-[7px]"
+              className="text-base font-medium text-[#1A120E] underline decoration-[#9BBF00] decoration-2 underline-offset-[7px]"
             >
               Chat on WhatsApp →
             </LeadLink>
             {CONTACT.hotlines.map((h) => (
-              <a key={h.tel} href={`tel:${h.tel}`} className="text-sm text-[#F3EFE6]/75 hover:text-[#C6F00C]">
+              <a key={h.tel} href={`tel:${h.tel}`} className="text-sm text-neutral-600 hover:text-[#1B4332]">
                 {h.display}
               </a>
             ))}
           </div>
-          <div className="mt-14 border-t border-white/15 pt-8">
-            <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-white/50">Next interior</div>
+          <div className="mt-14 border-t border-[#2A1F1A]/15 pt-8">
+            <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-neutral-500">Next interior</div>
             <Link
               to={`/interiors/${next.slug}`}
-              className="mt-2 inline-block font-['Space_Grotesk'] text-2xl font-bold text-[#F3EFE6] underline decoration-[#C6F00C] decoration-2 underline-offset-8"
+              className="mt-2 inline-block font-['Space_Grotesk'] text-2xl font-bold text-[#1B4332] underline decoration-[#9BBF00] decoration-2 underline-offset-8"
             >
               {next.title} →
             </Link>
           </div>
         </Reveal>
-      </DarkBand>
+      </section>
 
       <StickyBar project={lead} kind="interior" show={showBar} />
 

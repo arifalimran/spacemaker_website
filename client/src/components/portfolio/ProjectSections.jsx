@@ -327,6 +327,13 @@ const STARTERS = [
 ];
 const MIN_WORDS_CHARS = 8;
 
+export const SWEEP_CSS = `
+.sm-sweep{position:relative;overflow:hidden;isolation:isolate;transition:color .35s ease,border-color .35s ease}
+.sm-sweep::before{content:'';position:absolute;inset:0;z-index:-1;background:var(--sw,#C6F00C);transform:translateY(101%);transition:transform .45s cubic-bezier(.22,1,.36,1)}
+.sm-sweep:hover::before,.sm-sweep:focus-visible::before{transform:translateY(0)}
+.sm-sweep:hover,.sm-sweep:focus-visible{color:var(--swc,#1A120E)}
+`;
+
 const ENQ_CSS = `
 @keyframes smGlow{0%{opacity:.45}100%{opacity:1}}
 .sm-enq-glow{animation:smGlow 3.6s ease-in-out infinite alternate}
