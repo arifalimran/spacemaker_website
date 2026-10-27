@@ -19,7 +19,7 @@ export default function TeamExperts() {
     <section
       id="team"
       aria-labelledby="team-heading"
-      className="relative overflow-hidden border-t border-[#2A1F1A]/15 py-14 sm:py-16"
+      className="relative overflow-hidden border-t border-[#2A1F1A]/15 py-20 sm:py-28"
       style={{ background: 'linear-gradient(180deg, #F5F9EE 0%, #EEF4E3 100%)' }}
     >
       <style>{TEAM_CSS}</style>

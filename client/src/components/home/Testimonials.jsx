@@ -200,7 +200,7 @@ export default function Testimonials({ items = testimonials }) {
     <section
       ref={sectionRef}
       id="testimonials"
-      className={`relative pb-[64px] pt-16 sm:pt-20 lg:pb-[80px] ${reduce ? 'sm-static' : inView ? '' : 'sm-paused'}`}
+      className={`relative pb-[64px] pt-20 sm:pt-32 lg:pb-[80px] ${reduce ? 'sm-static' : inView ? '' : 'sm-paused'}`}
       style={{ background: BG, position: 'relative', zIndex: 1, overflow: 'clip' }}
     >
       <style>{DECOR_CSS}</style>

@@ -1,7 +1,7 @@
 // client/src/components/portfolio/AllProjects.jsx
 // Route: /projects  (every project, with filters and a photo that follows the cursor)
 import React, { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
 import { projects, upcoming, coverOf, STATUS_LABEL, TYPE_LABEL } from '../../data/portfolio';
 import { Eyebrow, LeadLink, Pic } from './shared';
@@ -55,7 +55,11 @@ function RowInner({ item, n }) {
 }
 
 export default function AllProjects() {
-  const [status, setStatus] = useState('all');
+  // the top bar and footer link here with ?status=active|completed|upcoming
+  const [params, setParams] = useSearchParams();
+  const wanted = params.get('status');
+  const status = STATUS_TABS.some((t) => t.key === wanted) ? wanted : 'all';
+  const setStatus = (k) => setParams(k === 'all' ? {} : { status: k }, { replace: true });
   const [type, setType] = useState('all');
   const [hover, setHover] = useState(null);
 

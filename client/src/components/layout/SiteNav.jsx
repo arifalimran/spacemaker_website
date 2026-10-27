@@ -1,7 +1,7 @@
 // client/src/components/layout/SiteNav.jsx
 import React, { useState, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BRAND, GENERAL_MESSAGE } from '../../data/portfolio';
+import { GENERAL_MESSAGE, projects, upcoming, interiorProjects, TYPE_LABEL } from '../../data/portfolio';
 import { waLink, trackLead } from '../../lib/leads';
 import MobileMenu, { MenuButton } from './MobileMenu';
 
@@ -18,21 +18,68 @@ const LINKS = [
   { label: 'Contact', k: 'contact', to: { pathname: '/', hash: '#contact' } },
 ];
 
+/* Hover menus under Projects and Interiors. Counts come from the data, so they follow the back end. */
+const countBy = (list, fn) => list.filter(fn).length;
+const SUBMENU = {
+  Projects: [
+    { label: 'All projects', to: '/projects', n: projects.length + upcoming.length, lead: true },
+    { label: 'Active', to: '/projects?status=active', n: countBy(projects, (p) => p.status === 'active') },
+    { label: 'Handed over', to: '/projects?status=completed', n: countBy(projects, (p) => p.status === 'completed') },
+    { label: 'Opening soon', to: '/projects?status=upcoming', n: upcoming.length },
+  ],
+  Interiors: [
+    { label: 'All interiors', to: '/interiors', n: interiorProjects.length, lead: true },
+    ...['residential', 'commercial'].map((t) => ({
+      label: t === 'commercial' ? 'Commercial projects' : TYPE_LABEL[t] || t,
+      to: `/interiors?type=${t}`,
+      n: countBy(interiorProjects, (p) => p.type === t) || 'Soon',
+    })),
+  ],
+};
+
+const DD_CSS = `
+.sm-dd-p{position:absolute;left:50%;top:100%;padding-top:20px;opacity:0;visibility:hidden;transform:translate(-50%,8px);transition:opacity .22s ease,transform .3s cubic-bezier(.22,1,.36,1),visibility 0s linear .3s}
+.sm-dd:hover .sm-dd-p,.sm-dd:focus-within .sm-dd-p{opacity:1;visibility:visible;transform:translate(-50%,0);transition-delay:0s}
+.sm-dd-i{opacity:0;transform:translateY(7px);transition:opacity .28s ease,transform .35s cubic-bezier(.22,1,.36,1),background-color .2s}
+.sm-dd:hover .sm-dd-i,.sm-dd:focus-within .sm-dd-i{opacity:1;transform:none;transition-delay:calc(var(--i)*55ms + 50ms),calc(var(--i)*55ms + 50ms),0s}
+.sm-dd-i:hover{background:var(--nav-panel-hover)}
+.sm-dd-i .sm-u{transition:width .3s cubic-bezier(.22,1,.36,1)}
+.sm-dd-i:hover .sm-u{width:100%}
+.sm-dd-i .sm-ar{transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .3s;opacity:0;transform:translateX(-6px)}
+.sm-dd-i:hover .sm-ar{opacity:1;transform:none}
+.sm-dd .sm-cv{transition:transform .3s}
+.sm-dd:hover .sm-cv,.sm-dd:focus-within .sm-cv{transform:rotate(180deg)}
+.sm-lg-l{opacity:0;transition:opacity .5s}
+.sm-lg-d{transition:opacity .5s}
+[data-sm-theme="dark"] .sm-lg-l{opacity:1}
+[data-sm-theme="dark"] .sm-lg-d{opacity:0}
+@media (prefers-reduced-motion:reduce){.sm-dd-p,.sm-dd-i{transition:none!important}}
+`;
+
 // colours come from CSS variables set by SectionWatcher (light/dark), so the bar changes with the section
 const linkCls =
   "relative text-[13px] font-medium text-[color:var(--nav-fg)] transition-colors duration-500 hover:text-[color:var(--nav-hover)] after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-[#C6F00C] after:transition-all hover:after:w-full";
 
+/* The real logo: tree mark + wordmark, with the slogan as live text so it stays sharp and readable.
+   Two colour versions are stacked; the top bar's theme decides which one shows. */
+const ASSET = '/assets/00_brand';
 function Logo() {
-  const [failed, setFailed] = useState(false);
-  return failed ? (
-    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FAF8F5] text-[#1B4332]">▲</span>
-  ) : (
-    <img
-      src={BRAND.icon}
-      alt="Space Maker"
-      onError={() => setFailed(true)}
-      className="h-11 w-11 rounded-xl bg-[#FAF8F5] object-cover"
-    />
+  const pair = (name, cls) => (
+    <>
+      <img src={`${ASSET}/logo-${name}.png`} alt="" className={`sm-lg-d absolute inset-0 h-full w-full object-contain ${cls}`} />
+      <img src={`${ASSET}/logo-${name}-light.png`} alt="" aria-hidden className={`sm-lg-l absolute inset-0 h-full w-full object-contain ${cls}`} />
+    </>
+  );
+  return (
+    <span className="flex items-center gap-3">
+      <span className="relative block h-11 w-[39px] flex-none">{pair('mark', '')}</span>
+      <span className="block">
+        <span className="relative block h-9 w-[85px]">{pair('word', '')}</span>
+        <span className="mt-0.5 block whitespace-nowrap text-[9px] font-semibold leading-none tracking-[0.03em] text-[color:var(--nav-brand)] transition-colors duration-500">
+          where space defines luxury
+        </span>
+      </span>
+    </span>
   );
 }
 
@@ -43,28 +90,50 @@ export default function SiteNav() {
 
   return (
     <header data-sm-themed className="fixed inset-x-0 top-4 z-50 px-4 md:px-8">
+      <style>{DD_CSS}</style>
       <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl border px-4 py-3 shadow-sm transition-[background-color,border-color] duration-500 ease-in-out md:px-6" style={{ background: 'var(--nav-bg)', borderColor: 'var(--nav-bd)' }}>
-        <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
+        <Link to="/" className="flex items-center" onClick={() => setOpen(false)} aria-label="Space Maker home">
           <Logo />
-          <span>
-            <span className="block text-base font-bold uppercase leading-none tracking-wide text-[color:var(--nav-brand)] transition-colors duration-500">
-              Space Maker
-            </span>
-            <span className="mt-1 block text-[11px] text-[color:var(--nav-sub)] transition-colors duration-500">where space defines luxury</span>
-          </span>
         </Link>
 
         <div className="hidden items-center gap-5 xl:flex 2xl:gap-6">
-          {LINKS.map((l) => (
-            <Link
-              key={l.label}
-              to={l.to}
-              className={`${linkCls} ${l.k ? `sm-l-${l.k}` : ''} ${(l.to === '/careers' && pathname === '/careers') || (l.to === '/interiors' && pathname.startsWith('/interiors')) ? 'text-[color:var(--nav-hover)] after:w-full' : ''}`}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </div>
+          {LINKS.map((l) => {
+            const active = (l.to === '/careers' && pathname === '/careers') || (l.to === '/interiors' && pathname.startsWith('/interiors')) || (l.label === 'Projects' && pathname.startsWith('/projects'));
+            const link = (
+              <Link
+                key={l.label}
+                to={l.to}
+                className={`${linkCls} ${l.k ? `sm-l-${l.k}` : ''} ${active ? 'text-[color:var(--nav-hover)] after:w-full' : ''}`}
+              >
+                {l.label}
+              </Link>
+            );
+            const items = SUBMENU[l.label];
+            if (!items) return link;
+            return (
+              <div key={l.label} className="sm-dd relative flex items-center gap-1">
+                {link}
+                <svg aria-hidden width="9" height="9" viewBox="0 0 12 12" className="sm-cv text-[color:var(--nav-fg)]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 4.5 6 8.5 10 4.5" /></svg>
+                <div className="sm-dd-p z-10">
+                  <div className="w-64 rounded-2xl border p-2 shadow-[0_18px_40px_-18px_rgba(0,0,0,.35)]" style={{ background: 'var(--nav-bg)', borderColor: 'var(--nav-bd)' }}>
+                    {items.map((it, i) => (
+                      <Link key={it.label} to={it.to} style={{ '--i': i }} className={`sm-dd-i flex items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 ${it.lead ? 'bg-[#C6F00C]/25' : ''}`}>
+                        <span className="relative">
+                          <span className={`text-[13.5px] ${it.lead ? 'font-bold' : 'font-medium'} text-[color:var(--nav-fg)]`}>{it.label}</span>
+                          <span className="sm-u absolute -bottom-0.5 left-0 block h-[2px] w-0 bg-[#C6F00C]" />
+                        </span>
+                        <span className="flex items-center gap-2">
+                          <span className="rounded-full bg-[#C6F00C]/60 px-2 py-0.5 font-['JetBrains_Mono'] text-[10px] font-semibold text-[#1A120E]">{it.n}</span>
+                          <span aria-hidden className="sm-ar text-[color:var(--nav-hover)]">→</span>
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          </div>
 
         <div className="flex items-center gap-3">
           <a
@@ -118,7 +187,7 @@ export default function SiteNav() {
         </div>
       </nav>
 
-      <MobileMenu open={open} onClose={closeMenu} links={LINKS} pathname={pathname} />
+      <MobileMenu open={open} onClose={closeMenu} links={LINKS.map((l) => ({ ...l, sub: SUBMENU[l.label] }))} pathname={pathname} />
     </header>
   );
 }

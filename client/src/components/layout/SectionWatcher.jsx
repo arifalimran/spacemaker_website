@@ -59,7 +59,7 @@ export default function SectionWatcher() {
       if (foot) {
         foot.dataset.sec = 'Contact';
         foot.dataset.key = 'contact';
-        foot.dataset.theme = 'dark';
+        foot.dataset.theme = 'light';
         list.push(foot);
       }
       return [...new Set(list)];

@@ -125,7 +125,7 @@ export default function LandownerSection() {
   }
 
   return (
-    <section id="land" className="relative overflow-hidden pb-14 pt-10 sm:pb-16 sm:pt-12 lg:pb-[150px]" style={{ background: 'linear-gradient(180deg, #EEF4E3 0%, #F4F7EA 45%, #FAF6EE 100%)' }}>
+    <section id="land" className="relative overflow-hidden pb-14 pt-20 sm:pb-16 sm:pt-28 lg:pb-[150px]" style={{ background: 'linear-gradient(180deg, #EEF4E3 0%, #F4F7EA 45%, #FAF6EE 100%)' }}>
       <SkylineParallax />
       <style>{CSS}</style>
       <div className="mx-auto max-w-7xl px-5 sm:px-8">

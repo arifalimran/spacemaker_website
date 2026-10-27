@@ -196,6 +196,22 @@ export default function MobileMenu({ open, onClose, links, pathname }) {
                             )}
                           </motion.span>
                         </Link>
+                        {l.sub && (
+                          <div className="relative z-10 flex flex-wrap gap-2 pb-4 pl-10">
+                            {l.sub.map((it) => (
+                              <Link
+                                key={it.label}
+                                to={it.to}
+                                onClick={go}
+                                className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13px] font-medium active:opacity-80"
+                                style={{ borderColor: 'rgba(245,240,230,.28)', color: IVORY, background: it.lead ? 'rgba(198,240,12,.18)' : 'transparent' }}
+                              >
+                                {it.label}
+                                <span className="font-['JetBrains_Mono'] text-[10px]" style={{ color: LIME }}>{it.n}</span>
+                              </Link>
+                            ))}
+                          </div>
+                        )}
                       </li>
                     );
                   });

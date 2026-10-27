@@ -432,12 +432,19 @@ export const upcoming = [
 export const WHY_US = {
   eyebrow: 'Why choose us',
   title: 'Three things you can see, feel and count on.',
+  // proof band under the heading. Edit the numbers here; the count-up and layout follow. (A fourth, live count of projects under construction is added by the page.)
+  proof: [
+    { value: 100, label: 'Apartments delivered' },
+    { value: 150000, label: 'Sq ft built' },
+    { value: 12, suffix: '+', label: 'Years in Dhaka' },
+  ],
   scenes: [
     {
       key: 'design',
       title: 'Aesthetic design',
       line: 'Light first, then everything else.',
       text: 'Every apartment gets natural cross-ventilation, broad balconies and direct morning sunlight. We never build dark boxes.',
+      points: ['Cross-ventilation in every apartment', 'Direct morning sunlight', 'Broad balconies'],
       image: U(EXT1, 1400),
       treatment: 'arch',
     },
@@ -447,6 +454,7 @@ export const WHY_US = {
       line: 'What you cannot see matters most.',
       text: 'The structure behind the walls is built from materials we test and trust, with no compromise.',
       points: ['Certified 72.5 grade rebar', 'High-strength stone chips', 'Trusted cement brands'],
+      specs: [['Rebar', 'Certified 72.5 grade'], ['Stone chips', 'High-strength'], ['Cement', 'Trusted brands']],
       image: U(INT3, 1400),
       treatment: 'frame', // cheap treatment on the espresso section (no CSS filters)
     },

@@ -1,6 +1,7 @@
 // client/src/components/portfolio/InteriorsIndex.jsx
 // Route: /interiors  (all interior projects). Compact: a card grid that stays tidy with dozens of interiors.
 import React, { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { interiorProjects, interiorCover, TYPE_LABEL } from '../../data/portfolio';
 import { Eyebrow, Reveal } from './shared';
@@ -54,10 +55,15 @@ function Card({ p, i }) {
 }
 
 export default function InteriorsIndex() {
-  const [type, setType] = useState('all');
+  // the top bar and footer link here with ?type=residential|commercial
+  const [params, setParams] = useSearchParams();
+  const wantedType = params.get('type');
+  const KNOWN = [...new Set(['residential', 'commercial', ...interiorProjects.map((p) => p.type)])];
+  const type = KNOWN.includes(wantedType) ? wantedType : 'all';
+  const setType = (k) => setParams(k === 'all' ? {} : { type: k }, { replace: true });
   const [q, setQ] = useState('');
   const [shown, setShown] = useState(PAGE);
-  const types = [...new Set(interiorProjects.map((p) => p.type))];
+  const types = KNOWN;
   const list = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return interiorProjects.filter(
@@ -124,7 +130,11 @@ export default function InteriorsIndex() {
             <Card key={p.id} p={p} i={i} />
           ))}
         </div>
-        {list.length === 0 && <p className="mt-10 text-neutral-600">No interiors match that search.</p>}
+        {list.length === 0 && (
+          <p className="mt-10 text-neutral-600">
+            {type !== 'all' && !q.trim() ? `${TYPE_LABEL[type] || type} interiors are coming soon.` : 'No interiors match that search.'}
+          </p>
+        )}
         {list.length > shown && (
           <div className="mt-12 text-center">
             <button
