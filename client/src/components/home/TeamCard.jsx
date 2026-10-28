@@ -118,12 +118,12 @@ export default function TeamCard({ m, n, showText = false }) {
           {/* corner marks + number */}
           <span aria-hidden className="pointer-events-none absolute left-2.5 top-2.5 h-3 w-3 border-l border-t" style={{ borderColor: 'rgba(245,240,230,.55)' }} />
           <span aria-hidden className="pointer-events-none absolute bottom-2.5 right-2.5 h-3 w-3 border-b border-r" style={{ borderColor: 'rgba(245,240,230,.55)' }} />
-          <span aria-hidden className="pointer-events-none absolute right-3 top-2.5 flex items-center gap-1.5 font-['JetBrains_Mono'] text-[10px] tracking-[0.2em] text-[#F5F0E6]/70">
+          <span aria-hidden className="pointer-events-none absolute right-3 top-2.5 flex items-center gap-1.5 font-['JetBrains_Mono'] text-[10px] tracking-[0.2em] text-[#8F7F6C]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#C6F00C]" />
             {String(n + 1).padStart(2, '0')}
           </span>
           {!has && m.isSample && (
-            <span aria-hidden className="pointer-events-none absolute bottom-2.5 left-3 font-['JetBrains_Mono'] text-[9px] uppercase tracking-[0.2em] text-[#F5F0E6]/45">
+            <span aria-hidden className="pointer-events-none absolute bottom-2.5 left-3 font-['JetBrains_Mono'] text-[9px] uppercase tracking-[0.2em] text-[#8F7F6C]">
               Sample
             </span>
           )}
@@ -135,12 +135,12 @@ export default function TeamCard({ m, n, showText = false }) {
               style={{ background: 'linear-gradient(to top, rgba(42,31,26,.97) 62%, rgba(42,31,26,0))' }}
             >
               <p
-                className="text-[12.5px] leading-[1.55] text-[#F5F0E6]"
+                className="text-[12.5px] leading-[1.55] text-[#BBA992]"
                 style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
               >
                 {m.expertise}
               </p>
-              <span aria-hidden className="sm-tc-arrow mt-2 inline-block font-['JetBrains_Mono'] text-xs text-[#F5F0E6]/80">
+              <span aria-hidden className="sm-tc-arrow mt-2 inline-block font-['JetBrains_Mono'] text-xs text-[#BBA992]">
                 →
               </span>
             </div>

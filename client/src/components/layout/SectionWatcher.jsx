@@ -9,13 +9,13 @@ import { useLocation } from 'react-router-dom';
 const CSS = `
 [data-sm-themed]{
   --nav-bg:rgba(250,248,245,.97);--nav-bd:rgba(229,229,229,.7);--nav-fg:#404040;--nav-hover:#1B4332;--nav-brand:#1B4332;--nav-sub:#737373;
-  --nav-btn-bg:#2A1F1A;--nav-btn-fg:#F5F0E6;--nav-btn-hfg:#2A1F1A;--nav-sweep:#C6F00C;--nav-circle:#C6F00C;--nav-arrow:#2A1F1A;--nav-dot:#C6F00C;--nav-panel-hover:#EDF4EC;
-  --dk-bg:#2A1F1A;--dk-fg:#F5F0E6;--dk-bd:rgba(245,240,230,.25);
+  --nav-btn-bg:#2A1F1A;--nav-btn-fg:#BBA992;--nav-btn-hfg:#2A1F1A;--nav-sweep:#C6F00C;--nav-circle:#C6F00C;--nav-arrow:#2A1F1A;--nav-dot:#C6F00C;--nav-panel-hover:#EDF4EC;
+  --dk-bg:#2A1F1A;--dk-fg:#BBA992;--dk-bd:rgba(245,240,230,.25);
 }
 [data-sm-themed][data-sm-theme="dark"]{
-  --nav-bg:rgba(42,31,26,.97);--nav-bd:rgba(245,240,230,.16);--nav-fg:rgba(245,240,230,.88);--nav-hover:#C6F00C;--nav-brand:#F5F0E6;--nav-sub:rgba(245,240,230,.6);
-  --nav-btn-bg:#3A2B23;--nav-btn-fg:#F5F0E6;--nav-panel-hover:rgba(245,240,230,.08);
-  --dk-bg:#F5F0E6;--dk-fg:#2A1F1A;--dk-bd:rgba(42,31,26,.25);
+  --nav-bg:rgba(42,31,26,.97);--nav-bd:rgba(245,240,230,.16);--nav-fg:#BBA992;--nav-hover:#C6F00C;--nav-brand:#BBA992;--nav-sub:#8F7F6C;
+  --nav-btn-bg:#3A2B23;--nav-btn-fg:#BBA992;--nav-panel-hover:rgba(245,240,230,.08);
+  --dk-bg:#BBA992;--dk-fg:#2A1F1A;--dk-bd:rgba(42,31,26,.25);
 }
 ${['projects', 'about', 'why', 'testimonials', 'team', 'land', 'contact']
   .map((k) => `[data-sm-themed][data-sm-sec="${k}"] .sm-l-${k}{color:var(--nav-hover)}[data-sm-themed][data-sm-sec="${k}"] .sm-l-${k}::after{width:100%}`)

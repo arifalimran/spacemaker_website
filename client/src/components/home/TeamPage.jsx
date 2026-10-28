@@ -49,7 +49,7 @@ export default function TeamPage() {
                 style={{
                   borderColor: ESPRESSO,
                   background: on ? ESPRESSO : 'transparent',
-                  color: on ? '#F5F0E6' : ESPRESSO,
+                  color: on ? '#BBA992' : ESPRESSO,
                 }}
               >
                 {g}

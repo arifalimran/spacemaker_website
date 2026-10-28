@@ -162,7 +162,7 @@ function PhotoVeil({ side = 'right', tint = 0.2 }) {
 /* the frosted light-espresso card, same family as the hero card */
 function SceneCard({ data, className = '' }) {
   return (
-    <div className={`sm-glass-lite rounded-[24px] border border-white/20 p-6 text-[#F5F0E6] sm:p-8 ${className}`}>
+    <div className={`sm-glass-lite rounded-[24px] border border-white/20 p-6 text-[#BBA992] sm:p-8 ${className}`}>
       <span className="flex items-center gap-2.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#C6F00C]">
         <span aria-hidden className="relative flex h-2 w-2">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#C6F00C] opacity-60 motion-reduce:animate-none" />
@@ -171,8 +171,8 @@ function SceneCard({ data, className = '' }) {
         {data.num} · {data.label}
       </span>
       <span aria-hidden className="mt-3 block h-[2px] w-10 rounded-full bg-[#C6F00C]" />
-      <h3 className="f-display mt-6 text-3xl font-bold leading-tight text-[#F7F3E8] sm:text-4xl">{data.heading}</h3>
-      <p className="mt-3 text-base leading-relaxed text-[#F5F0E6]/90 sm:text-lg">{data.text}</p>
+      <h3 className="f-display mt-6 text-3xl font-bold leading-tight text-[#BBA992] sm:text-4xl">{data.heading}</h3>
+      <p className="mt-3 text-base leading-relaxed text-[#BBA992] sm:text-lg">{data.text}</p>
     </div>
   );
 }

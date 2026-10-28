@@ -8,8 +8,8 @@ import { CONTACT, GENERAL_MESSAGE, projects, upcoming, interiorProjects } from '
 import { waLink, trackLead } from '../../lib/leads';
 
 const head = "font-['JetBrains_Mono'] text-xs font-semibold uppercase tracking-[0.22em] text-[#C7D17F]";
-const lk = 'sm-fl relative inline-block text-base font-medium text-[#F5F0E6]/85 transition-colors duration-300 hover:text-[#C7D17F]';
-const sub = "font-['JetBrains_Mono'] text-xs font-medium uppercase tracking-[0.16em] text-[#F5F0E6]/60";
+const lk = 'sm-fl relative inline-block text-base font-medium text-[#BBA992] transition-colors duration-300 hover:text-[#C7D17F]';
+const sub = "font-['JetBrains_Mono'] text-xs font-medium uppercase tracking-[0.16em] text-[#8F7F6C]";
 
 const count = (list, fn) => list.filter(fn).length;
 
@@ -111,13 +111,13 @@ const FOOTER_CSS = `
 .sm-fl:hover::after{width:100%}
 .sm-bp{transition:background-color .3s,color .3s,border-color .3s,transform .3s}
 .sm-bp .sm-bn{transition:background-color .3s,color .3s}
-.sm-bp:hover,.sm-bp:focus-visible{background:#F5F0E6;color:#2A1F1A;border-color:#F5F0E6;transform:translateY(-2px)}
+.sm-bp:hover,.sm-bp:focus-visible{background:#BBA992;color:#2A1F1A;border-color:#BBA992;transform:translateY(-2px)}
 .sm-bp:hover .sm-bn,.sm-bp:focus-visible .sm-bn{background:#2A1F1A;color:#F5F0E6}
 @media (prefers-reduced-motion:reduce){.sm-bp,.sm-bp .sm-bn,.sm-soc-i{transition:none!important}}
 `;
 
 function BrowseStrip() {
-  const pill = 'sm-bp inline-flex items-center gap-3 rounded-full border border-[#F5F0E6]/25 py-2 pl-5 pr-2 text-base font-semibold text-[#F5F0E6]';
+  const pill = 'sm-bp inline-flex items-center gap-3 rounded-full border border-[#F5F0E6]/25 py-2 pl-5 pr-2 text-base font-semibold text-[#BBA992]';
   const num = "sm-bn inline-flex h-9 min-w-[2.25rem] items-center justify-center rounded-full bg-[#A9B957] px-2 font-['JetBrains_Mono'] text-sm font-semibold text-[#2A1F1A]";
   const Pill = ({ r }) => (
     <Link to={r.to} className={pill}>
@@ -126,15 +126,15 @@ function BrowseStrip() {
     </Link>
   );
   return (
-    <div className="rounded-3xl border border-[#F5F0E6]/12 bg-[#241A15] px-6 py-10 sm:px-12 sm:py-14">
+    <div className="rounded-3xl border border-[#F5F0E6]/10 bg-[#241A15] px-6 py-10 sm:px-12 sm:py-14">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div className="flex items-center gap-4 whitespace-nowrap font-['Space_Grotesk'] text-3xl font-extrabold tracking-tight text-[#F5F0E6] sm:text-5xl">
+        <div className="flex items-center gap-4 whitespace-nowrap font-['Space_Grotesk'] text-3xl font-extrabold tracking-tight text-[#BBA992] sm:text-5xl">
           <span className="h-[2px] w-10 flex-none rounded-full bg-[#A9B957]" aria-hidden />
           Find your home
         </div>
-        <p className="max-w-sm text-base leading-relaxed text-[#F5F0E6]/65 lg:text-right">Every Space Maker home, sorted by where it stands today.</p>
+        <p className="max-w-md text-base leading-relaxed text-[#8F7F6C] lg:text-right">Every Space Maker home, sorted by where it stands today.</p>
       </div>
-      <nav aria-label="Browse projects" className="mt-8 flex flex-wrap items-center gap-3 border-t border-[#F5F0E6]/12 pt-8 sm:mt-10 sm:pt-10">
+      <nav aria-label="Browse projects" className="mt-8 flex flex-wrap items-center gap-3 border-t border-[#F5F0E6]/10 pt-8 sm:mt-10 sm:pt-10">
         {BROWSE.map((r) => (
           <Pill key={r.label} r={r} />
         ))}
@@ -152,7 +152,7 @@ export default function SiteFooter() {
   // the two list pages are already the finder, so the strip would be redundant there
   const showBrowse = !(pathname === '/projects' || pathname === '/interiors');
   return (
-    <footer id="contact" className="relative overflow-hidden text-[#F5F0E6]" style={{ background: '#2A1F1A' }}>
+    <footer id="contact" className="relative overflow-hidden text-[#BBA992]" style={{ background: '#2A1F1A' }}>
       <style>{FOOTER_CSS}</style>
 
       <div className="relative mx-auto max-w-7xl px-5 pt-24 sm:px-8 sm:pt-40">
@@ -162,9 +162,9 @@ export default function SiteFooter() {
           {/* brand */}
           <div className="lg:col-span-4">
             <Link to="/" className="inline-block" aria-label="Space Maker home">
-              <img src="/assets/00_brand/logo-lockup-light.png" alt="Space Maker, where space defines luxury" className="h-28 w-auto sm:h-36" loading="lazy" />
+              <img src="/assets/00_brand/logo-lockup-taupe.png" alt="Space Maker, where space defines luxury" className="h-28 w-auto sm:h-36" loading="lazy" />
             </Link>
-            {CONTACT.footerLine && <p className="mt-6 max-w-sm text-base leading-relaxed text-[#F5F0E6]/75">{CONTACT.footerLine}</p>}
+            {CONTACT.footerLine && <p className="mt-6 max-w-sm text-base leading-relaxed text-[#BBA992]">{CONTACT.footerLine}</p>}
             <SocialRow items={CONTACT.social} />
           </div>
 
@@ -186,8 +186,8 @@ export default function SiteFooter() {
             <ul className="mt-6 grid gap-6">
               {CONTACT.offices.map((o) => (
                 <li key={o.name}>
-                  <div className="text-base font-semibold text-[#F5F0E6]">{o.name}</div>
-                  <div className="mt-1 text-base leading-relaxed text-[#F5F0E6]/75">{o.address}</div>
+                  <div className="text-base font-semibold text-[#BBA992]">{o.name}</div>
+                  <div className="mt-1 text-base leading-relaxed text-[#BBA992]">{o.address}</div>
                 </li>
               ))}
             </ul>
@@ -225,21 +225,21 @@ export default function SiteFooter() {
               target="_blank"
               rel="noreferrer"
               onClick={() => trackLead({ channel: 'whatsapp', kind: 'footer-visit' })}
-              className="relative isolate mt-8 inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl border-[1.5px] border-[#F5F0E6] bg-[#F5F0E6] px-7 py-4 text-base font-semibold text-[#2A1F1A] transition-[color] duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#A9B957] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
+              className="relative isolate mt-8 inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl border-[1.5px] border-[#BBA992] bg-[#BBA992] px-7 py-4 text-base font-semibold text-[#2A1F1A] transition-[color] duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#A9B957] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
             >
-              <span className="h-2 w-2 rounded-full bg-[#A9B957]" />
+              <span className="h-2 w-2 rounded-full bg-[#2A1F1A]" />
               Book a visit
             </a>
           </div>
         </div>
 
         {/* bottom bar */}
-        <div className="mt-20 flex flex-col gap-2 border-t border-[#F5F0E6]/12 pt-6 text-sm text-[#F5F0E6]/65 sm:flex-row sm:items-center sm:justify-between sm:pr-36">
+        <div className="mt-20 flex flex-col gap-2 border-t border-[#F5F0E6]/10 pt-6 text-sm text-[#8F7F6C] sm:flex-row sm:items-center sm:justify-between sm:pr-36">
           <span>© {new Date().getFullYear()} Space Maker Limited. All rights reserved.</span>
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="sm-fl self-start font-semibold text-[#F5F0E6] sm:self-auto"
+            className="sm-fl self-start font-semibold text-[#BBA992] sm:self-auto"
           >
             Back to top ↑
           </button>

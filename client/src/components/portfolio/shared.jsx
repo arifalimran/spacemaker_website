@@ -17,10 +17,10 @@ export const btnPrimary = `${base} bg-[#1B4332] text-white shadow-[0_10px_24px_-
 export const btnOutline = `${base} border border-[#1B4332]/30 text-[#1B4332] hover:border-[#C6F00C] hover:bg-[#C6F00C]/25`;
 export const btnRound =
   'inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#1B4332]/25 text-[#1B4332] transition duration-300 hover:-translate-y-0.5 hover:border-[#C6F00C] hover:bg-[#C6F00C]';
-export const btnPrimaryDark = `${base} bg-[#F3EFE6] text-[#2A1F1A] hover:-translate-y-0.5 hover:bg-white`;
-export const btnOutlineDark = `${base} border border-[#C6F00C]/60 text-[#F3EFE6] hover:bg-[#C6F00C]/15`;
+export const btnPrimaryDark = `${base} bg-[#BBA992] text-[#2A1F1A] hover:-translate-y-0.5 hover:bg-[#C9B99F]`;
+export const btnOutlineDark = `${base} border border-[#C6F00C]/60 text-[#BBA992] hover:bg-[#C6F00C]/15`;
 export const btnRoundDark =
-  'inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 text-[#F3EFE6] transition duration-300 hover:-translate-y-0.5 hover:bg-[#C6F00C] hover:text-[#2A1F1A]';
+  'inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 text-[#BBA992] transition duration-300 hover:-translate-y-0.5 hover:bg-[#C6F00C] hover:text-[#2A1F1A]';
 
 export const linkCls =
   'text-sm font-medium text-[#1B4332] underline decoration-[#C6F00C] decoration-2 underline-offset-[6px] hover:decoration-[#1B4332] transition';
@@ -131,12 +131,12 @@ export function Facts({ items, className = '', dark = false }) {
         <div key={i.k}>
           <dt
             className={`font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.18em] ${
-              dark ? 'text-white/50' : 'text-neutral-500'
+              dark ? 'text-[#8F7F6C]' : 'text-neutral-500'
             }`}
           >
             {i.k}
           </dt>
-          <dd className={`mt-1 font-['Space_Grotesk'] text-sm font-semibold ${dark ? 'text-[#F3EFE6]' : 'text-[#111827]'}`}>
+          <dd className={`mt-1 font-['Space_Grotesk'] text-sm font-semibold ${dark ? 'text-[#BBA992]' : 'text-[#111827]'}`}>
             {i.v}
           </dd>
         </div>

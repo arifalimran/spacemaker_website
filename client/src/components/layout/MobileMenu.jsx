@@ -11,7 +11,7 @@ import { waLink, trackLead } from '../../lib/leads';
 
 const LIME = '#C6F00C';
 const INK = '#2A1F1A';
-const IVORY = '#F5F0E6';
+const IVORY = '#BBA992';
 const EASE = [0.76, 0, 0.24, 1];
 
 const DESC = {

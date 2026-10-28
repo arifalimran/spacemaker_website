@@ -166,7 +166,7 @@ export function PlanExplorer({ plans, open, onAsk }) {
                   setI(0);
                 }}
                 className={`${MONO} rounded-full border px-3 py-1 text-[10px] uppercase tracking-[0.16em] transition ${
-                  bed === b ? 'border-[#2A1F1A] bg-[#2A1F1A] text-[#F3EFE6]' : 'border-[#1B4332]/20 text-neutral-600 hover:border-[#1B4332]'
+                  bed === b ? 'border-[#2A1F1A] bg-[#2A1F1A] text-[#BBA992]' : 'border-[#1B4332]/20 text-neutral-600 hover:border-[#1B4332]'
                 }`}
               >
                 {b === 'all' ? 'All' : `${b} bed`}
@@ -441,7 +441,7 @@ function DChips({ options, value, onChange }) {
             className={`rounded-full border px-4 py-1.5 text-[13px] font-medium leading-snug transition ${
               on
                 ? 'border-[#C6F00C] bg-[#C6F00C] text-[#1A120E]'
-                : 'border-[#F3EFE6]/25 text-[#F3EFE6]/85 hover:border-[#C6F00C]/70'
+                : 'border-[#F3EFE6]/25 text-[#BBA992] hover:border-[#C6F00C]/70'
             }`}
           >
             {o}
@@ -453,7 +453,7 @@ function DChips({ options, value, onChange }) {
 }
 
 const dField =
-  'mt-2 w-full border-0 border-b border-[#F3EFE6]/25 bg-transparent px-0 py-2.5 text-[16px] text-[#F3EFE6] outline-none transition placeholder:text-[#F3EFE6]/35 focus:border-[#C6F00C]';
+  'mt-2 w-full border-0 border-b border-[#F3EFE6]/25 bg-transparent px-0 py-2.5 text-[16px] text-[#BBA992] outline-none transition placeholder:text-[#8F7F6C] focus:border-[#C6F00C]';
 const dLabel = `${MONO} text-[10px] uppercase tracking-[0.2em] text-[#C6F00C]/80`;
 
 export function EnquiryBlock({ project, options, layout, setLayout }) {
@@ -577,10 +577,10 @@ export function EnquiryBlock({ project, options, layout, setLayout }) {
               {done ? (
                 <div className="relative py-10 text-center">
                   <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-[#C6F00C] text-xl text-[#1A120E]">✓</div>
-                  <h3 className="font-serif text-4xl italic leading-tight text-[#F3EFE6] sm:text-5xl">
+                  <h3 className="font-serif text-4xl italic leading-tight text-[#BBA992] sm:text-5xl">
                     Thank you{name ? `, ${name.split(' ')[0]}` : ''}.
                   </h3>
-                  <p className="mt-4 text-[#F3EFE6]/70">
+                  <p className="mt-4 text-[#8F7F6C]">
                     {state === 'ok' ? 'We will call you shortly.' : 'We could not send it automatically. Please send it to us on WhatsApp.'}
                   </p>
                   {state === 'fallback' && (
@@ -608,7 +608,7 @@ export function EnquiryBlock({ project, options, layout, setLayout }) {
                         setMsg(e.target.value);
                         grow(e.target);
                       }}
-                      className="block min-h-[12rem] w-full resize-none border-0 bg-transparent p-0 font-serif text-[22px] leading-[1.5] text-[#F3EFE6] outline-none placeholder:text-[#F3EFE6]/40 sm:min-h-[13.5rem] sm:text-[28px]"
+                      className="block min-h-[12rem] w-full resize-none border-0 bg-transparent p-0 font-serif text-[22px] leading-[1.5] text-[#BBA992] outline-none placeholder:text-[#8F7F6C] sm:min-h-[13.5rem] sm:text-[28px]"
                     />
                     <span aria-hidden className="sm-enq-line absolute inset-x-4 bottom-0 block h-[2px] rounded-full" style={{ background: 'linear-gradient(90deg, #C6F00C, rgba(198,240,12,0.1))' }} />
                   </label>
@@ -620,7 +620,7 @@ export function EnquiryBlock({ project, options, layout, setLayout }) {
                         key={st.k}
                         type="button"
                         onClick={() => addStarter(st.t)}
-                        className="rounded-full border border-[#F3EFE6]/25 px-4 py-1.5 text-[13px] text-[#F3EFE6]/85 transition hover:border-[#C6F00C] hover:text-[#C6F00C]"
+                        className="rounded-full border border-[#F3EFE6]/25 px-4 py-1.5 text-[13px] text-[#BBA992] transition hover:border-[#C6F00C] hover:text-[#C6F00C]"
                       >
                         + {st.k}
                       </button>
@@ -634,8 +634,8 @@ export function EnquiryBlock({ project, options, layout, setLayout }) {
                       transition={{ duration: 0.55, ease: 'easeOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="mt-9 border-t border-[#F3EFE6]/12 pt-8">
-                        <div className="font-serif text-2xl italic text-[#F3EFE6]">Where should we reach you?</div>
+                      <div className="mt-9 border-t border-[#F3EFE6]/10 pt-8">
+                        <div className="font-serif text-2xl italic text-[#BBA992]">Where should we reach you?</div>
                         <div className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2">
                           <label className="block">
                             <span className={dLabel}>Your name</span>

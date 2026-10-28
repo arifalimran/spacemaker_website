@@ -67,7 +67,7 @@ function Logo() {
   const pair = (name, cls) => (
     <>
       <img src={`${ASSET}/logo-${name}.png`} alt="" className={`sm-lg-d absolute inset-0 h-full w-full object-contain ${cls}`} />
-      <img src={`${ASSET}/logo-${name}-light.png`} alt="" aria-hidden className={`sm-lg-l absolute inset-0 h-full w-full object-contain ${cls}`} />
+      <img src={`${ASSET}/logo-${name}-taupe.png`} alt="" aria-hidden className={`sm-lg-l absolute inset-0 h-full w-full object-contain ${cls}`} />
     </>
   );
   return (

@@ -97,7 +97,7 @@ export default function HeroStage() {
           animate={{ opacity: 1, y: 0 }}
           transition={t(-0.05)}
           className="sm-glass w-full max-w-[31rem] rounded-[24px] border border-white/15 p-5 sm:p-7 lg:p-8"
-          style={{ color: '#F5F0E6' }}
+          style={{ color: '#BBA992' }}
         >
           <h1 className="font-['Space_Grotesk'] text-[2.6rem] font-extrabold leading-[1.03] tracking-tight sm:text-6xl lg:text-[3.3rem]">
             {LINES.map((line, li) => (
@@ -164,7 +164,7 @@ export default function HeroStage() {
               target="_blank"
               rel="noreferrer"
               className="relative isolate inline-flex items-center gap-2 overflow-hidden rounded-full border-[1.5px] px-5 py-3 text-sm font-semibold transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#F5F0E6] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
-              style={{ borderColor: '#F5F0E6' }}
+              style={{ borderColor: '#BBA992' }}
             >
               Book a private visit
             </a>

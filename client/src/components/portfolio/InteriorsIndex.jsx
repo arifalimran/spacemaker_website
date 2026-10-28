@@ -16,7 +16,7 @@ function Chip({ on, onClick, children }) {
       type="button"
       onClick={onClick}
       className={`${MONO} rounded-full border px-4 py-1.5 text-[10px] uppercase tracking-[0.18em] transition ${
-        on ? 'border-[#2A1F1A] bg-[#2A1F1A] text-[#F3EFE6]' : 'border-[#2A1F1A]/20 text-neutral-600 hover:border-[#2A1F1A]/60'
+        on ? 'border-[#2A1F1A] bg-[#2A1F1A] text-[#BBA992]' : 'border-[#2A1F1A]/20 text-neutral-600 hover:border-[#2A1F1A]/60'
       }`}
     >
       {children}

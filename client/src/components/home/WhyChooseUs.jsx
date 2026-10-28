@@ -111,12 +111,12 @@ function Track({ items: raw }) {
                   style={{ borderColor: LIME, opacity: 0, ...an(`smRing${i}`) }}
                 />
               )}
-              <span className="font-['JetBrains_Mono'] text-[10px] tracking-[0.18em] text-[#FAF8F5]/40">
+              <span className="font-['JetBrains_Mono'] text-[10px] tracking-[0.18em] text-[#8F7F6C]">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <span
                 className={`font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] ${last ? 'font-semibold' : ''}`}
-                style={{ color: last ? LIME : '#FAF8F5', opacity: run ? 0.4 : 1, ...an(`smLab${i}`) }}
+                style={{ color: last ? LIME : '#BBA992', opacity: run ? 0.4 : 1, ...an(`smLab${i}`) }}
               >
                 {m}
               </span>
@@ -146,7 +146,7 @@ function Track({ items: raw }) {
 
 function Card({ s, i }) {
   const num = (
-    <span className="absolute left-5 top-4 font-['Space_Grotesk'] text-5xl font-extrabold leading-none text-[#FAF8F5]/90 sm:text-6xl" aria-hidden>
+    <span className="absolute left-5 top-4 font-['Space_Grotesk'] text-5xl font-extrabold leading-none text-[#BBA992]/80 sm:text-6xl" aria-hidden>
       0{i + 1}
     </span>
   );
@@ -169,15 +169,15 @@ function Card({ s, i }) {
         )}
 
         <div className="mt-8 flex flex-1 flex-col">
-          <h3 className="font-['Space_Grotesk'] text-2xl font-extrabold leading-tight tracking-tight text-[#FAF8F5] sm:text-3xl">{s.title}</h3>
-          <p className="mt-3 font-serif text-xl italic text-[#F3EFE6]/80">{s.line}</p>
-          <p className="mt-4 text-base leading-relaxed text-[#F3EFE6]/70">{s.text}</p>
+          <h3 className="font-['Space_Grotesk'] text-2xl font-extrabold leading-tight tracking-tight text-[#BBA992] sm:text-3xl">{s.title}</h3>
+          <p className="mt-3 font-serif text-xl italic text-[#BBA992]">{s.line}</p>
+          <p className="mt-4 text-base leading-relaxed text-[#8F7F6C]">{s.text}</p>
           {s.specs ? (
-            <dl className="mt-6 divide-y divide-[#FAF8F5]/12 border-y border-[#FAF8F5]/12">
+            <dl className="mt-6 divide-y divide-[#FAF8F5]/10 border-y border-[#FAF8F5]/10">
               {s.specs.map(([k, v]) => (
                 <div key={k} className="flex items-baseline justify-between gap-4 py-3">
-                  <dt className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#FAF8F5]/55">{k}</dt>
-                  <dd className="text-right font-['Space_Grotesk'] text-sm font-semibold text-[#FAF8F5]">{v}</dd>
+                  <dt className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#8F7F6C]">{k}</dt>
+                  <dd className="text-right font-['Space_Grotesk'] text-sm font-semibold text-[#BBA992]">{v}</dd>
                 </div>
               ))}
             </dl>
@@ -185,7 +185,7 @@ function Card({ s, i }) {
             s.points && (
               <ul className="mt-6 grid gap-3">
                 {s.points.map((p) => (
-                  <li key={p} className="flex items-center gap-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.12em] text-[#FAF8F5]/90">
+                  <li key={p} className="flex items-center gap-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.12em] text-[#BBA992]">
                     <span className="h-1.5 w-1.5 flex-none rounded-full" style={{ background: LIME }} />
                     {p}
                   </li>
@@ -206,25 +206,25 @@ export default function WhyChooseUs() {
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="max-w-3xl">
           <Eyebrow dark>{WHY_US.eyebrow}</Eyebrow>
-          <h2 className="mt-5 font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.06] tracking-tight text-[#FAF8F5] sm:text-5xl lg:text-6xl">
+          <h2 className="mt-5 font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.06] tracking-tight text-[#BBA992] sm:text-5xl lg:text-6xl">
             {WHY_US.title}
           </h2>
         </Reveal>
 
         {/* proof band */}
         <Reveal className="mt-14 sm:mt-20" delay={0.05}>
-          <ul className="grid grid-cols-2 gap-y-10 border-y border-[#FAF8F5]/15 py-10 sm:py-12 lg:grid-cols-4 lg:gap-y-0">
+          <ul className="grid grid-cols-2 gap-y-10 border-y border-[#4A3B32] py-10 sm:py-12 lg:grid-cols-4 lg:gap-y-0">
             {band.map((x, k) => {
               const inner = (
                 <>
-                  <span className="block font-['Space_Grotesk'] text-5xl font-extrabold leading-none tracking-tight text-[#FAF8F5] sm:text-6xl lg:text-7xl">
+                  <span className="block font-['Space_Grotesk'] text-5xl font-extrabold leading-none tracking-tight text-[#BBA992] sm:text-6xl lg:text-7xl">
                     <CountUp to={x.value} suffix={x.suffix} />
                   </span>
-                  <span className="mt-3 block font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#FAF8F5]/60">{x.label}</span>
+                  <span className="mt-3 block font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#8F7F6C]">{x.label}</span>
                 </>
               );
               return (
-                <li key={x.label} className={`px-0 lg:px-8 ${k > 0 ? 'lg:border-l lg:border-[#FAF8F5]/15' : 'lg:pl-0'}`}>
+                <li key={x.label} className={`px-0 lg:px-8 ${k > 0 ? 'lg:border-l lg:border-[#4A3B32]' : 'lg:pl-0'}`}>
                   {x.to ? (
                     <Link to={x.to} className="block transition-opacity hover:opacity-80">{inner}</Link>
                   ) : (
@@ -246,7 +246,7 @@ export default function WhyChooseUs() {
           <Reveal className="mt-20">
             <ul className="flex flex-wrap gap-x-10 gap-y-3 border-t border-[#FAF8F5]/15 pt-8">
               {WHY_US.assurances.map((a) => (
-                <li key={a} className="flex items-center gap-3 font-['Space_Grotesk'] text-base font-semibold text-[#FAF8F5]">
+                <li key={a} className="flex items-center gap-3 font-['Space_Grotesk'] text-base font-semibold text-[#BBA992]">
                   <span className="h-2 w-2 flex-none rounded-full" style={{ background: LIME }} />
                   {a}
                 </li>

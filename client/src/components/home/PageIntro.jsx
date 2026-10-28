@@ -54,7 +54,7 @@ export default function PageIntro() {
               {WORD.map((c, i) => (
                 <motion.span
                   key={i}
-                  className="font-['Space_Grotesk'] text-[2.4rem] font-extrabold uppercase tracking-tight text-[#F5F0E6] sm:text-6xl"
+                  className="font-['Space_Grotesk'] text-[2.4rem] font-extrabold uppercase tracking-tight text-[#BBA992] sm:text-6xl"
                   style={{ display: 'inline-block', width: c === ' ' ? '0.35em' : undefined }}
                   initial={{ y: '110%' }}
                   animate={{ y: 0 }}
@@ -72,7 +72,7 @@ export default function PageIntro() {
               transition={{ duration: 0.7, delay: 0.5, ease: 'easeInOut' }}
             />
             <motion.p
-              className="mt-4 font-serif text-base italic text-[#F5F0E6]/70"
+              className="mt-4 font-serif text-base italic text-[#8F7F6C]"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7 }}
