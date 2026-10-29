@@ -1,5 +1,5 @@
 // client/src/App.jsx
-// Routes: /  (home), /projects, /projects/:slug, /interiors, /interiors/:slug, /careers
+// Routes: /  (home), /projects, /projects/:slug, /interiors, /interiors/:slug, /careers, /careers/openings
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 
@@ -19,6 +19,7 @@ import TeamExperts from './components/home/TeamExperts';
 import TeamPage from './components/home/TeamPage';
 import LandownerSection from './components/home/LandownerSection';
 import Careers from './components/home/Careers';
+import CareersOpenings from './components/home/CareersOpenings';
 import PortfolioSection from './components/portfolio/PortfolioSection';
 import ProjectPage from './components/portfolio/ProjectPage';
 import AllProjects from './components/portfolio/AllProjects';
@@ -87,6 +88,7 @@ function Shell() {
         <Route path="/interiors/:slug" element={<InteriorPage />} />
         <Route path="/team" element={<TeamPage />} />
         <Route path="/careers" element={<main><Careers /></main>} />
+        <Route path="/careers/openings" element={<main><CareersOpenings /></main>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <SiteFooter />

@@ -6,11 +6,20 @@ export const CAREERS_HERO = {
   eyebrow: 'Careers & Culture',
   title: 'Build homes. Shape your career.',
   mission: 'We build homes families can trust, and a workplace where people are proud to grow.',
-  image: '/assets/01_hero/hero-main-2000.webp',
-  cvMessage: 'Hello Space Maker HR, I would like to submit my CV.',
+  // Header photo. SAMPLE: free Unsplash photo (Siyuan), linked directly for now.
+  // Replace with your own file, e.g. '/assets/careers/careers-hero.webp'. If it fails to load, the panel stays matte espresso.
+  image: 'https://images.unsplash.com/photo-1577354425215-479a15121ed8?auto=format&fit=crop&w=2000&q=70',
+  // The big line under the hero, with a link to the all-openings page. "joinHighlight" gets the soft lime marker.
+  joinTitle: 'Discover your place at Space Maker',
+  joinHighlight: 'your place',
+  joinLink: 'See open roles',
 };
 
-// the four pinned-photo chapters (the old "What we provide" perks)
+// Short intro under the "What we offer" heading. SAMPLE wording: replace from the CMS later.
+export const OFFER_INTRO =
+  'We look after the people who build our homes. Salary arrives on the date, you learn beside senior engineers and architects, and every site is safe, fair and respectful.';
+
+// the three "What we offer" perks, each with a photo (the old "What we provide" perks)
 export const CHAPTERS = [
   {
     key: 'pay',
@@ -31,18 +40,10 @@ export const CHAPTERS = [
   {
     key: 'culture',
     label: 'Site culture',
-    title: 'A dignified site culture',
-    line: 'Respect, on every site.',
-    text: 'A positive environment with zero workplace abuse, reasonable hours, and full safety gear (PPE) from day one.',
+    title: 'Respect and care on site',
+    line: 'Safe, fair and looked after, every day.',
+    text: 'A positive environment with zero workplace abuse, reasonable hours and full safety gear (PPE) from day one, plus daily lunch allowances and transport support for engineers at our Jolshiri Abashon sites.',
     image: '/assets/03_developments/flagships/moon-residence/delivered-facade/delivered.jpg',
-  },
-  {
-    key: 'transport',
-    label: 'Transport and lunch',
-    title: 'Transport and site lunch',
-    line: 'We look after the journey too.',
-    text: 'Daily lunch allowances and transport support for engineers posted at our Jolshiri Abashon sites.',
-    image: '/assets/01_hero/hero-rayerbazar-1600.webp',
   },
 ];
 
@@ -54,10 +55,28 @@ export const CAREER_STATS = [
 ];
 
 export const JOBS = [
-  { title: 'Senior Structural Project Engineer', loc: 'Jolshiri Abashon (Sectors 13 & 16)', exp: '4–7 Years', type: 'Full-Time' },
-  { title: 'Site Supervisor / Civil Foreman', loc: 'Dhaka & Jolshiri Projects', exp: '3+ Years', type: 'Full-Time' },
-  { title: 'Junior Architectural Visualizer', loc: 'Corporate Studio (Mohakhali DOHS)', exp: '1–3 Years', type: 'Full-Time' },
+  { slug: 'senior-structural-project-engineer', team: 'Structure', title: 'Senior Structural Project Engineer', loc: 'Jolshiri Abashon (Sectors 13 & 16)', exp: '4–7 Years', type: 'Full-Time' },
+  { slug: 'site-supervisor-civil-foreman', team: 'Site', title: 'Site Supervisor / Civil Foreman', loc: 'Dhaka & Jolshiri Projects', exp: '3+ Years', type: 'Full-Time' },
+  { slug: 'junior-architectural-visualizer', team: 'Studio', title: 'Junior Architectural Visualizer', loc: 'Corporate Studio (Mohakhali DOHS)', exp: '1–3 Years', type: 'Full-Time' },
 ];
+
+// Freelance / part-time card (shown after Open positions). SAMPLE wording: replace with the real terms.
+// Photo: free Unsplash photo (Vitaly Gariev) as a stand-in. Replace with your own file, e.g. '/assets/careers/careers-flex.webp'.
+export const FLEX = {
+  eyebrow: 'Flexible work',
+  title: 'Prefer to work your own way?',
+  text: 'We also work with freelancers, part-time sales agents and part-time site workers who want flexible hours and a clear way to earn.',
+  who: ['Sales agents', 'Freelancers', 'Part-time workers'],
+  points: [
+    'Choose your own hours',
+    'Leads and training from our team',
+    'Clear payment terms, agreed upfront',
+  ],
+  note: 'Terms are agreed in writing before you start.',
+  cta: 'Apply now',
+  emailSubject: 'Freelance / part-time enquiry',
+  image: 'https://images.unsplash.com/photo-1758611975583-fddf609226a0?auto=format&fit=crop&w=1400&q=70',
+};
 
 export const FAQS = [
   { q: 'Will my salary be delayed like conventional developers in Dhaka?', a: 'No. Space Maker follows strict corporate discipline. All employee salaries and site allowances are disbursed promptly on schedule every month without exception.' },
@@ -68,10 +87,17 @@ export const FAQS = [
 
 // how hiring works (SAMPLE wording, from the FAQ)
 export const STEPS = [
-  { title: 'Apply', text: 'Send your CV on WhatsApp or by email. No form to fill.' },
+  { title: 'Apply', text: 'Fill in a short form and upload your CV. It takes about two minutes.' },
   { title: 'We review', text: 'Our engineering and HR desk reviews every submission weekly.' },
   { title: 'Interview and tea', text: 'Shortlisted candidates meet us at our Mohakhali DOHS office within 5 to 7 working days.' },
   { title: 'Offer', text: 'A clear offer, and salary on the date from your first month.' },
 ];
 
-export const HR = { email: 'spacemakerbd@gmail.com', phoneDisplay: '01916-100416' };
+// Apply form (panel). "general" and "flex" appear in the Position dropdown beside the open roles.
+export const APPLY = {
+  general: 'General application',
+  flex: 'Freelance / part-time agent',
+  success: "We've received your application. We'll get back to you within 5 to 7 working days.",
+};
+
+export const HR ={ email: 'spacemakerbd@gmail.com', phoneDisplay: '01916-100416' };
