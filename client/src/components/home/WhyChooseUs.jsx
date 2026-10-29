@@ -10,7 +10,42 @@ import { WHY_US, projects } from '../../data/portfolio';
 import { Eyebrow, Reveal } from '../portfolio/shared';
 
 const LIME = '#C6F00C';
+// three text tiers on espresso: SAND = headings and figures, BODY = reading text, SUB = small labels (all matte, never white); SOFT = the one soft-lime accent
+const SAND = '#D9CBB4';
+const SUB = '#A39380';
+const SOFT = '#C6DB3F';
+const INTRO = 'Every Space Maker home is built on these three promises.';
 const underConstruction = projects.filter((p) => p.status === 'active').length;
+
+// hover on the photo cards: camera viewfinder. Four thin corner brackets fade in and ease inward, the photo zooms slowly
+// as if focusing, the photo lifts 4px. Transform + opacity only. Touch screens (no hover) show the brackets faintly.
+const WC_CSS = `
+.sm-wc-photo{transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .4s ease}
+.sm-wc-img{transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.sm-wc-br{position:absolute;width:22px;height:22px;opacity:0;pointer-events:none;border:0 solid rgba(245,240,230,.85);transition:opacity .4s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
+.sm-wc-br.tl{top:10px;left:10px;border-top-width:1.5px;border-left-width:1.5px;--dx:8px;--dy:8px}
+.sm-wc-br.tr{top:10px;right:10px;border-top-width:1.5px;border-right-width:1.5px;--dx:-8px;--dy:8px}
+.sm-wc-br.bl{bottom:10px;left:10px;border-bottom-width:1.5px;border-left-width:1.5px;--dx:8px;--dy:-8px}
+.sm-wc-br.brr{bottom:10px;right:10px;border-bottom-width:1.5px;border-right-width:1.5px;--dx:-8px;--dy:-8px}
+@media (hover:hover){
+  .sm-wc:hover .sm-wc-photo{transform:translateY(-4px)}
+  .sm-wc:hover .sm-wc-img{transform:scale(1.06)}
+  .sm-wc:hover .sm-wc-br{opacity:1;transform:translate(var(--dx),var(--dy))}
+  .sm-wc:hover .sm-wc-flat{box-shadow:0 0 0 1px rgba(198,219,63,.55)}
+}
+@media (hover:none){.sm-wc-br{opacity:.5}}
+@media (prefers-reduced-motion:reduce){.sm-wc-photo,.sm-wc-img,.sm-wc-br{transition:none !important}}
+`;
+function Corners() {
+  return (
+    <>
+      <span aria-hidden className="sm-wc-br tl" />
+      <span aria-hidden className="sm-wc-br tr" />
+      <span aria-hidden className="sm-wc-br bl" />
+      <span aria-hidden className="sm-wc-br brr" />
+    </>
+  );
+}
 
 // numbers count up once when they scroll into view (reduced motion: shown as they are)
 function CountUp({ to, suffix = '' }) {
@@ -50,7 +85,7 @@ function trackCss(n) {
     const t = Math.max(0.001, (SWEEP * i) / (n - 1));
     const t2 = t + 0.02;
     s += `@keyframes smOn${i}{0%{opacity:0}${pc(t)}{opacity:0}${pc(t2)}{opacity:1}88%{opacity:1}94%{opacity:0}100%{opacity:0}}`;
-    s += `@keyframes smLab${i}{0%{opacity:.4}${pc(t)}{opacity:.4}${pc(t2)}{opacity:1}88%{opacity:1}94%{opacity:.4}100%{opacity:.4}}`;
+    s += `@keyframes smLab${i}{0%{opacity:.55}${pc(t)}{opacity:.55}${pc(t2)}{opacity:1}88%{opacity:1}94%{opacity:.55}100%{opacity:.55}}`;
     s += `@keyframes smRing${i}{0%{opacity:0;transform:scale(1)}${pc(t)}{opacity:.9;transform:scale(1)}${pc(Math.min(0.99, t + 0.06))}{opacity:0;transform:scale(2.8)}100%{opacity:0;transform:scale(2.8)}}`;
   }
   return s;
@@ -76,7 +111,7 @@ function Track({ items: raw }) {
     <div ref={ref} className="relative pl-8">
       {run && <style>{css}</style>}
       {/* rail */}
-      <div aria-hidden className="absolute bottom-[9px] left-[7px] top-[9px] w-[2px] bg-[#FAF8F5]/15" />
+      <div aria-hidden className="absolute bottom-[9px] left-[7px] top-[9px] w-[2px] bg-[#FAF8F5]/20" />
       {/* lime fill that follows the pulse */}
       <div
         aria-hidden
@@ -111,12 +146,12 @@ function Track({ items: raw }) {
                   style={{ borderColor: LIME, opacity: 0, ...an(`smRing${i}`) }}
                 />
               )}
-              <span className="font-['JetBrains_Mono'] text-[10px] tracking-[0.18em] text-[#8F7F6C]">
+              <span className="font-['JetBrains_Mono'] text-[10px] tracking-[0.18em] text-[#A39380]">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <span
                 className={`font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] ${last ? 'font-semibold' : ''}`}
-                style={{ color: last ? LIME : '#BBA992', opacity: run ? 0.4 : 1, ...an(`smLab${i}`) }}
+                style={{ color: last ? LIME : '#BBA992', opacity: run ? 0.55 : 1, ...an(`smLab${i}`) }}
               >
                 {m}
               </span>
@@ -145,39 +180,37 @@ function Track({ items: raw }) {
 }
 
 function Card({ s, i }) {
-  const num = (
-    <span className="absolute left-5 top-4 font-['Space_Grotesk'] text-5xl font-extrabold leading-none text-[#BBA992]/80 sm:text-6xl" aria-hidden>
-      0{i + 1}
-    </span>
-  );
   return (
     <Reveal delay={i * 0.1} className="h-full">
-      <article className="flex h-full flex-col">
+      <article className="sm-wc flex h-full flex-col">
         {s.milestones ? (
-          <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl bg-[#33261F] sm:aspect-[4/5]">
-            {num}
+          <div className="sm-wc-photo sm-wc-flat relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl bg-[#33261F] sm:aspect-[4/5]">
             <div className="w-full max-w-[15rem] pt-8">
               <Track items={s.milestones} />
             </div>
           </div>
         ) : (
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl sm:aspect-[4/5]">
-            {s.image && <img src={s.image} alt={s.title} loading="lazy" decoding="async" className="h-full w-full object-cover" />}
+          <div className="sm-wc-photo relative aspect-[4/3] overflow-hidden rounded-2xl sm:aspect-[4/5]">
+            {s.image && <img src={s.image} alt={s.title} loading="lazy" decoding="async" className="sm-wc-img h-full w-full object-cover" />}
             <div aria-hidden className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(42,31,26,.55) 0%, rgba(42,31,26,0) 45%)' }} />
-            {num}
+            <Corners />
           </div>
         )}
 
         <div className="mt-8 flex flex-1 flex-col">
-          <h3 className="font-['Space_Grotesk'] text-2xl font-extrabold leading-tight tracking-tight text-[#BBA992] sm:text-3xl">{s.title}</h3>
-          <p className="mt-3 font-serif text-xl italic text-[#BBA992]">{s.line}</p>
-          <p className="mt-4 text-base leading-relaxed text-[#8F7F6C]">{s.text}</p>
+          <span aria-hidden className="mb-4 block h-[2px] w-10" style={{ background: SOFT }} />
+          <h3 className="font-['Space_Grotesk'] text-2xl font-extrabold leading-tight tracking-tight text-[#D9CBB4] sm:text-3xl">{s.title}</h3>
+          <p className="mt-3 font-serif text-xl italic text-[#C6DB3F]/90">{s.line}</p>
+          <p className="mt-4 text-base leading-relaxed text-[#BBA992]">{s.text}</p>
           {s.specs ? (
             <dl className="mt-6 divide-y divide-[#FAF8F5]/10 border-y border-[#FAF8F5]/10">
               {s.specs.map(([k, v]) => (
                 <div key={k} className="flex items-baseline justify-between gap-4 py-3">
-                  <dt className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#8F7F6C]">{k}</dt>
-                  <dd className="text-right font-['Space_Grotesk'] text-sm font-semibold text-[#BBA992]">{v}</dd>
+                  <dt className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#A39380]">{k}</dt>
+                  <dd className="text-right font-['Space_Grotesk'] text-sm font-semibold text-[#BBA992]">
+                    <span aria-hidden className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: SOFT }} />
+                    {v}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -200,27 +233,32 @@ function Card({ s, i }) {
 }
 
 export default function WhyChooseUs() {
+  const title = WHY_US.title || '';
+  const cut = title.lastIndexOf(' ', title.lastIndexOf(' ') - 1) + 1;
   const band = [...(WHY_US.proof || []), { value: underConstruction, label: 'Under construction', to: '/projects?status=active' }];
   return (
     <section className="relative overflow-hidden py-20 sm:py-28" style={{ background: '#2A1F1A' }}>
+      <style>{WC_CSS}</style>
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-        <Reveal className="max-w-3xl">
+        <Reveal className="max-w-6xl">
           <Eyebrow dark>{WHY_US.eyebrow}</Eyebrow>
-          <h2 className="mt-5 font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.06] tracking-tight text-[#BBA992] sm:text-5xl lg:text-6xl">
-            {WHY_US.title}
+          <h2 className="mt-4 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.1] tracking-tight text-[#D9CBB4] sm:text-4xl lg:text-5xl">
+            {title.slice(0, cut)}
+            <span style={{ background: 'linear-gradient(transparent 62%, rgba(198,240,12,.32) 62%)' }}>{title.slice(cut)}</span>
           </h2>
+          <p className="mt-4 font-serif text-lg italic text-[#BBA992]">{WHY_US.intro || INTRO}</p>
         </Reveal>
 
         {/* proof band */}
-        <Reveal className="mt-14 sm:mt-20" delay={0.05}>
-          <ul className="grid grid-cols-2 gap-y-10 border-y border-[#4A3B32] py-10 sm:py-12 lg:grid-cols-4 lg:gap-y-0">
+        <Reveal className="mt-10 sm:mt-14" delay={0.05}>
+          <ul className="grid grid-cols-2 gap-y-8 border-y border-[#4A3B32] py-7 sm:py-8 lg:grid-cols-4 lg:gap-y-0">
             {band.map((x, k) => {
               const inner = (
                 <>
-                  <span className="block font-['Space_Grotesk'] text-5xl font-extrabold leading-none tracking-tight text-[#BBA992] sm:text-6xl lg:text-7xl">
+                  <span className="block font-['Space_Grotesk'] text-3xl font-extrabold leading-none tracking-tight text-[#D9CBB4] sm:text-4xl lg:text-5xl">
                     <CountUp to={x.value} suffix={x.suffix} />
                   </span>
-                  <span className="mt-3 block font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#8F7F6C]">{x.label}</span>
+                  <span className="mt-2.5 block font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#A39380]">{x.label}</span>
                 </>
               );
               return (
@@ -236,17 +274,28 @@ export default function WhyChooseUs() {
           </ul>
         </Reveal>
 
-        <div className="mt-20 grid gap-14 sm:mt-24 md:grid-cols-3 md:gap-8 lg:gap-12">
+        <div className="mt-14 grid gap-14 sm:mt-16 md:grid-cols-3 md:gap-8 lg:gap-12">
           {WHY_US.scenes.map((s, i) => (
             <Card key={s.key} s={s} i={i} />
           ))}
         </div>
 
+        <Reveal className="mt-14 flex justify-start sm:mt-16">
+          <Link
+            to="/projects?status=active"
+            className="group relative isolate inline-flex items-center gap-3 overflow-hidden rounded-full border-[1.5px] border-[#BBA992]/60 px-6 py-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#BBA992] transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#BBA992] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
+          >
+            <span className="h-2 w-2 rounded-full" style={{ background: SOFT }} />
+            See our active projects
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </Link>
+        </Reveal>
+
         {WHY_US.assurances?.length > 0 && (
-          <Reveal className="mt-20">
+          <Reveal className="mt-14">
             <ul className="flex flex-wrap gap-x-10 gap-y-3 border-t border-[#FAF8F5]/15 pt-8">
               {WHY_US.assurances.map((a) => (
-                <li key={a} className="flex items-center gap-3 font-['Space_Grotesk'] text-base font-semibold text-[#BBA992]">
+                <li key={a} className="flex items-center gap-3 font-['Space_Grotesk'] text-base font-semibold text-[#D9CBB4]">
                   <span className="h-2 w-2 flex-none rounded-full" style={{ background: LIME }} />
                   {a}
                 </li>
