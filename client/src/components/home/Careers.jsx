@@ -1,133 +1,269 @@
-import React, { useState } from "react";
-import { ArrowUpRight, MessageCircle, ChevronDown } from "lucide-react";
+// client/src/components/home/Careers.jsx
+// Careers page (/careers): simple and clean. Header, what we offer, open positions, how hiring works, FAQ, closing card.
+// No photos, no hero. Content lives in data/careers.js (replace from the CMS later).
+import React, { useState } from 'react';
+import { CAREERS_HERO as H, CHAPTERS as PERKS, JOBS, STEPS, FAQS, HR } from '../../data/careers';
+import { waLink, trackLead } from '../../lib/leads';
+import { Eyebrow, Reveal } from '../portfolio/shared';
 
-export default function Careers() {
-  const [openFaq, setOpenFaq] = useState(null);
+const ESPRESSO = '#2A1F1A';
+const h2 = "mt-4 font-['Space_Grotesk'] text-2xl font-extrabold leading-[1.1] tracking-tight text-[#2A1F1A] sm:text-3xl lg:text-4xl";
 
-  const perks = [
-    { title: "Guaranteed On-Time Pay", desc: "No delayed wages. Salaries and festival bonuses are deposited on schedule every single month." },
-    { title: "Hands-On Field Training", desc: "Direct mentorship under veteran BUET structural leads and principal architects in rebar testing and piling." },
-    { title: "Dignified Site Culture", desc: "A positive work environment with zero workplace abuse, reasonable hours, and full safety gear (PPE) on day one." },
-    { title: "Transport & Site Lunch", desc: "Daily lunch allowances and transport logistics support for engineers posted at our Jolshiri Abashon sites." }
-  ];
+function goTo(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (window.__lenis) window.__lenis.scrollTo(el, { offset: -100 });
+  else el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
-  const jobs = [
-    { title: "Senior Structural Project Engineer", loc: "Jolshiri Abashon (Sectors 13 & 16)", exp: "4–7 Years", type: "Full-Time" },
-    { title: "Site Supervisor / Civil Foreman", loc: "Dhaka & Jolshiri Projects", exp: "3+ Years", type: "Full-Time" },
-    { title: "Junior Architectural Visualizer", loc: "Corporate Studio (Mohakhali DOHS)", exp: "1–3 Years", type: "Full-Time" }
-  ];
+const mailto = (subject) => `mailto:${HR.email}?subject=${encodeURIComponent(subject)}`;
 
-  const faqs = [
-    { q: "Will my salary be delayed like conventional developers in Dhaka?", a: "No. Space Maker follows strict corporate discipline. All employee salaries and site allowances are disbursed promptly on schedule every month without exception." },
-    { q: "Do I need decades of experience to join?", a: "We prioritize dedication, character, and proactive problem solving over long resumes. If you are eager to learn and take personal pride in clean civil work, we will invest in your training." },
-    { q: "Is transport provided for site postings in Jolshiri Abashon?", a: "Yes. Our site engineers and supervisors receive transit allowances and logistical support for commutes to our Jalshiri operations hub." },
-    { q: "How fast will I hear back after applying?", a: "Our engineering and HR desk reviews submissions weekly. Shortlisted candidates are invited for an interview and tea at our Mohakhali DOHS office within 5 to 7 business days." }
-  ];
+const pill =
+  "group relative isolate inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-full border-[1.5px] border-[#2A1F1A] px-5 py-2.5 font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2A1F1A] transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#2A1F1A] before:transition-transform before:duration-300 hover:text-[#F5F0E6] hover:before:translate-y-0";
 
+function Arrow() {
+  return <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>;
+}
+
+/* ---------- header ---------- */
+function Header() {
   return (
-    <section id="careers" className="relative z-10 py-28 px-6"
-      style={{ background: 'linear-gradient(to bottom, #FAF8F5 0%, #F5F0E6 35%, #EDE3D6 75%, #E2D5C4 100%)' }}>
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs uppercase tracking-widest font-extrabold text-[#2D6A4F] mb-2 block">
-            Careers & Culture
-          </span>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-neutral-900 leading-tight">
-            Build Homes. Shape Your Career.
-          </h2>
-          <p className="text-sm md:text-base text-neutral-600 mt-3">
-            We are looking for dedicated engineers, initiators, and team players who take pride in disciplined construction.
-          </p>
-        </div>
+    <section className="relative pb-16 pt-40 sm:pb-20 sm:pt-44" style={{ background: 'linear-gradient(to bottom, #E4EDD6 0%, #FAF8F5 100%)' }}>
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <Reveal className="max-w-3xl">
+          <Eyebrow>{H.eyebrow}</Eyebrow>
+          <h1 className="mt-4 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.1] tracking-tight text-[#2A1F1A] sm:text-4xl lg:text-5xl">
+            Build homes. <span className="lime-mark">Shape your career.</span>
+          </h1>
+          <p className="mt-5 max-w-xl font-serif text-lg italic text-[#6B5446] sm:text-xl">{H.mission}</p>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <button type="button" onClick={() => goTo('roles')} className={pill}>
+              See open roles <span aria-hidden>↓</span>
+            </button>
+            <span className="flex items-center gap-2.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#6B5446]">
+              <span className="h-2 w-2 rounded-full bg-[#C6DB3F] ring-1 ring-[#2A1F1A]/30" />
+              {JOBS.length} open roles · Dhaka and Jolshiri
+            </span>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
 
-        <div className="mb-20">
-          <h3 className="text-center text-xs uppercase font-extrabold tracking-wider text-neutral-500 mb-8">What We Provide For Our Team</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {perks.map((perk, idx) => (
-              <div key={idx} className="bg-[#EFE6D8] p-6 rounded-2xl border border-[#D6C5B1] flex flex-col justify-between transition duration-300 hover:-translate-y-0.5 hover:border-[#5C6E0A]">
-                <div>
-                  <div className="w-8 h-8 rounded-lg bg-[#1B4332] text-[#C6F00C] flex items-center justify-center font-bold text-xs mb-4">
-                    0{idx+1}
-                  </div>
-                  <h4 className="font-extrabold text-neutral-900 text-base mb-2">{perk.title}</h4>
-                  <p className="text-xs text-neutral-600 leading-relaxed">{perk.desc}</p>
+/* ---------- what we offer ---------- */
+function Offer() {
+  return (
+    <section className="py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <Reveal>
+          <Eyebrow>What we offer</Eyebrow>
+          <h2 className={h2}>A workplace you can be proud of.</h2>
+        </Reveal>
+        <ul className="mt-12 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+          {PERKS.map((p, i) => (
+            <li key={p.key}>
+              <Reveal delay={i * 0.08}>
+                <span aria-hidden className="block h-[2px] w-10 bg-[#C6DB3F]" />
+                <h3 className="mt-5 font-['Space_Grotesk'] text-xl font-extrabold leading-tight text-[#2A1F1A]">{p.title}</h3>
+                <p className="mt-2 font-serif text-base italic text-[#5C6E0A]">{p.line}</p>
+                <p className="mt-3 text-[15px] leading-[1.7] text-[#4B3F37]">{p.text}</p>
+              </Reveal>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- open positions ---------- */
+function Roles() {
+  return (
+    <section id="roles" className="py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <Reveal className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <Eyebrow>Open positions</Eyebrow>
+            <h2 className={h2}>Join us on site and in the studio.</h2>
+          </div>
+          <span className="rounded-full border border-[#2A1F1A]/30 px-3.5 py-1.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#2A1F1A]">
+            {JOBS.length} open
+          </span>
+        </Reveal>
+
+        <ul className="mt-10 divide-y divide-[#2A1F1A]/15 border-y border-[#2A1F1A]/15">
+          {JOBS.map((j) => (
+            <li key={j.title} className="group flex flex-col gap-5 py-7 transition-colors duration-300 hover:bg-[#2A1F1A]/[0.03] md:flex-row md:items-center md:justify-between md:px-4">
+              <div>
+                <h3 className="font-['Space_Grotesk'] text-xl font-extrabold leading-tight text-[#2A1F1A] sm:text-2xl">{j.title}</h3>
+                <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#6B5446]">
+                  <span>{j.loc}</span>
+                  <span>{j.exp}</span>
+                  <span>{j.type}</span>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mb-20 bg-[#EFE6D8] p-8 md:p-10 rounded-3xl border border-[#D6C5B1]">
-          <h3 className="text-2xl font-extrabold text-neutral-900 mb-6">Current Open Positions</h3>
-          <div className="divide-y divide-[#D6C5B1]/60">
-            {jobs.map((job, idx) => (
-              <div key={idx} className="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h4 className="text-base font-extrabold text-neutral-900">{job.title}</h4>
-                  <div className="text-xs text-neutral-500 mt-1 flex flex-wrap gap-3">
-                    <span>📍 {job.loc}</span>
-                    <span>⏳ Experience: {job.exp}</span>
-                    <span>💼 {job.type}</span>
-                  </div>
-                </div>
-                <a 
-                  href="mailto:spacemakerbd@gmail.com?subject=Job%20Application"
-                  className="px-5 py-2.5 bg-[#1B4332] hover:bg-[#143225] text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+              <div className="flex flex-wrap items-center gap-3 md:flex-none">
+                <a
+                  href={waLink(`Hello Space Maker HR, I would like to apply for ${j.title}.`)}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => trackLead({ channel: 'whatsapp', kind: 'careers-apply' })}
+                  className={pill}
                 >
-                  <span>Apply Now</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-[#C6F00C]" />
+                  <span className="h-2 w-2 rounded-full bg-[#C6F00C] ring-1 ring-[#2A1F1A]/30" />
+                  Apply on WhatsApp <Arrow />
+                </a>
+                <a
+                  href={mailto(`Application: ${j.title}`)}
+                  className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#2A1F1A] underline decoration-[#2A1F1A]/30 underline-offset-[6px] transition-colors hover:decoration-[#5C6E0A]"
+                >
+                  Email
                 </a>
               </div>
-            ))}
-          </div>
-        </div>
+            </li>
+          ))}
+        </ul>
 
-        <div className="max-w-3xl mx-auto mb-16">
-          <h3 className="text-center text-2xl font-extrabold text-neutral-900 mb-6">Frequently Asked Questions</h3>
-          <div className="space-y-3">
-            {faqs.map((f, idx) => (
-              <div key={idx} className="bg-[#EFE6D8] rounded-2xl border border-[#D6C5B1] overflow-hidden transition-colors duration-300 hover:border-[#5C6E0A]">
-                <button 
-                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left flex items-center justify-between font-extrabold text-xs sm:text-sm text-neutral-900"
+        <p className="mt-8 font-serif text-lg italic text-[#4B3F37]">
+          Don't see your role?{' '}
+          <a
+            href={waLink(H.cvMessage)}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => trackLead({ channel: 'whatsapp', kind: 'careers-cv' })}
+            className="not-italic font-semibold text-[#2A1F1A] underline decoration-[#C6DB3F] decoration-2 underline-offset-[6px]"
+          >
+            Send your CV anyway →
+          </a>
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- how hiring works ---------- */
+function Steps() {
+  return (
+    <section className="py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <Reveal>
+          <Eyebrow>How hiring works</Eyebrow>
+          <h2 className={h2}>Four steps, no surprises.</h2>
+        </Reveal>
+        <ol className="relative mt-12 grid gap-10 md:grid-cols-4 md:gap-8">
+          <span aria-hidden className="absolute left-[15px] top-4 hidden h-px w-[calc(100%-2rem)] bg-[#2A1F1A]/20 md:block" />
+          {STEPS.map((s, i) => (
+            <li key={s.title} className="relative">
+              <Reveal delay={i * 0.08}>
+                <span className="relative flex h-8 w-8 items-center justify-center rounded-full border-[1.5px] border-[#2A1F1A] bg-[#FAF8F5] font-['JetBrains_Mono'] text-[11px] font-semibold text-[#2A1F1A]">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="mt-5 font-['Space_Grotesk'] text-lg font-extrabold text-[#2A1F1A]">{s.title}</h3>
+                <p className="mt-2 text-[15px] leading-[1.7] text-[#4B3F37]">{s.text}</p>
+              </Reveal>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- FAQ ---------- */
+function Faq() {
+  const [open, setOpen] = useState(0);
+  return (
+    <section className="py-16 sm:py-20">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-12 lg:gap-16">
+        <Reveal className="lg:col-span-4">
+          <Eyebrow>Questions</Eyebrow>
+          <h2 className={h2}>Good to know before you apply.</h2>
+          <p className="mt-4 font-serif text-lg italic text-[#6B5446]">Straight answers, no fine print.</p>
+        </Reveal>
+        <ul className="divide-y divide-[#2A1F1A]/15 border-y border-[#2A1F1A]/15 lg:col-span-8">
+          {FAQS.map((f, i) => {
+            const on = open === i;
+            return (
+              <li key={f.q}>
+                <button
+                  type="button"
+                  onClick={() => setOpen(on ? -1 : i)}
+                  aria-expanded={on}
+                  className="flex w-full items-center justify-between gap-6 py-6 text-left"
                 >
-                  <span>{f.q}</span>
-                  <ChevronDown className={`w-4 h-4 text-neutral-400 transition-transform ${openFaq === idx ? "rotate-180" : ""}`} />
+                  <span className="font-['Space_Grotesk'] text-lg font-bold leading-snug text-[#2A1F1A] sm:text-xl">{f.q}</span>
+                  <span
+                    aria-hidden
+                    className="flex h-8 w-8 flex-none items-center justify-center rounded-full border-[1.5px] border-[#2A1F1A] font-['JetBrains_Mono'] text-base text-[#2A1F1A] transition-colors duration-300"
+                    style={{ background: on ? '#C6DB3F' : 'transparent' }}
+                  >
+                    {on ? '−' : '+'}
+                  </span>
                 </button>
-                {openFaq === idx && (
-                  <div className="p-5 pt-0 text-xs text-neutral-600 leading-relaxed border-t border-[#D6C5B1]/60">
-                    {f.a}
+                <div className="grid transition-[grid-template-rows] duration-300 ease-out" style={{ gridTemplateRows: on ? '1fr' : '0fr' }}>
+                  <div className="overflow-hidden">
+                    <p className="max-w-2xl pb-6 text-base leading-[1.75] text-[#4B3F37]">{f.a}</p>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  );
+}
 
-        <div className="text-center bg-[#1B4332] p-8 md:p-10 rounded-3xl text-white shadow-xl">
-          <h4 className="text-xl md:text-2xl font-extrabold mb-2">Want to Join Space Maker?</h4>
-          <p className="text-xs md:text-sm text-neutral-200 mb-6 max-w-xl mx-auto">
-            You do not need a complex form. Send your resume directly to our HR desk via email or WhatsApp.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <a 
-              href="mailto:spacemakerbd@gmail.com?subject=Resume%20Submission"
-              className="px-6 py-3 bg-white text-neutral-900 rounded-xl text-xs font-bold hover:bg-neutral-100 transition"
-            >
-              Email: spacemakerbd@gmail.com
-            </a>
-            <a 
-              href="https://wa.me/8801916100416?text=Hello%20Space%20Maker%20HR,%20I%20would%20like%20to%20submit%20my%20CV."
-              target="_blank"
-              rel="noreferrer"
-              className="px-6 py-3 bg-[#25D366] hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md"
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span>Send CV via WhatsApp (01916-100416)</span>
-            </a>
+/* ---------- closing card ---------- */
+function Closing() {
+  return (
+    <section className="pb-28 pt-16 sm:pb-32 sm:pt-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="relative">
+          <div aria-hidden className="absolute inset-0 rounded-[20px] border" style={{ borderColor: 'rgba(42,31,26,.22)', transform: 'translate(9px, 9px)' }} />
+          <div className="relative grid gap-8 rounded-[20px] border-[1.5px] bg-[#FAF8F5] px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-12 lg:items-center" style={{ borderColor: ESPRESSO }}>
+            <div className="lg:col-span-7">
+              <Eyebrow>Join us</Eyebrow>
+              <h2 className={h2}>
+                Ready to build <span className="lime-mark">with us?</span>
+              </h2>
+              <p className="mt-4 max-w-lg text-base leading-[1.7] text-[#4B3F37]">
+                You do not need a complex form. Send your CV to our HR desk by WhatsApp or email and we will get back to you within 5 to 7 working days.
+              </p>
+            </div>
+            <div className="flex flex-col gap-4 lg:col-span-5 lg:items-end">
+              <a
+                href={waLink(H.cvMessage)}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => trackLead({ channel: 'whatsapp', kind: 'careers-cv' })}
+                className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-[#2A1F1A] px-7 py-3.5 font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.18em] text-[#F5F0E6] transition-transform duration-300 hover:-translate-y-0.5"
+              >
+                <span className="h-2 w-2 rounded-full bg-[#C6F00C]" />
+                Send CV on WhatsApp <Arrow />
+              </a>
+              <a href={mailto('Resume submission')} className={pill}>
+                Email {HR.email}
+              </a>
+              <span className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#6B5446]">WhatsApp {HR.phoneDisplay}</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+export default function Careers() {
+  return (
+    <>
+      <Header />
+      <Offer />
+      <Roles />
+      <Steps />
+      <Faq />
+      <Closing />
+    </>
   );
 }

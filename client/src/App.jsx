@@ -86,7 +86,7 @@ function Shell() {
         <Route path="/interiors" element={<InteriorsIndex />} />
         <Route path="/interiors/:slug" element={<InteriorPage />} />
         <Route path="/team" element={<TeamPage />} />
-        <Route path="/careers" element={<main className="pt-24"><Careers /></main>} />
+        <Route path="/careers" element={<main><Careers /></main>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <SiteFooter />
