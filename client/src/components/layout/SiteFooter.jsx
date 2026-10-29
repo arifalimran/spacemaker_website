@@ -1,26 +1,16 @@
 // client/src/components/layout/SiteFooter.jsx
-// Compact espresso footer. One slim "Find your home" strip (project filters + interiors, with live counts) sits on top and is hidden
-// on /projects and /interiors, where the page is already the finder. Then brand, links, offices, contact, and a wordmark that
-// bleeds off the bottom edge. Counts and links come from the data, so they follow the back end. Also the "Contact" target in the nav.
+// Compact espresso footer: brand, links, offices, contact, and a one-line wordmark that dissolves into the espresso.
+// ("Find your home" now lives at the end of the Testimonials section.) Also the "Contact" target in the nav.
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { CONTACT, GENERAL_MESSAGE, projects, upcoming, interiorProjects } from '../../data/portfolio';
+import { Link } from 'react-router-dom';
+import { CONTACT, GENERAL_MESSAGE } from '../../data/portfolio';
 import { waLink, trackLead } from '../../lib/leads';
 
-const head = "font-['JetBrains_Mono'] text-xs font-semibold uppercase tracking-[0.22em] text-[#C7D17F]";
+// column titles + "Back to top": lime neon (static text-shadow glow, no filters)
+const head = "sm-neon font-['JetBrains_Mono'] text-xs font-semibold uppercase tracking-[0.22em]";
 const lk = 'sm-fl relative inline-block text-base font-medium text-[#BBA992] transition-colors duration-300 hover:text-[#C7D17F]';
-const sub = "font-['JetBrains_Mono'] text-xs font-medium uppercase tracking-[0.16em] text-[#8F7F6C]";
-
-const count = (list, fn) => list.filter(fn).length;
-
-// the heart of the footer: the project filters and the interiors, with counts
-const BROWSE = [
-  { label: 'Active', to: '/projects?status=active', n: count(projects, (p) => p.status === 'active') },
-  { label: 'Handed over', to: '/projects?status=completed', n: count(projects, (p) => p.status === 'completed') },
-  { label: 'Opening soon', to: '/projects?status=upcoming', n: upcoming.length },
-  { label: 'All projects', to: '/projects', n: projects.length + upcoming.length },
-];
-const BROWSE_INTERIORS = [{ label: 'Interiors', to: '/interiors', n: interiorProjects.length }];
+// highlighted labels (WhatsApp, hotline, Email) and office names: bright cream with a small lime dot
+const sub = "sm-hl font-['JetBrains_Mono'] text-xs font-semibold uppercase tracking-[0.16em]";
 
 const QUICK_LINKS = [
   { label: 'About', to: { pathname: '/', hash: '#about' } },
@@ -109,56 +99,22 @@ function SocialRow({ items = [] }) {
 const FOOTER_CSS = `
 .sm-fl::after{content:"";position:absolute;left:0;bottom:-3px;height:2px;width:0;background:#A9B957;transition:width .3s cubic-bezier(.22,1,.36,1)}
 .sm-fl:hover::after{width:100%}
-.sm-bp{transition:background-color .3s,color .3s,border-color .3s,transform .3s}
-.sm-bp .sm-bn{transition:background-color .3s,color .3s}
-.sm-bp:hover,.sm-bp:focus-visible{background:#BBA992;color:#2A1F1A;border-color:#BBA992;transform:translateY(-2px)}
-.sm-bp:hover .sm-bn,.sm-bp:focus-visible .sm-bn{background:#2A1F1A;color:#F5F0E6}
-@media (prefers-reduced-motion:reduce){.sm-bp,.sm-bp .sm-bn,.sm-soc-i{transition:none!important}}
+.sm-neon{color:#C6F00C;text-shadow:0 0 4px rgba(198,240,12,.55),0 0 12px rgba(198,240,12,.35),0 0 22px rgba(198,240,12,.18)}
+button.sm-neon{transition:text-shadow .3s}
+button.sm-neon:hover,button.sm-neon:focus-visible{text-shadow:0 0 5px rgba(198,240,12,.75),0 0 16px rgba(198,240,12,.5),0 0 30px rgba(198,240,12,.3)}
+.sm-hl{display:inline-flex;align-items:center;gap:.5rem;color:#F5F0E6}
+.sm-hl::before{content:"";width:6px;height:6px;border-radius:999px;background:#C6F00C;flex:none}
+@media (prefers-reduced-motion:reduce){.sm-soc-i,button.sm-neon{transition:none!important}}
 `;
-
-function BrowseStrip() {
-  const pill = 'sm-bp inline-flex items-center gap-3 rounded-full border border-[#F5F0E6]/25 py-2 pl-5 pr-2 text-base font-semibold text-[#BBA992]';
-  const num = "sm-bn inline-flex h-9 min-w-[2.25rem] items-center justify-center rounded-full bg-[#A9B957] px-2 font-['JetBrains_Mono'] text-sm font-semibold text-[#2A1F1A]";
-  const Pill = ({ r }) => (
-    <Link to={r.to} className={pill}>
-      {r.label}
-      <span className={num}>{String(r.n).padStart(2, '0')}</span>
-    </Link>
-  );
-  return (
-    <div className="rounded-3xl border border-[#F5F0E6]/10 bg-[#241A15] px-6 py-10 sm:px-12 sm:py-14">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div className="flex items-center gap-4 whitespace-nowrap font-['Space_Grotesk'] text-3xl font-extrabold tracking-tight text-[#BBA992] sm:text-5xl">
-          <span className="h-[2px] w-10 flex-none rounded-full bg-[#A9B957]" aria-hidden />
-          Find your home
-        </div>
-        <p className="max-w-md text-base leading-relaxed text-[#8F7F6C] lg:text-right">Every Space Maker home, sorted by where it stands today.</p>
-      </div>
-      <nav aria-label="Browse projects" className="mt-8 flex flex-wrap items-center gap-3 border-t border-[#F5F0E6]/10 pt-8 sm:mt-10 sm:pt-10">
-        {BROWSE.map((r) => (
-          <Pill key={r.label} r={r} />
-        ))}
-        {BROWSE_INTERIORS.map((r) => (
-          <Pill key={r.label} r={r} />
-        ))}
-      </nav>
-    </div>
-  );
-}
 
 export default function SiteFooter() {
   const waDisplay = CONTACT.whatsappDisplay || `+${CONTACT.whatsapp}`;
-  const { pathname } = useLocation();
-  // the two list pages are already the finder, so the strip would be redundant there
-  const showBrowse = !(pathname === '/projects' || pathname === '/interiors');
   return (
     <footer id="contact" className="relative overflow-hidden text-[#BBA992]" style={{ background: '#2A1F1A' }}>
       <style>{FOOTER_CSS}</style>
 
       <div className="relative mx-auto max-w-7xl px-5 pt-24 sm:px-8 sm:pt-40">
-        {showBrowse && <BrowseStrip />}
-
-        <div className={`grid gap-12 sm:grid-cols-2 lg:grid-cols-12 ${showBrowse ? 'pt-20' : 'pt-4'}`}>
+        <div className={`grid gap-12 sm:grid-cols-2 lg:grid-cols-12 pt-4`}>
           {/* brand */}
           <div className="lg:col-span-4">
             <Link to="/" className="inline-block" aria-label="Space Maker home">
@@ -186,8 +142,8 @@ export default function SiteFooter() {
             <ul className="mt-6 grid gap-6">
               {CONTACT.offices.map((o) => (
                 <li key={o.name}>
-                  <div className="text-base font-semibold text-[#BBA992]">{o.name}</div>
-                  <div className="mt-1 text-base leading-relaxed text-[#BBA992]">{o.address}</div>
+                  <div className={`${sub} text-sm`}>{o.name}</div>
+                  <div className="mt-2 text-base leading-relaxed text-[#BBA992]">{o.address}</div>
                 </li>
               ))}
             </ul>
@@ -239,7 +195,7 @@ export default function SiteFooter() {
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="sm-fl self-start font-semibold text-[#BBA992] sm:self-auto"
+            className="sm-neon self-start font-semibold sm:self-auto"
           >
             Back to top ↑
           </button>

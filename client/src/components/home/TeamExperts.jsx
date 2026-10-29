@@ -35,7 +35,7 @@ export default function TeamExperts() {
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-20"
-        style={{ background: 'linear-gradient(to bottom, #EAF1DF, rgba(245,249,238,0))' }}
+        style={{ background: 'linear-gradient(to bottom, #FAF8F5, rgba(245,249,238,0))' }}
       />
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">

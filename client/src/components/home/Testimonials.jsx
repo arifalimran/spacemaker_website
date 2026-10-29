@@ -14,14 +14,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { testimonials, testimonialsSection as S } from '../../data/siteContent';
+import { projects, upcoming, interiorProjects, coverOf } from '../../data/portfolio';
 import { Eyebrow } from '../portfolio/shared';
 import TestimonialsTree from './TestimonialsTree';
 import TestimonialsFallenLeaves from './TestimonialsFallenLeaves';
 import TestimonialsFallingLeaves from './TestimonialsFallingLeaves';
 
-const BG = '#EAF1DF'; // soft sage (solid: the photo rings use it as their gap colour)
+const BG = 'linear-gradient(to bottom, #EAF1DF 0%, #FAF8F5 100%)'; // soft sage dissolving into warm cream (same blend as the project sections)
+const RING_BG = '#EFF3E6'; // the gradient's tone where the photos sit: gap colour of the photo rings
 const ESPRESSO = '#2A1F1A';
-const ring = (w) => `0 0 0 3px ${BG}, 0 0 0 ${w}px ${ESPRESSO}`;
+const ring = (w) => `0 0 0 3px ${RING_BG}, 0 0 0 ${w}px ${ESPRESSO}`;
 const GLOW = 520;
 
 /* decor CSS: tree size/sway, live-leaf flutter, grass wave, pause + static states */
@@ -102,6 +104,80 @@ function Avatar({ t, active }) {
         </span>
       )}
     </div>
+  );
+}
+
+
+/* ---- "Find your home" strap: sends readers on to the projects after the testimonials ---- */
+const nOf = (list, fn) => list.filter(fn).length;
+const FIND = [
+  { label: 'Active', to: '/projects?status=active', n: nOf(projects, (p) => p.status === 'active') },
+  { label: 'Handed over', to: '/projects?status=completed', n: nOf(projects, (p) => p.status === 'completed') },
+  { label: 'Opening soon', to: '/projects?status=upcoming', n: upcoming.length },
+  { label: 'Interiors', to: '/interiors', n: interiorProjects.length },
+];
+// three round covers: active projects first, then the rest
+const COVERS = [...projects.filter((p) => p.status === 'active'), ...projects.filter((p) => p.status !== 'active')]
+  .map((p) => ({ slug: p.slug, title: p.title, src: coverOf(p) }))
+  .filter((c) => c.src)
+  .slice(0, 3);
+
+function FindHomeStrap() {
+  return (
+    <FadeUp className="mt-16 lg:mt-20">
+      <div className="relative">
+        {/* faint offset outline behind the strap */}
+        <div aria-hidden className="absolute inset-0 translate-x-2 translate-y-2 rounded-2xl border border-[#2A1F1A]/20" />
+        <div className="relative flex flex-col gap-6 rounded-2xl border-[1.5px] border-[#2A1F1A] bg-[#FAF8F5] py-7 pl-7 pr-6 sm:pl-9 lg:flex-row lg:items-center lg:gap-10 lg:py-8">
+          <span aria-hidden className="absolute bottom-6 left-0 top-6 w-1 rounded-r bg-[#2A1F1A]" />
+
+          <div className="flex flex-none items-center">
+            {COVERS.map((c, i) => (
+              <Link
+                key={c.slug}
+                to={`/projects/${c.slug}`}
+                aria-label={`See ${c.title}`}
+                className={`h-16 w-16 flex-none overflow-hidden rounded-full bg-[#1B4332] shadow-[0_0_0_3px_#FAF8F5,0_0_0_4px_#2A1F1A] transition-transform duration-300 hover:-translate-y-1 sm:h-[72px] sm:w-[72px] ${i ? '-ml-5' : ''}`}
+              >
+                <img src={c.src} alt="" loading="lazy" className="h-full w-full object-cover" />
+              </Link>
+            ))}
+          </div>
+
+          <div className="min-w-0 lg:flex-1">
+            <h3 className="font-['Space_Grotesk'] text-2xl font-extrabold leading-[1.1] tracking-tight text-[#2A1F1A] sm:text-3xl">
+              Liked what they said? <span className="lime-mark">Find your home.</span>
+            </h3>
+            <p className="mt-2 font-serif text-base italic text-[#5C6E0A] sm:text-lg">
+              Every Space Maker project, from under construction to handed over.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-4 lg:items-end">
+            <ul className="flex flex-wrap gap-2">
+              {FIND.map((f) => (
+                <li key={f.label}>
+                  <Link
+                    to={f.to}
+                    className="inline-flex items-center gap-2 rounded-full border border-[#2A1F1A]/30 px-3.5 py-1.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#2A1F1A] transition-colors duration-300 hover:border-[#2A1F1A] hover:bg-[#2A1F1A] hover:text-[#F5F0E6]"
+                  >
+                    {f.label}
+                    <span className="rounded-full bg-[#A9B957] px-1.5 text-[10px] font-semibold text-[#2A1F1A]">{f.n}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link
+              to="/projects"
+              className="inline-flex items-center justify-center gap-2.5 self-start rounded-full bg-[#2A1F1A] px-6 py-3 font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.2em] text-[#F5F0E6] transition-transform duration-300 hover:-translate-y-0.5 lg:self-end"
+            >
+              <span className="h-2 w-2 rounded-full bg-[#C6F00C]" />
+              See all projects <span aria-hidden>→</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </FadeUp>
   );
 }
 
@@ -201,7 +277,7 @@ export default function Testimonials({ items = testimonials }) {
       ref={sectionRef}
       id="testimonials"
       className={`relative pb-[64px] pt-20 sm:pt-32 lg:pb-[80px] ${reduce ? 'sm-static' : inView ? '' : 'sm-paused'}`}
-      style={{ background: BG, position: 'relative', zIndex: 1, overflow: 'clip' }}
+      style={{ backgroundImage: BG, position: 'relative', zIndex: 1, overflow: 'clip' }}
     >
       <style>{DECOR_CSS}</style>
 
@@ -237,7 +313,7 @@ export default function Testimonials({ items = testimonials }) {
                   <figure
                     tabIndex={0}
                     aria-label={t.name ? `Testimonial from ${t.name}` : 'Client testimonial'}
-                    className="flex h-full cursor-default flex-col items-start border-l-[#2A1F1A] outline-none transition-[opacity,box-shadow] duration-[350ms] focus-visible:ring-2 focus-visible:ring-[#1B4332]/40 focus-visible:ring-offset-4 focus-visible:ring-offset-[#EAF1DF]"
+                    className="flex h-full cursor-default flex-col items-start border-l-[#2A1F1A] outline-none transition-[opacity,box-shadow] duration-[350ms] focus-visible:ring-2 focus-visible:ring-[#1B4332]/40 focus-visible:ring-offset-4 focus-visible:ring-offset-[#EFF3E6]"
                     style={{
                       opacity: dim ? 0.75 : 1,
                       borderLeftStyle: 'solid',
@@ -292,6 +368,8 @@ export default function Testimonials({ items = testimonials }) {
             );
           })}
         </ul>
+
+        <FindHomeStrap />
       </div>
     </section>
   );
