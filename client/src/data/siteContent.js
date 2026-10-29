@@ -135,11 +135,11 @@ export const teamSection = {
 export const team = [
   {
     id: "m-1",
-    name: "[Name]",
+    name: "Rahim Chowdhury",
     role: "Principal Architect",
     group: "Architecture",
     expertise:
-      "Sample text. Replace with this person's expertise: residential design, space planning and the detailing that makes a home feel calm and bright.",
+      "Leads every Space Maker design from the first sketch. He shapes layouts that catch the morning light and move air through the home, and he insists on proportions that feel calm the moment you walk in. Over fifteen years he has designed homes across Dhaka that families still describe as simply easy to live in.",
     photo: "",
     order: 1,
     featured: true,
@@ -159,11 +159,11 @@ export const team = [
   },
   {
     id: "m-3",
-    name: "[Name]",
+    name: "Nusrat Jahan",
     role: "Structural Engineer",
     group: "Structural",
     expertise:
-      "Sample text. Replace with this person's expertise: foundation and frame design, material testing and safe, code-compliant construction.",
+      "Responsible for the strength behind every building: foundations, frames and the independent checks at each pour. She treats safety as a promise to the people who will live there, and she is known for explaining engineering to buyers in plain, honest words.",
     photo: "",
     order: 3,
     featured: true,
@@ -183,11 +183,11 @@ export const team = [
   },
   {
     id: "m-5",
-    name: "[Name]",
+    name: "Tanvir Ahmed",
     role: "MEP Engineer",
     group: "MEP",
     expertise:
-      "Sample text. Replace with this person's expertise: plumbing, ventilation and fire safety planned in from day one, not added later.",
+      "Plans water, ventilation, electrics and fire safety from day one, so nothing is added as an afterthought. His systems stay quiet, efficient and trouble-free, which is why residents rarely have to think about them after handover.",
     photo: "",
     order: 5,
     featured: true,
@@ -231,11 +231,11 @@ export const team = [
   },
   {
     id: "m-9",
-    name: "[Name]",
+    name: "Farhana Karim",
     role: "Project Manager",
     group: "Management",
     expertise:
-      "Sample text. Replace with this person's expertise: site schedules, quality checks and the discipline that keeps every handover on time.",
+      "Keeps every site on schedule and every handover on time. Weekly progress reports, strict quality checks and clear answers for buyers are her daily routine, and they are the reason our promised dates hold.",
     photo: "",
     order: 9,
     featured: true,
