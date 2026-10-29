@@ -83,23 +83,16 @@ export default function TeamExperts() {
     <section
       id="team"
       aria-labelledby="team-heading"
-      className="relative overflow-clip border-t border-[#2A1F1A]/15 py-20 sm:py-28"
-      style={{ background: 'linear-gradient(180deg, #F5F9EE 0%, #EEF4E3 100%)' }}
+      className="relative overflow-clip py-20 sm:py-28"
+      style={{ background: 'linear-gradient(180deg, #FAF8F5 0%, #FAF8F5 60%, #F2F5E9 100%)' }}
     >
       <style>{TEAM_CSS + CSS}</style>
       <TeamBackdrop />
+      {/* same faint dot grid as Testimonials and Partner */}
       <div
         aria-hidden
-        className="sm-team-grid pointer-events-none absolute inset-0"
-        style={{
-          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%)',
-          maskImage: 'linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%)',
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-20"
-        style={{ background: 'linear-gradient(to bottom, #FAF8F5, rgba(245,249,238,0))' }}
+        className="pointer-events-none absolute inset-0 opacity-[0.035]"
+        style={{ backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)', backgroundSize: '32px 32px' }}
       />
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">

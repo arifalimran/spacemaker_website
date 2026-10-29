@@ -1,5 +1,5 @@
 // client/src/components/home/LandownerSection.jsx
-// "Partner with us" (landowners): compact, on a solid espresso card with a soft lime glow (same family as the project enquiry card). Heading + one line + Call / WhatsApp / Email pills on the left,
+// "Partner with us" (landowners): compact, on a light paper card (cream, thin espresso border + offset outline, same frame language as the Find your home strap and the Team portrait). Sits on the Testimonials/Team/Partner blended band. Heading + one line + Call / WhatsApp / Email pills on the left,
 // a slim espresso-bordered form on the right (notes hidden behind "+ Add a note"). A fine plot drawing
 // draws itself once next to the pills (tablet and up) and a small coffee cup steams next to the heading.
 // Submit logic unchanged: VITE_LAND_URL endpoint, else WhatsApp fallback so a lead is never lost.
@@ -12,12 +12,12 @@ import { waLink, landMessage, trackLead } from '../../lib/leads';
 import { Eyebrow, Reveal } from '../portfolio/shared';
 
 const ESPRESSO = '#2A1F1A';
-const CREAM = '#BBA992';
+const CREAM = '#2A1F1A'; // ink colour on the light card
 const SHORT = 'Share your plot. Our engineering director will call you back.';
 
 const field =
-  'w-full rounded-lg border border-[#F5F0E6]/20 bg-[#241A15] px-3.5 py-2.5 text-base text-[#BBA992] placeholder:text-[#8F7F6C] focus:border-[#C6F00C]/70 focus:outline-none focus:ring-2 focus:ring-[#C6F00C]/20';
-const label = "mb-1 block font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.18em] text-[#C6F00C]/85";
+  'w-full rounded-lg border border-[#2A1F1A]/25 bg-[#FAF8F5] px-3.5 py-2.5 text-base text-[#2A1F1A] placeholder:text-[#8A7B6E] focus:border-[#5C6E0A] focus:outline-none focus:ring-2 focus:ring-[#5C6E0A]/20';
+const label = "mb-1 block font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.18em] text-[#5C6E0A]";
 
 const CSS = `
 @keyframes smSteam{0%{transform:translateY(2px);opacity:0}30%{opacity:.7}100%{transform:translateY(-9px);opacity:0}}
@@ -77,14 +77,14 @@ function Pill({ href, children, external, icon, live }) {
     <a
       href={href}
       {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
-      className="inline-flex items-center gap-2 rounded-full border-[1.5px] border-[#F5F0E6]/30 px-4 py-2 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#BBA992] before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#BBA992] before:transition-transform before:duration-300 hover:before:translate-y-0 relative isolate overflow-hidden transition-colors duration-300 hover:text-[#2A1F1A]"
+      className="inline-flex items-center gap-2 rounded-full border-[1.5px] border-[#2A1F1A]/30 px-4 py-2 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#2A1F1A] before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#2A1F1A] before:transition-transform before:duration-300 hover:before:translate-y-0 relative isolate overflow-hidden transition-colors duration-300 hover:border-[#2A1F1A] hover:text-[#F5F0E6]"
     >
       {icon}
       {children}
       {live && (
         <span aria-hidden className="relative ml-0.5 flex h-2 w-2">
           <span className="absolute inline-flex h-full w-full rounded-full bg-[#C6F00C] opacity-75 motion-safe:animate-ping" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-[#C6F00C] ring-1 ring-[#F5F0E6]/30" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-[#C6F00C] ring-1 ring-[#2A1F1A]/30" />
         </span>
       )}
     </a>
@@ -126,38 +126,43 @@ export default function LandownerSection() {
   }
 
   return (
-    <section id="land" className="relative overflow-hidden pb-14 pt-20 sm:pb-16 sm:pt-28 lg:pb-[150px]" style={{ background: 'linear-gradient(180deg, #EEF4E3 0%, #F4F7EA 45%, #FAF6EE 100%)' }}>
+    <section id="land" className="relative overflow-hidden pb-14 pt-20 sm:pb-16 sm:pt-28 lg:pb-[150px]" style={{ background: 'linear-gradient(180deg, #F2F5E9 0%, #EBF0DF 55%, #E4EDD6 100%)' }}>
+      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.035]" style={{ backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
       <SkylineParallax />
+      {/* faint survey contour lines along the bottom: tree (Testimonials), building (Team), land (here) */}
+      <svg aria-hidden viewBox="0 0 1440 160" preserveAspectRatio="none" className="pointer-events-none absolute inset-x-0 bottom-0 h-32 w-full sm:h-40" fill="none" stroke="#2A1F1A" strokeWidth="1" opacity=".09">
+        <path d="M0 118 C240 84 420 140 700 108 S1200 70 1440 104" />
+        <path d="M0 136 C260 106 460 154 740 126 S1220 92 1440 122" />
+        <path d="M0 152 C280 128 480 164 760 144 S1240 114 1440 140" />
+      </svg>
       <style>{CSS}</style>
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      <div className="relative">
+      <div aria-hidden className="absolute inset-0 rounded-[20px] border" style={{ borderColor: 'rgba(42,31,26,.22)', transform: 'translate(9px, 9px)' }} />
       <div
         className="relative grid gap-7 rounded-[20px] border-[1.5px] px-5 py-8 sm:px-10 sm:py-10 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-5"
-        style={{
-          background: 'radial-gradient(120% 90% at 0% 0%, rgba(150,140,50,.16), rgba(42,31,26,0) 55%), #2A1F1A',
-          borderColor: 'rgba(245,240,230,.16)',
-          boxShadow: '0 0 0 1px rgba(198,240,12,.18), 0 0 56px 4px rgba(198,240,12,.13), 0 30px 60px -30px rgba(42,31,26,.55)',
-        }}
+        style={{ background: '#FAF8F5', borderColor: '#2A1F1A' }}
       >
         {/* heading + one line */}
         <Reveal className="lg:col-span-5">
-          <Eyebrow dark>{L.eyebrow}</Eyebrow>
+          <Eyebrow>{L.eyebrow}</Eyebrow>
           <div className="mt-3 flex items-start gap-3">
             <h2 className="font-['Space_Grotesk'] text-[1.7rem] font-extrabold leading-[1.12] tracking-tight sm:text-4xl" style={{ color: CREAM }}>
               {L.title.slice(0, L.title.lastIndexOf(' ', L.title.length - 3) + 1)}
-              <span style={{ background: 'linear-gradient(transparent 62%, rgba(198,240,12,.35) 62%)' }}>{L.title.slice(L.title.lastIndexOf(' ', L.title.length - 3) + 1)}</span>
+              <span className="lime-mark">{L.title.slice(L.title.lastIndexOf(' ', L.title.length - 3) + 1)}</span>
             </h2>
             <span className="mt-1 hidden sm:block">
               <Cup />
             </span>
           </div>
-          <p className="mt-3 text-[15px] leading-[1.7] text-[#8F7F6C]">{SHORT}</p>
+          <p className="mt-3 text-[15px] leading-[1.7] text-[#4B3F37]">{SHORT}</p>
         </Reveal>
 
         {/* form */}
         <Reveal className="lg:col-span-7 lg:row-span-2">
           <div className="relative">
-            <div aria-hidden className="absolute inset-0 rounded-[10px] border" style={{ borderColor: 'rgba(245,240,230,.16)', transform: 'translate(6px, 6px)' }} />
-            <div className="relative rounded-[10px] border-[1.5px] p-5 sm:p-6" style={{ borderColor: 'rgba(245,240,230,.2)', background: '#33261F' }}>
+            <div aria-hidden className="absolute inset-0 rounded-[10px] border" style={{ borderColor: 'rgba(42,31,26,.2)', transform: 'translate(6px, 6px)' }} />
+            <div className="relative rounded-[10px] border-[1.5px] p-5 sm:p-6" style={{ borderColor: 'rgba(42,31,26,.3)', background: '#F3F6EA' }}>
               {state === 'ok' || state === 'fallback' ? (
                 <div className="py-6 text-center">
                   <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#C6F00C]" style={{ color: ESPRESSO }}>
@@ -166,7 +171,7 @@ export default function LandownerSection() {
                     </svg>
                   </div>
                   <h3 className="mt-4 font-['Space_Grotesk'] text-xl font-bold" style={{ color: CREAM }}>Thank you.</h3>
-                  <p className="mx-auto mt-2 max-w-sm text-[15px] text-[#8F7F6C]">
+                  <p className="mx-auto mt-2 max-w-sm text-[15px] text-[#4B3F37]">
                     {state === 'ok'
                       ? 'Our engineering director will call you back directly.'
                       : 'We could not send this automatically. Please tap below to send it on WhatsApp.'}
@@ -219,7 +224,7 @@ export default function LandownerSection() {
                       type="button"
                       onClick={() => setNote(true)}
                       aria-expanded="false"
-                      className="mt-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#C6F00C]/80 underline decoration-[#F5F0E6]/30 underline-offset-4 transition-colors hover:text-[#C6F00C] hover:decoration-[#C6F00C]"
+                      className="mt-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#5C6E0A] underline decoration-[#2A1F1A]/30 underline-offset-4 transition-colors hover:text-[#2A1F1A] hover:decoration-[#5C6E0A]"
                     >
                       + Add a note
                     </button>
@@ -228,7 +233,7 @@ export default function LandownerSection() {
                   <button
                     type="submit"
                     disabled={state === 'busy'}
-                    className="mt-4 flex w-full items-center justify-between rounded-full bg-[#C6DB3F] py-2 pl-6 pr-2 text-sm font-semibold text-[#2A1F1A] transition-[filter,box-shadow] duration-300 hover:brightness-105 hover:shadow-[0_0_24px_2px_rgba(198,240,12,.25)] disabled:opacity-60"
+                    className="mt-4 flex w-full items-center justify-between rounded-full bg-[#C6DB3F] py-2 pl-6 pr-2 text-sm font-semibold text-[#2A1F1A] transition-[filter,box-shadow] duration-300 hover:brightness-105 hover:shadow-[0_6px_18px_-6px_rgba(42,31,26,.35)] disabled:opacity-60"
                   >
                     <span className="mx-auto pl-8">{state === 'busy' ? 'Sending...' : 'Submit land details'}</span>
                     <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-[#2A1F1A] text-[#C6DB3F]">
@@ -285,6 +290,7 @@ export default function LandownerSection() {
             <PlotDrawing />
           </div>
         </Reveal>
+      </div>
       </div>
       </div>
     </section>
