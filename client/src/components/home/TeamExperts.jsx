@@ -7,6 +7,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { team, teamSection as S } from '../../data/siteContent';
+import { waLink, trackLead } from '../../lib/leads';
 import { Eyebrow, Reveal } from '../portfolio/shared';
 import { TEAM_CSS, ESPRESSO, SamplePortrait } from './TeamCard';
 import TeamBuildingMark from './TeamBuildingMark';
@@ -62,6 +63,12 @@ export default function TeamExperts() {
   const row = (sorted.some((m) => m.featured) ? sorted.filter((m) => m.featured) : sorted).slice(0, 4);
   const [active, setActive] = useState(0);
   const refs = useRef([]);
+  const jump = (i) => {
+    const el = refs.current[i];
+    if (!el) return;
+    const calm = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'center' });
+  };
 
   // whoever's block crosses the middle of the screen becomes the active leader
   useEffect(() => {
@@ -83,7 +90,7 @@ export default function TeamExperts() {
     <section
       id="team"
       aria-labelledby="team-heading"
-      className="relative overflow-clip py-20 sm:py-28"
+      className="relative overflow-clip pb-12 pt-20 sm:pb-16 sm:pt-28"
       style={{ background: 'linear-gradient(180deg, #FAF8F5 0%, #FAF8F5 60%, #F2F5E9 100%)' }}
     >
       <style>{TEAM_CSS + CSS}</style>
@@ -116,8 +123,8 @@ export default function TeamExperts() {
         </div>
 
         {/* pinned portrait (desktop) + scrolling leaders */}
-        <div className="mt-12 grid items-start gap-y-12 lg:mt-16 lg:grid-cols-12 lg:gap-x-14">
-          <div className="hidden lg:col-span-5 lg:block lg:sticky lg:top-28">
+        <div className="mt-12 grid items-start gap-y-12 lg:mt-20 lg:grid-cols-12 lg:gap-x-12">
+          <div className="hidden lg:col-span-4 lg:block lg:sticky lg:top-28">
             <div className="max-w-[340px]">
               <Frame label={`${pad(active)} / ${pad(row.length - 1)}`}>
                 {row.map((m, i) => (
@@ -126,10 +133,26 @@ export default function TeamExperts() {
                   </div>
                 ))}
               </Frame>
+              {/* jump between leaders */}
+              <div className="mt-7 flex items-center gap-3" role="group" aria-label="Choose a leader">
+                {row.map((m, i) => (
+                  <button
+                    key={m.id || i}
+                    type="button"
+                    onClick={() => jump(i)}
+                    aria-label={`Show ${m.name || 'leader'} ${pad(i)}`}
+                    aria-current={active === i}
+                    className="h-11 w-11 flex-none overflow-hidden rounded-full bg-[#2F231C] transition-[box-shadow,opacity] duration-300 hover:opacity-100"
+                    style={{ boxShadow: active === i ? '0 0 0 2px #FAF8F5, 0 0 0 3.5px #2A1F1A' : '0 0 0 1px rgba(42,31,26,.25)', opacity: active === i ? 1 : 0.6 }}
+                  >
+                    <Photo m={m} n={sorted.indexOf(m)} grey={false} />
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
-          <ol className="lg:col-span-7">
+          <ol className="lg:col-span-8">
             {row.map((m, i) => {
               const on = active === i;
               return (
@@ -137,7 +160,7 @@ export default function TeamExperts() {
                   key={m.id || i}
                   ref={(el) => (refs.current[i] = el)}
                   data-i={i}
-                  className={`sm-tx-blk flex flex-col justify-center lg:min-h-[52vh] ${on ? 'sm-tx-on' : 'lg:opacity-[0.38]'} ${i ? 'mt-12 lg:mt-0' : ''}`}
+                  className={`sm-tx-blk flex flex-col justify-center lg:min-h-[44vh] lg:py-14 ${i === 0 ? 'lg:pt-0' : ''} ${i === row.length - 1 ? 'lg:pb-0' : 'lg:border-b lg:border-[#2A1F1A]/15'} ${on ? 'sm-tx-on' : 'lg:opacity-[0.38]'} ${i ? 'mt-12 lg:mt-0' : ''}`}
                 >
                   {/* phones: this leader's own photo */}
                   <div className="mb-6 max-w-[300px] lg:hidden">
@@ -155,14 +178,37 @@ export default function TeamExperts() {
                     {m.name}
                     <span aria-hidden className="sm-tx-line absolute -bottom-2 left-0 block h-[2px] w-full" style={{ background: '#C6F00C' }} />
                   </h3>
-                  {m.expertise && <p className="mt-6 max-w-lg font-serif text-base italic leading-[1.75] text-[#4B3F37] sm:text-lg">{m.expertise}</p>}
+                  {m.expertise && <p className="mt-8 max-w-[640px] font-serif text-base italic leading-[1.75] text-[#4B3F37] sm:text-lg">{m.expertise}</p>}
+
+                  {Array.isArray(m.facts) && m.facts.length > 0 && (
+                    <dl className="mt-9 flex gap-8">
+                      {m.facts.map((f, k) => (
+                        <div key={f.label} className={k ? 'border-l border-[#2A1F1A]/20 pl-8' : ''}>
+                          <dt className="font-['Space_Grotesk'] text-3xl font-extrabold leading-none text-[#2A1F1A]">{f.value}</dt>
+                          <dd className="mt-2 font-['JetBrains_Mono'] text-[10.5px] uppercase tracking-[0.16em] text-[#6B5446]">{f.label}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  )}
+
+                  <a
+                    href={waLink(`Hello Space Maker, I would like to talk to ${m.name || 'your team'}${m.role ? ` (${m.role})` : ''}.`)}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => trackLead({ channel: 'whatsapp', kind: 'team-leader' })}
+                    className="group relative isolate mt-10 inline-flex items-center gap-2.5 self-start overflow-hidden rounded-full border-[1.5px] border-[#2A1F1A] px-5 py-2.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#2A1F1A] transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#2A1F1A] before:transition-transform before:duration-300 hover:text-[#F5F0E6] hover:before:translate-y-0"
+                  >
+                    <span className="h-2 w-2 rounded-full bg-[#C6F00C] ring-1 ring-[#2A1F1A]/30" />
+                    Talk to our team
+                    <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </a>
                 </li>
               );
             })}
           </ol>
         </div>
 
-        <Reveal className="mt-12 flex justify-start lg:mt-14">
+        <Reveal className="mt-10 flex justify-start lg:mt-12">
           <Link
             to="/team"
             className="group relative isolate inline-flex items-center gap-3 overflow-hidden rounded-full border-[1.5px] border-[#2A1F1A] bg-transparent px-6 py-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#2A1F1A] transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#2A1F1A] before:transition-transform before:duration-300 hover:text-[#F5F0E6] hover:before:translate-y-0"
