@@ -61,7 +61,7 @@ function Signature({ project, index }) {
       <Reveal className={`md:col-span-5 ${flip ? 'md:order-1' : ''}`}>
         <div className="font-serif text-8xl italic leading-none text-[#C6F00C]/25">0{index + 1}</div>
         <TypeTag type={project.type} dark />
-        <h3 className="relative mt-3 font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.04] tracking-tight text-[#BBA992] lg:text-5xl">
+        <h3 className="relative mt-3 font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.04] tracking-tight text-[#D9CBB4] lg:text-5xl">
           {project.title}
           <Flutter
             hue="#C6F00C"
@@ -69,7 +69,7 @@ function Signature({ project, index }) {
             className="absolute -top-6 right-0 opacity-0 transition duration-500 group-hover:-translate-y-1 group-hover:opacity-100"
           />
         </h3>
-        <p className="mt-5 font-serif text-xl italic leading-snug text-[#BBA992] sm:text-2xl">{project.line}</p>
+        <p className="mt-5 font-serif text-xl italic leading-snug text-[#C6DB3F]/90 sm:text-2xl">{project.line}</p>
         <Facts
           dark
           className="mt-7"
@@ -110,7 +110,7 @@ function Panels({ items, extra }) {
               <div
                 aria-hidden
                 className="absolute inset-0"
-                style={{ background: 'linear-gradient(to top, rgba(26,18,14,0.9), rgba(26,18,14,0.2) 55%, rgba(26,18,14,0.05))' }}
+                style={{ background: 'linear-gradient(to top, rgba(26,18,14,0.96) 0%, rgba(26,18,14,0.9) 28%, rgba(26,18,14,0.62) 48%, rgba(26,18,14,0.18) 68%, rgba(26,18,14,0.04) 100%)' }}
               />
               <Link
                 to={`/projects/${p.slug}`}
@@ -131,8 +131,8 @@ function Panels({ items, extra }) {
                 }`}
               >
                 <div
-                  className="font-['Space_Grotesk'] text-xl font-bold text-[#BBA992]"
-                  style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+                  className="font-['Space_Grotesk'] text-xl font-bold text-[#EADFCB]"
+                  style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', textShadow: '0 1px 12px rgba(26,18,14,.8)' }}
                 >
                   {p.title}
                 </div>
@@ -140,16 +140,17 @@ function Panels({ items, extra }) {
 
               {/* expanded: details */}
               <div
+                style={{ textShadow: '0 1px 14px rgba(26,18,14,.75), 0 0 2px rgba(26,18,14,.5)' }}
                 className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 p-6 transition duration-500 md:p-8 ${
                   open ? 'md:translate-y-0 md:opacity-100' : 'md:translate-y-3 md:opacity-0'
                 }`}
               >
                 <TypeTag type={p.type} status={p.status} dark />
-                <h3 className="mt-3 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.05] tracking-tight text-[#BBA992] sm:text-4xl">
+                <h3 className="mt-3 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.05] tracking-tight text-[#EADFCB] sm:text-4xl">
                   {p.title}
                 </h3>
-                <p className="mt-2 max-w-md font-serif text-lg italic text-[#BBA992]">{p.line}</p>
-                <div className="mt-2 font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.18em] text-[#8F7F6C]">
+                <p className="mt-3 max-w-md font-serif text-xl italic leading-snug text-[#D3E35A]">{p.line}</p>
+                <div className="mt-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#D9CBB4]">
                   {p.area} · {p.floors}
                 </div>
                 <div className="pointer-events-auto mt-5">
@@ -175,7 +176,7 @@ function Panels({ items, extra }) {
             <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-[#C6F00C]">
               Visit our other projects
             </div>
-            <div className="mt-3 font-serif text-5xl italic leading-none text-[#BBA992]">
+            <div className="mt-3 font-serif text-5xl italic leading-none text-[#D9CBB4]">
               {extra > 0 ? `+${extra}` : 'All'}
             </div>
             <div className="mt-2 font-['Space_Grotesk'] text-lg font-bold text-[#BBA992]">
@@ -298,7 +299,7 @@ function Interiors() {
             <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-[#C6F00C]">
               Visit our other interiors
             </div>
-            <div className="mt-3 font-serif text-5xl italic leading-none text-[#BBA992]">All</div>
+            <div className="mt-3 font-serif text-5xl italic leading-none text-[#D9CBB4]">All</div>
             <div className="mt-2 font-['Space_Grotesk'] text-lg font-bold text-[#BBA992]">interiors</div>
             <div className="mt-4 text-[#C6F00C] transition duration-300 group-hover:translate-x-2">→</div>
           </div>
@@ -393,7 +394,7 @@ export default function PortfolioSection() {
         <DarkBand id="signature" className="mt-6">
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <Eyebrow dark>Signature projects</Eyebrow>
-            <h3 className="mt-4 max-w-2xl font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.08] tracking-tight text-[#BBA992] sm:text-5xl">
+            <h3 className="mt-4 max-w-2xl font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.08] tracking-tight text-[#D9CBB4] sm:text-5xl">
               The work we are proudest of.
             </h3>
           </div>
