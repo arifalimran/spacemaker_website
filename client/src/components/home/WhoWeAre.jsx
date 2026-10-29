@@ -171,7 +171,7 @@ function SceneCard({ data, className = '' }) {
         {data.num} · {data.label}
       </span>
       <span aria-hidden className="mt-3 block h-[2px] w-10 rounded-full bg-[#C6F00C]" />
-      <h3 className="f-display mt-6 text-3xl font-bold leading-tight text-[#BBA992] sm:text-4xl">{data.heading}</h3>
+      <h3 className="f-display mt-6 text-3xl font-bold leading-tight text-[#D9CBB4] sm:text-4xl">{data.heading}</h3>
       <p className="mt-3 text-base leading-relaxed text-[#BBA992] sm:text-lg">{data.text}</p>
     </div>
   );

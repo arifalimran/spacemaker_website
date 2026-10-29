@@ -13,7 +13,7 @@ const CSS = `
   --dk-bg:#2A1F1A;--dk-fg:#BBA992;--dk-bd:rgba(245,240,230,.25);
 }
 [data-sm-themed][data-sm-theme="dark"]{
-  --nav-bg:rgba(42,31,26,.97);--nav-bd:rgba(245,240,230,.16);--nav-fg:#BBA992;--nav-hover:#C6F00C;--nav-brand:#BBA992;--nav-sub:#8F7F6C;
+  --nav-bg:rgba(42,31,26,.97);--nav-bd:rgba(245,240,230,.16);--nav-fg:#BBA992;--nav-hover:#C6F00C;--nav-brand:#BBA992;--nav-sub:#A39380;
   --nav-btn-bg:#3A2B23;--nav-btn-fg:#BBA992;--nav-panel-hover:rgba(245,240,230,.08);
   --dk-bg:#BBA992;--dk-fg:#2A1F1A;--dk-bd:rgba(42,31,26,.25);
 }

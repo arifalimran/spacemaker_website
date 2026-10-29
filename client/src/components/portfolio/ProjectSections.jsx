@@ -453,7 +453,7 @@ function DChips({ options, value, onChange }) {
 }
 
 const dField =
-  'mt-2 w-full border-0 border-b border-[#F3EFE6]/25 bg-transparent px-0 py-2.5 text-[16px] text-[#BBA992] outline-none transition placeholder:text-[#8F7F6C] focus:border-[#C6F00C]';
+  'mt-2 w-full border-0 border-b border-[#F3EFE6]/25 bg-transparent px-0 py-2.5 text-[16px] text-[#BBA992] outline-none transition placeholder:text-[#A39380] focus:border-[#C6F00C]';
 const dLabel = `${MONO} text-[10px] uppercase tracking-[0.2em] text-[#C6F00C]/80`;
 
 export function EnquiryBlock({ project, options, layout, setLayout }) {
@@ -577,10 +577,10 @@ export function EnquiryBlock({ project, options, layout, setLayout }) {
               {done ? (
                 <div className="relative py-10 text-center">
                   <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-[#C6F00C] text-xl text-[#1A120E]">✓</div>
-                  <h3 className="font-serif text-4xl italic leading-tight text-[#BBA992] sm:text-5xl">
+                  <h3 className="font-serif text-4xl italic leading-tight text-[#D9CBB4] sm:text-5xl">
                     Thank you{name ? `, ${name.split(' ')[0]}` : ''}.
                   </h3>
-                  <p className="mt-4 text-[#8F7F6C]">
+                  <p className="mt-4 text-[#A39380]">
                     {state === 'ok' ? 'We will call you shortly.' : 'We could not send it automatically. Please send it to us on WhatsApp.'}
                   </p>
                   {state === 'fallback' && (
@@ -608,7 +608,7 @@ export function EnquiryBlock({ project, options, layout, setLayout }) {
                         setMsg(e.target.value);
                         grow(e.target);
                       }}
-                      className="block min-h-[12rem] w-full resize-none border-0 bg-transparent p-0 font-serif text-[22px] leading-[1.5] text-[#BBA992] outline-none placeholder:text-[#8F7F6C] sm:min-h-[13.5rem] sm:text-[28px]"
+                      className="block min-h-[12rem] w-full resize-none border-0 bg-transparent p-0 font-serif text-[22px] leading-[1.5] text-[#BBA992] outline-none placeholder:text-[#A39380] sm:min-h-[13.5rem] sm:text-[28px]"
                     />
                     <span aria-hidden className="sm-enq-line absolute inset-x-4 bottom-0 block h-[2px] rounded-full" style={{ background: 'linear-gradient(90deg, #C6F00C, rgba(198,240,12,0.1))' }} />
                   </label>
@@ -635,7 +635,7 @@ export function EnquiryBlock({ project, options, layout, setLayout }) {
                       className="overflow-hidden"
                     >
                       <div className="mt-9 border-t border-[#F3EFE6]/10 pt-8">
-                        <div className="font-serif text-2xl italic text-[#BBA992]">Where should we reach you?</div>
+                        <div className="font-serif text-2xl italic text-[#D9CBB4]">Where should we reach you?</div>
                         <div className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2">
                           <label className="block">
                             <span className={dLabel}>Your name</span>

@@ -131,7 +131,7 @@ export function Facts({ items, className = '', dark = false }) {
         <div key={i.k}>
           <dt
             className={`font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.18em] ${
-              dark ? 'text-[#8F7F6C]' : 'text-neutral-500'
+              dark ? 'text-[#A39380]' : 'text-neutral-500'
             }`}
           >
             {i.k}

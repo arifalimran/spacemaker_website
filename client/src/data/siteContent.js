@@ -141,6 +141,8 @@ export const team = [
     expertise:
       "Leads every Space Maker design from the first sketch. He shapes layouts that catch the morning light and move air through the home, and he insists on proportions that feel calm the moment you walk in. Over fifteen years he has designed homes across Dhaka that families still describe as simply easy to live in.",
     photo: "",
+    tags: ["Residential design","Space planning","Daylight"],
+    facts: [{ value: "15 yrs", label: "Designing homes" }, { value: "40+", label: "Homes shaped" }],
     order: 1,
     featured: true,
     isSample: true,
@@ -165,6 +167,8 @@ export const team = [
     expertise:
       "Responsible for the strength behind every building: foundations, frames and the independent checks at each pour. She treats safety as a promise to the people who will live there, and she is known for explaining engineering to buyers in plain, honest words.",
     photo: "",
+    tags: ["Foundations","Frame design","Quality checks"],
+    facts: [{ value: "12 yrs", label: "In structures" }, { value: "60+", label: "Pours checked" }],
     order: 3,
     featured: true,
     isSample: true,
@@ -189,6 +193,8 @@ export const team = [
     expertise:
       "Plans water, ventilation, electrics and fire safety from day one, so nothing is added as an afterthought. His systems stay quiet, efficient and trouble-free, which is why residents rarely have to think about them after handover.",
     photo: "",
+    tags: ["Water and drainage","Ventilation","Fire safety"],
+    facts: [{ value: "10 yrs", label: "In MEP" }, { value: "35+", label: "Systems planned" }],
     order: 5,
     featured: true,
     isSample: true,
@@ -237,6 +243,8 @@ export const team = [
     expertise:
       "Keeps every site on schedule and every handover on time. Weekly progress reports, strict quality checks and clear answers for buyers are her daily routine, and they are the reason our promised dates hold.",
     photo: "",
+    tags: ["Site schedules","Quality control","Handover"],
+    facts: [{ value: "14 yrs", label: "Managing sites" }, { value: "100%", label: "On-time focus" }],
     order: 9,
     featured: true,
     isSample: true,

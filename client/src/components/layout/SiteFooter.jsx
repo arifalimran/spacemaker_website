@@ -1,9 +1,10 @@
 // client/src/components/layout/SiteFooter.jsx
-// Compact espresso footer: brand, links, offices, contact, and a one-line wordmark that dissolves into the espresso.
-// ("Find your home" now lives at the end of the Testimonials section.) Also the "Contact" target in the nav.
+// Compact espresso footer. A "Find your home" block (one featured Signature project + two buttons) sits on top and is hidden
+// on /projects and /interiors, where the page is already the finder. Then brand, links, offices, contact, and a wordmark that
+// bleeds off the bottom edge. Counts and links come from the data, so they follow the back end. Also the "Contact" target in the nav.
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { CONTACT, GENERAL_MESSAGE } from '../../data/portfolio';
+import { Link, useLocation } from 'react-router-dom';
+import { CONTACT, GENERAL_MESSAGE, projects, coverOf } from '../../data/portfolio';
 import { waLink, trackLead } from '../../lib/leads';
 
 // column titles + "Back to top": lime neon (static text-shadow glow, no filters)
@@ -11,6 +12,9 @@ const head = "sm-neon font-['JetBrains_Mono'] text-xs font-semibold uppercase tr
 const lk = 'sm-fl relative inline-block text-base font-medium text-[#BBA992] transition-colors duration-300 hover:text-[#C7D17F]';
 // highlighted labels (WhatsApp, hotline, Email) and office names: bright cream with a small lime dot
 const sub = "sm-hl font-['JetBrains_Mono'] text-xs font-semibold uppercase tracking-[0.16em]";
+
+// the featured project: `footerFeatured: true` in the data wins, otherwise the first Signature project
+const FEATURED = projects.find((p) => p.footerFeatured) || projects.find((p) => p.flagship) || projects[0];
 
 const QUICK_LINKS = [
   { label: 'About', to: { pathname: '/', hash: '#about' } },
@@ -104,17 +108,68 @@ button.sm-neon{transition:text-shadow .3s}
 button.sm-neon:hover,button.sm-neon:focus-visible{text-shadow:0 0 5px rgba(198,240,12,.75),0 0 16px rgba(198,240,12,.5),0 0 30px rgba(198,240,12,.3)}
 .sm-hl{display:inline-flex;align-items:center;gap:.5rem;color:#F5F0E6}
 .sm-hl::before{content:"";width:6px;height:6px;border-radius:999px;background:#C6F00C;flex:none}
-@media (prefers-reduced-motion:reduce){.sm-soc-i,button.sm-neon{transition:none!important}}
+.sm-feat img{transition:transform .7s cubic-bezier(.22,1,.36,1)}
+.sm-feat:hover img{transform:scale(1.04)}
+@media (prefers-reduced-motion:reduce){.sm-soc-i,.sm-feat img,button.sm-neon{transition:none!important}}
 `;
+
+// option 8: one featured project photo + "See this home" / "All projects"
+function FeaturedStrip() {
+  const p = FEATURED;
+  if (!p) return null;
+  const photo = coverOf(p);
+  return (
+    <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+      <Link
+        to={`/projects/${p.slug}`}
+        className="sm-feat group relative block aspect-[16/10] overflow-hidden rounded-3xl bg-[#3A2C24] lg:col-span-7"
+        aria-label={`See ${p.title}`}
+      >
+        {photo && <img src={photo} alt={`${p.title}, ${p.area}`} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />}
+        {/* legibility shade for the caption (photo overlay only) */}
+        <div aria-hidden className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,18,14,.82) 0%, rgba(26,18,14,.25) 45%, rgba(26,18,14,0) 70%)' }} />
+        <div className="absolute bottom-0 left-0 p-6 sm:p-8">
+          <div className="font-['JetBrains_Mono'] text-xs font-semibold uppercase tracking-[0.22em] text-[#C6F00C]">{p.flagship ? 'Signature' : 'Featured'}</div>
+          <div className="mt-2 font-['Space_Grotesk'] text-2xl font-extrabold leading-tight text-[#FAF8F5] sm:text-4xl">{p.title}</div>
+          {p.area && <div className="mt-1 text-base text-[#F5F0E6]/85">{p.area}</div>}
+        </div>
+      </Link>
+
+      <div className="lg:col-span-5">
+        <h2 className="font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.05] tracking-tight text-[#F5F0E6] sm:text-5xl">Find your home</h2>
+        <p className="mt-4 font-serif text-xl italic text-[#C6F00C]">Start with our latest, or browse them all.</p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link
+            to={`/projects/${p.slug}`}
+            className="inline-flex items-center gap-2 rounded-xl bg-[#C6F00C] px-6 py-3.5 text-base font-semibold text-[#1F1713] transition-transform duration-300 hover:-translate-y-0.5"
+          >
+            See this home <span aria-hidden>→</span>
+          </Link>
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-2 rounded-xl border-[1.5px] border-[#F5F0E6]/40 px-6 py-3.5 text-base font-semibold text-[#F5F0E6] transition-colors duration-300 hover:border-[#C6F00C] hover:text-[#C6F00C]"
+          >
+            All projects
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function SiteFooter() {
   const waDisplay = CONTACT.whatsappDisplay || `+${CONTACT.whatsapp}`;
+  const { pathname } = useLocation();
+  // the two list pages are already the finder, so the strip would be redundant there
+  const showBrowse = !(pathname === '/projects' || pathname === '/interiors');
   return (
     <footer id="contact" className="relative overflow-hidden text-[#BBA992]" style={{ background: '#2A1F1A' }}>
       <style>{FOOTER_CSS}</style>
 
       <div className="relative mx-auto max-w-7xl px-5 pt-24 sm:px-8 sm:pt-40">
-        <div className={`grid gap-12 sm:grid-cols-2 lg:grid-cols-12 pt-4`}>
+        {showBrowse && <FeaturedStrip />}
+
+        <div className={`grid gap-12 sm:grid-cols-2 lg:grid-cols-12 ${showBrowse ? 'pt-20' : 'pt-4'}`}>
           {/* brand */}
           <div className="lg:col-span-4">
             <Link to="/" className="inline-block" aria-label="Space Maker home">
@@ -190,7 +245,7 @@ export default function SiteFooter() {
         </div>
 
         {/* bottom bar */}
-        <div className="mt-20 flex flex-col gap-2 border-t border-[#F5F0E6]/10 pt-6 text-sm text-[#8F7F6C] sm:flex-row sm:items-center sm:justify-between sm:pr-36">
+        <div className="mt-20 flex flex-col gap-2 border-t border-[#F5F0E6]/10 pt-6 text-sm text-[#A39380] sm:flex-row sm:items-center sm:justify-between sm:pr-36">
           <span>© {new Date().getFullYear()} Space Maker Limited. All rights reserved.</span>
           <button
             type="button"
