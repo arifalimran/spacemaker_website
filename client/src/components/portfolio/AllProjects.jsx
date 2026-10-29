@@ -101,7 +101,7 @@ export default function AllProjects() {
   return (
     <main
       className="relative min-h-screen pb-28"
-      style={{ background: 'linear-gradient(to bottom, #FAF8F5 0%, #F3EFE6 30%, #EDF4EC 100%)' }}
+      style={{ background: 'linear-gradient(to bottom, #FAF8F5 0%, #F5F0E6 35%, #EDE3D6 75%, #E2D5C4 100%)' }}
       onMouseMove={(e) => {
         mx.set(e.clientX + 200);
         my.set(e.clientY);

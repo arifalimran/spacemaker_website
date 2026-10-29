@@ -25,7 +25,8 @@ export default function Careers() {
   ];
 
   return (
-    <section id="careers" className="relative z-10 py-28 px-6 bg-gradient-to-b from-[#FAF8F5] via-[#EBF3E8] to-[#FAF8F5]">
+    <section id="careers" className="relative z-10 py-28 px-6"
+      style={{ background: 'linear-gradient(to bottom, #FAF8F5 0%, #F5F0E6 35%, #EDE3D6 75%, #E2D5C4 100%)' }}>
       <div className="max-w-6xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="text-xs uppercase tracking-widest font-extrabold text-[#2D6A4F] mb-2 block">
@@ -43,7 +44,7 @@ export default function Careers() {
           <h3 className="text-center text-xs uppercase font-extrabold tracking-wider text-neutral-500 mb-8">What We Provide For Our Team</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {perks.map((perk, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-2xl border border-neutral-300/70 shadow-sm flex flex-col justify-between">
+              <div key={idx} className="bg-[#EFE6D8] p-6 rounded-2xl border border-[#D6C5B1] flex flex-col justify-between transition duration-300 hover:-translate-y-0.5 hover:border-[#5C6E0A]">
                 <div>
                   <div className="w-8 h-8 rounded-lg bg-[#1B4332] text-[#C6F00C] flex items-center justify-center font-bold text-xs mb-4">
                     0{idx+1}
@@ -56,9 +57,9 @@ export default function Careers() {
           </div>
         </div>
 
-        <div className="mb-20 bg-white p-8 md:p-10 rounded-3xl border border-neutral-300/70 shadow-sm">
+        <div className="mb-20 bg-[#EFE6D8] p-8 md:p-10 rounded-3xl border border-[#D6C5B1]">
           <h3 className="text-2xl font-extrabold text-neutral-900 mb-6">Current Open Positions</h3>
-          <div className="divide-y divide-neutral-200">
+          <div className="divide-y divide-[#D6C5B1]/60">
             {jobs.map((job, idx) => (
               <div key={idx} className="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
@@ -85,7 +86,7 @@ export default function Careers() {
           <h3 className="text-center text-2xl font-extrabold text-neutral-900 mb-6">Frequently Asked Questions</h3>
           <div className="space-y-3">
             {faqs.map((f, idx) => (
-              <div key={idx} className="bg-white rounded-2xl border border-neutral-300/70 overflow-hidden">
+              <div key={idx} className="bg-[#EFE6D8] rounded-2xl border border-[#D6C5B1] overflow-hidden transition-colors duration-300 hover:border-[#5C6E0A]">
                 <button 
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                   className="w-full p-5 text-left flex items-center justify-between font-extrabold text-xs sm:text-sm text-neutral-900"
@@ -94,7 +95,7 @@ export default function Careers() {
                   <ChevronDown className={`w-4 h-4 text-neutral-400 transition-transform ${openFaq === idx ? "rotate-180" : ""}`} />
                 </button>
                 {openFaq === idx && (
-                  <div className="p-5 pt-0 text-xs text-neutral-600 leading-relaxed border-t border-neutral-100">
+                  <div className="p-5 pt-0 text-xs text-neutral-600 leading-relaxed border-t border-[#D6C5B1]/60">
                     {f.a}
                   </div>
                 )}

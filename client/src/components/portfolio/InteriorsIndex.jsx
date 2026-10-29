@@ -74,7 +74,7 @@ export default function InteriorsIndex() {
   }, [type, q]);
 
   return (
-    <main className="relative min-h-screen pb-20" style={{ background: 'linear-gradient(to bottom, #FAF8F3 0%, #F7F3E8 60%, #F8F5EC 100%)' }}>
+    <main className="relative min-h-screen pb-20" style={{ background: 'linear-gradient(to bottom, #FAF8F5 0%, #F5F0E6 35%, #EDE3D6 75%, #E2D5C4 100%)' }}>
       <Wash x="85%" y="12%" size={900} a={0.16} />
       <div className="relative z-10 mx-auto max-w-7xl px-5 pt-28 sm:px-8 md:pt-32">
         <Link
