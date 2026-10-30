@@ -1,221 +1,159 @@
 // client/src/components/home/TeamExperts.jsx
-// "Team of experts" on the home page. Desktop: one large portrait stays pinned on the left while the four leaders'
-// text blocks scroll past on the right, one after another; the portrait cross-fades to whoever is in the middle of the
-// screen and a thin lime line draws under their name. Phones: each leader is photo on top, text below, stacked.
-// No scroll hijacking: plain sticky + one IntersectionObserver. Opacity/transform only; static under reduced motion.
+// "Team of experts" on the home page, Allbirds style: one leader at a time. A tall pill-shaped photo on one side,
+// the name and role (mono capitals) and a short line of text centred on the other. No scroll pinning:
+// the visitor changes leader with the dots, the arrows, the arrow keys, or a swipe. Link to the full list at the bottom.
 // Data: teamSection + team in data/siteContent.js (sample content for now). Full list lives at /team (TeamCard).
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, useReducedMotion } from 'framer-motion';
 import { team, teamSection as S } from '../../data/siteContent';
 import { waLink, trackLead } from '../../lib/leads';
-import { Eyebrow, Reveal } from '../portfolio/shared';
-import { TEAM_CSS, ESPRESSO, SamplePortrait } from './TeamCard';
-import TeamBuildingMark from './TeamBuildingMark';
-import TeamBackdrop from './TeamBackdrop';
+import { Reveal } from '../portfolio/shared';
+import { ESPRESSO, SamplePortrait } from './TeamCard';
 
-const CSS = `
-.sm-tx-blk{transition:opacity .5s ease}
-.sm-tx-line{transform:scaleX(0);transform-origin:left;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
-.sm-tx-on .sm-tx-line{transform:scaleX(1)}
-.sm-tx-layer{transition:opacity .7s ease}
-@media (prefers-reduced-motion:reduce){.sm-tx-blk,.sm-tx-line,.sm-tx-layer{transition:none !important}}
-`;
+const LIME = '#C6DB3F';
+const CREAM = '#FAF8F5';
 
-function Photo({ m, n, grey }) {
+/* keep the text short: the first sentence, cut at a word if it is still long */
+const shorten = (t = '', max = 150) => {
+  const text = String(t).trim();
+  if (!text) return '';
+  const first = text.match(/^.*?[.!?](\s|$)/)?.[0].trim() || text;
+  if (first.length <= max) return first;
+  const cut = first.slice(0, max);
+  return `${cut.slice(0, cut.lastIndexOf(' '))}…`;
+};
+
+function Photo({ m, n }) {
   const [broken, setBroken] = useState(false);
   return m.photo && !broken ? (
     <img
       src={m.photo}
-      alt=""
+      alt={m.name ? `${m.name}${m.role ? `, ${m.role}` : ''}` : ''}
       loading="lazy"
       decoding="async"
       onError={() => setBroken(true)}
-      className="h-full w-full object-cover transition-[filter] duration-700"
-      style={{ filter: grey ? 'grayscale(1)' : 'grayscale(0)' }}
+      className="h-full w-full object-cover"
     />
   ) : (
     <SamplePortrait n={n} />
   );
 }
 
-/* the framed portrait: espresso border, offset outline, drawing-sheet corner marks */
-function Frame({ children, label }) {
-  return (
-    <div className="relative">
-      <div aria-hidden className="absolute inset-0 rounded-[8px] border" style={{ borderColor: 'rgba(42,31,26,.32)', transform: 'translate(9px, 9px)' }} />
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[8px] border-[1.5px]" style={{ borderColor: ESPRESSO, background: '#2F231C' }}>
-        {children}
-        <span aria-hidden className="pointer-events-none absolute left-3 top-3 h-3.5 w-3.5 border-l border-t" style={{ borderColor: 'rgba(245,240,230,.55)' }} />
-        <span aria-hidden className="pointer-events-none absolute bottom-3 right-3 h-3.5 w-3.5 border-b border-r" style={{ borderColor: 'rgba(245,240,230,.55)' }} />
-        {label && (
-          <span aria-hidden className="pointer-events-none absolute right-4 top-3 flex items-center gap-1.5 font-['JetBrains_Mono'] text-[11px] tracking-[0.2em] text-[#BBA992]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#C6F00C]" />
-            {label}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-}
-
 export default function TeamExperts() {
+  const reduce = useReducedMotion();
   const sorted = [...team].sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
   const row = (sorted.some((m) => m.featured) ? sorted.filter((m) => m.featured) : sorted).slice(0, 4);
-  const [active, setActive] = useState(0);
-  const refs = useRef([]);
-  const jump = (i) => {
-    const el = refs.current[i];
-    if (!el) return;
-    const calm = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    el.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'center' });
+  const [i, setI] = useState(0);
+  const count = row.length;
+
+  const go = useCallback((n) => setI(((n % count) + count) % count), [count]);
+  const onKey = (e) => {
+    if (e.key === 'ArrowRight') go(i + 1);
+    if (e.key === 'ArrowLeft') go(i - 1);
   };
 
-  // whoever's block crosses the middle of the screen becomes the active leader
-  useEffect(() => {
-    if (!row.length || typeof IntersectionObserver === 'undefined') return undefined;
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && setActive(Number(e.target.dataset.i))),
-      { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
-    );
-    refs.current.forEach((el) => el && io.observe(el));
-    return () => io.disconnect();
-  }, [row.length]);
-
   if (!sorted.length) return null;
+  const m = row[i];
   const pad = (n) => String(n + 1).padStart(2, '0');
-  const heading = S.heading || '';
-  const cut = heading.lastIndexOf(' ') + 1;
+  const fade = reduce ? {} : { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
   return (
-    <section
-      id="team"
-      aria-labelledby="team-heading"
-      className="relative overflow-clip pb-12 pt-20 sm:pb-16 sm:pt-28"
-      style={{ background: 'linear-gradient(180deg, #FAF8F5 0%, #FAF8F5 60%, #F2F5E9 100%)' }}
-    >
-      <style>{TEAM_CSS + CSS}</style>
-      <TeamBackdrop />
-      {/* same faint dot grid as Testimonials and Partner */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.035]"
-        style={{ backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)', backgroundSize: '32px 32px' }}
-      />
+    <section id="team" aria-labelledby="team-heading" className="relative overflow-clip pb-24 pt-24 sm:pb-32 sm:pt-32" style={{ background: CREAM }}>
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <span className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.22em] text-[#5C6E0A]">{S.label}</span>
+          <h2 id="team-heading" className="f-display mt-5 text-3xl font-bold leading-[1.1] sm:text-4xl lg:text-5xl" style={{ color: ESPRESSO }}>
+            {S.heading}
+          </h2>
+        </Reveal>
 
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-        {/* heading */}
-        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between md:gap-14">
-          <Reveal className="max-w-4xl">
-            <Eyebrow>{S.label}</Eyebrow>
-            <h2
-              id="team-heading"
-              className="mt-4 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.1] tracking-tight sm:text-4xl lg:text-5xl"
-              style={{ color: ESPRESSO }}
-            >
-              {heading.slice(0, cut)}
-              <span className="lime-mark">{heading.slice(cut)}</span>
-            </h2>
-            {S.intro && <p className="mt-4 font-serif text-lg italic text-[#6B5446]">{S.intro}</p>}
-          </Reveal>
-          <div className="w-[170px] flex-none md:w-[230px]">
-            <TeamBuildingMark />
-          </div>
-        </div>
-
-        {/* pinned portrait (desktop) + scrolling leaders */}
-        <div className="mt-12 grid items-start gap-y-12 lg:mt-20 lg:grid-cols-12 lg:gap-x-12">
-          <div className="hidden lg:col-span-4 lg:block lg:sticky lg:top-28">
-            <div className="max-w-[340px]">
-              <Frame label={`${pad(active)} / ${pad(row.length - 1)}`}>
-                {row.map((m, i) => (
-                  <div key={m.id || i} className="sm-tx-layer absolute inset-0" style={{ opacity: active === i ? 1 : 0 }} aria-hidden>
-                    <Photo m={m} n={sorted.indexOf(m)} grey={active !== i} />
-                  </div>
-                ))}
-              </Frame>
-              {/* jump between leaders */}
-              <div className="mt-7 flex items-center gap-3" role="group" aria-label="Choose a leader">
-                {row.map((m, i) => (
-                  <button
-                    key={m.id || i}
-                    type="button"
-                    onClick={() => jump(i)}
-                    aria-label={`Show ${m.name || 'leader'} ${pad(i)}`}
-                    aria-current={active === i}
-                    className="h-11 w-11 flex-none overflow-hidden rounded-full bg-[#2F231C] transition-[box-shadow,opacity] duration-300 hover:opacity-100"
-                    style={{ boxShadow: active === i ? '0 0 0 2px #FAF8F5, 0 0 0 3.5px #2A1F1A' : '0 0 0 1px rgba(42,31,26,.25)', opacity: active === i ? 1 : 0.6 }}
-                  >
-                    <Photo m={m} n={sorted.indexOf(m)} grey={false} />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <ol className="lg:col-span-8">
-            {row.map((m, i) => {
-              const on = active === i;
-              return (
-                <li
-                  key={m.id || i}
-                  ref={(el) => (refs.current[i] = el)}
-                  data-i={i}
-                  className={`sm-tx-blk flex flex-col justify-center lg:min-h-[44vh] lg:py-14 ${i === 0 ? 'lg:pt-0' : ''} ${i === row.length - 1 ? 'lg:pb-0' : 'lg:border-b lg:border-[#2A1F1A]/15'} ${on ? 'sm-tx-on' : 'lg:opacity-[0.38]'} ${i ? 'mt-12 lg:mt-0' : ''}`}
+        <div
+          role="group"
+          aria-roledescription="carousel"
+          aria-label="Our experts"
+          tabIndex={0}
+          onKeyDown={onKey}
+          className="relative mt-16 outline-none sm:mt-20 lg:mt-24"
+        >
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8">
+            {/* text, centred in the free space */}
+            <motion.div key={`t${i}`} {...fade} className="order-2 px-2 text-center lg:order-1 lg:px-16" aria-live="polite">
+              <div className="mx-auto max-w-md">
+                <p className="font-['JetBrains_Mono'] text-[12px] uppercase tracking-[0.2em] sm:text-[13px]" style={{ color: ESPRESSO }}>
+                  {m.name}
+                  {m.role ? `, ${m.role}` : ''}
+                </p>
+                {m.expertise && <p className="mt-6 text-base leading-[1.8] text-[#4B3F37] sm:text-[17px]">{shorten(m.expertise)}</p>}
+                <a
+                  href={waLink(`Hello Space Maker, I would like to talk to ${m.name || 'your team'}${m.role ? ` (${m.role})` : ''}.`)}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => trackLead({ channel: 'whatsapp', kind: 'team-leader' })}
+                  className="mt-8 inline-block font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] underline decoration-2 underline-offset-[8px] transition-colors hover:decoration-[#5C6E0A]"
+                  style={{ color: ESPRESSO, textDecorationColor: LIME }}
                 >
-                  {/* phones: this leader's own photo */}
-                  <div className="mb-6 max-w-[300px] lg:hidden">
-                    <Frame label={pad(i)}>
-                      <Photo m={m} n={sorted.indexOf(m)} grey={false} />
-                    </Frame>
-                  </div>
+                  Talk to our team
+                </a>
+              </div>
 
-                  <div className="flex items-center gap-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#5C6E0A]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#C6F00C]" />
-                    {pad(i)}
-                    {m.role && <span className="text-[#6B5446]">· {m.role}</span>}
-                  </div>
-                  <h3 className="relative mt-4 inline-block self-start font-['Space_Grotesk'] text-2xl font-extrabold leading-[1.1] tracking-tight sm:text-3xl lg:text-4xl" style={{ color: ESPRESSO }}>
-                    {m.name}
-                    <span aria-hidden className="sm-tx-line absolute -bottom-2 left-0 block h-[2px] w-full" style={{ background: '#C6F00C' }} />
-                  </h3>
-                  {m.expertise && <p className="mt-8 max-w-[640px] font-serif text-base italic leading-[1.75] text-[#4B3F37] sm:text-lg">{m.expertise}</p>}
+              {/* arrows and counter */}
+              {count > 1 && (
+                <div className="mt-12 flex items-center justify-center gap-6 font-['JetBrains_Mono'] text-[11px] tracking-[0.2em]" style={{ color: ESPRESSO }}>
+                  <button type="button" onClick={() => go(i - 1)} aria-label="Previous expert" className="flex h-11 w-11 items-center justify-center rounded-full border transition-colors hover:bg-[#2A1F1A] hover:text-[#FAF8F5]" style={{ borderColor: 'rgba(42,31,26,.35)' }}>
+                    ←
+                  </button>
+                  <span aria-hidden>
+                    {pad(i)} / {pad(count - 1)}
+                  </span>
+                  <button type="button" onClick={() => go(i + 1)} aria-label="Next expert" className="flex h-11 w-11 items-center justify-center rounded-full border transition-colors hover:bg-[#2A1F1A] hover:text-[#FAF8F5]" style={{ borderColor: 'rgba(42,31,26,.35)' }}>
+                    →
+                  </button>
+                </div>
+              )}
+            </motion.div>
 
-                  {Array.isArray(m.facts) && m.facts.length > 0 && (
-                    <dl className="mt-9 flex gap-8">
-                      {m.facts.map((f, k) => (
-                        <div key={f.label} className={k ? 'border-l border-[#2A1F1A]/20 pl-8' : ''}>
-                          <dt className="font-['Space_Grotesk'] text-3xl font-extrabold leading-none text-[#2A1F1A]">{f.value}</dt>
-                          <dd className="mt-2 font-['JetBrains_Mono'] text-[10.5px] uppercase tracking-[0.16em] text-[#6B5446]">{f.label}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  )}
+            {/* tall pill-shaped photo; swipe sideways to change */}
+            <motion.div
+              key={`p${i}`}
+              {...fade}
+              drag={reduce || count < 2 ? false : 'x'}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -60) go(i + 1);
+                else if (info.offset.x > 60) go(i - 1);
+              }}
+              className="order-1 mx-auto w-full max-w-[300px] sm:max-w-[360px] lg:order-2 lg:max-w-[420px]"
+            >
+              <div className="aspect-[5/7] w-full overflow-hidden rounded-full bg-[#2F231C]">
+                <Photo m={m} n={sorted.indexOf(m)} />
+              </div>
+            </motion.div>
+          </div>
 
-                  <a
-                    href={waLink(`Hello Space Maker, I would like to talk to ${m.name || 'your team'}${m.role ? ` (${m.role})` : ''}.`)}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => trackLead({ channel: 'whatsapp', kind: 'team-leader' })}
-                    className="group relative isolate mt-10 inline-flex items-center gap-2.5 self-start overflow-hidden rounded-full border-[1.5px] border-[#2A1F1A] px-5 py-2.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#2A1F1A] transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#2A1F1A] before:transition-transform before:duration-300 hover:text-[#F5F0E6] hover:before:translate-y-0"
-                  >
-                    <span className="h-2 w-2 rounded-full bg-[#C6F00C] ring-1 ring-[#2A1F1A]/30" />
-                    Talk to our team
-                    <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                  </a>
-                </li>
-              );
-            })}
-          </ol>
+          {/* dots: down the right edge on large screens, under the arrows on phones */}
+          {count > 1 && (
+            <div className="mt-8 flex items-center justify-center gap-1 lg:absolute lg:right-0 lg:top-1/2 lg:mt-0 lg:-translate-y-1/2 lg:flex-col" role="group" aria-label="Choose an expert">
+              {row.map((r, k) => (
+                <button key={r.id || k} type="button" onClick={() => go(k)} aria-label={`Show expert ${pad(k)}`} aria-current={i === k} className="flex h-6 w-6 items-center justify-center">
+                  <span
+                    className="block h-2 w-2 rounded-full border transition-colors duration-300"
+                    style={{ borderColor: ESPRESSO, background: i === k ? ESPRESSO : 'transparent' }}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        <Reveal className="mt-10 flex justify-start lg:mt-12">
+        <Reveal className="mt-20 flex justify-center sm:mt-24">
           <Link
             to="/team"
-            className="group relative isolate inline-flex items-center gap-3 overflow-hidden rounded-full border-[1.5px] border-[#2A1F1A] bg-transparent px-6 py-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#2A1F1A] transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#2A1F1A] before:transition-transform before:duration-300 hover:text-[#F5F0E6] hover:before:translate-y-0"
+            className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] underline decoration-2 underline-offset-[8px] transition-colors hover:decoration-[#5C6E0A]"
+            style={{ color: ESPRESSO, textDecorationColor: LIME }}
           >
-            {S.linkLabel || 'Meet all our experts'}
-            <span className="rounded-full border border-current px-2 py-0.5 text-[10px]">{sorted.length}</span>
-            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            {S.linkLabel || 'Meet all our experts'} ({sorted.length}) →
           </Link>
         </Reveal>
       </div>
