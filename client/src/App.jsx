@@ -1,5 +1,5 @@
 // client/src/App.jsx
-// Routes: /  (home), /projects, /projects/:slug, /interiors, /interiors/:slug, /careers, /careers/openings
+// Routes: /  (home), /projects, /projects/:slug, /interiors, /interiors/:slug, /careers, /careers/openings, /landowners
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 
@@ -18,8 +18,10 @@ import Testimonials from './components/home/Testimonials';
 import TeamExperts from './components/home/TeamExperts';
 import TeamPage from './components/home/TeamPage';
 import LandownerSection from './components/home/LandownerSection';
-import Careers from './components/home/Careers';
+import Careers, { Flex } from './components/home/Careers';
+import { ApplyProvider } from './components/home/ApplyForm';
 import CareersOpenings from './components/home/CareersOpenings';
+import Landowners from './components/home/Landowners';
 import PortfolioSection from './components/portfolio/PortfolioSection';
 import ProjectPage from './components/portfolio/ProjectPage';
 import AllProjects from './components/portfolio/AllProjects';
@@ -53,6 +55,11 @@ function Home() {
       </div>
       <div data-sec="Partner with us" data-key="land" data-theme="light">
         <LandownerSection />
+      </div>
+      <div>
+        <ApplyProvider>
+          <Flex />
+        </ApplyProvider>
       </div>
     </main>
   );
@@ -89,6 +96,7 @@ function Shell() {
         <Route path="/team" element={<TeamPage />} />
         <Route path="/careers" element={<main><Careers /></main>} />
         <Route path="/careers/openings" element={<main><CareersOpenings /></main>} />
+        <Route path="/landowners" element={<main><Landowners /></main>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <SiteFooter />
