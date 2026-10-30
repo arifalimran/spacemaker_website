@@ -19,6 +19,10 @@ export const CAREERS_HERO = {
 export const OFFER_INTRO =
   'We look after the people who build our homes. Salary arrives on the date, you learn beside senior engineers and architects, and every site is safe, fair and respectful.';
 
+// Short intro under the "Find your team." heading (Open positions). SAMPLE wording: replace from the CMS later.
+export const OPEN_INTRO =
+  'Every team at Space Maker builds something you can see from the street. Choose the one that sounds like you and see what is open. If nothing fits yet, send us your CV and we will keep it on file.';
+
 // the three "What we offer" perks, each with a photo (the old "What we provide" perks)
 export const CHAPTERS = [
   {
@@ -54,10 +58,90 @@ export const CAREER_STATS = [
   { value: 100, suffix: '', label: 'Apartments delivered' },
 ];
 
+// SAMPLE job details (summary, salary range, duties, needs). The salary figures are placeholders: set the real ranges: replace from the CMS later. Every field is plain text.
 export const JOBS = [
-  { slug: 'senior-structural-project-engineer', team: 'Structure', title: 'Senior Structural Project Engineer', loc: 'Jolshiri Abashon (Sectors 13 & 16)', exp: '4–7 Years', type: 'Full-Time' },
-  { slug: 'site-supervisor-civil-foreman', team: 'Site', title: 'Site Supervisor / Civil Foreman', loc: 'Dhaka & Jolshiri Projects', exp: '3+ Years', type: 'Full-Time' },
-  { slug: 'junior-architectural-visualizer', team: 'Studio', title: 'Junior Architectural Visualizer', loc: 'Corporate Studio (Mohakhali DOHS)', exp: '1–3 Years', type: 'Full-Time' },
+  {
+    slug: 'senior-structural-project-engineer',
+    team: 'Structure',
+    title: 'Senior Structural Project Engineer',
+    loc: 'Jolshiri Abashon (Sectors 13 & 16)',
+    exp: '4–7 Years',
+    type: 'Full-Time',
+    salary: 'BDT 90,000 – 1,40,000 per month',
+    summary: 'Lead structural delivery on our Jolshiri Abashon sites, from soil data to the final pour, with senior engineers beside you.',
+    responsibilities: [
+      'Check structural drawings and loads before work starts on site',
+      'Supervise piling, rebar, formwork and concrete pours',
+      'Run quality tests and keep clear records for every pour',
+      'Coordinate daily with architects, services teams and site supervisors',
+      'Track progress against the milestone schedule and raise delays early',
+      'Guide and train junior engineers on site',
+    ],
+    needs: [
+      'BSc in Civil Engineering (BUET or equivalent)',
+      '4 to 7 years of experience on building structures',
+      'Working knowledge of the Bangladesh National Building Code',
+      'Happy to be on site every day at Jolshiri',
+    ],
+    bonus: ['Experience with high-rise piling', 'Confident writing short, clear site reports'],
+  },
+  {
+    slug: 'site-supervisor-civil-foreman',
+    team: 'Site',
+    title: 'Site Supervisor / Civil Foreman',
+    loc: 'Dhaka & Jolshiri Projects',
+    exp: '3+ Years',
+    type: 'Full-Time',
+    salary: 'BDT 40,000 – 65,000 per month',
+    summary: 'Run the daily work on site: people, materials and quality, so every floor is built right and on time.',
+    responsibilities: [
+      'Plan each day’s work and brief the crew every morning',
+      'Make sure drawings and specifications are followed exactly',
+      'Check materials on arrival and keep the store in order',
+      'Keep every worker using safety gear (PPE)',
+      'Report progress and problems to the project engineer each day',
+      'Keep the site clean, safe and respectful for everyone',
+    ],
+    needs: [
+      '3 or more years supervising civil work on building sites',
+      'Can read structural and architectural drawings',
+      'Able to lead a crew calmly and fairly',
+      'Based in or willing to work around Dhaka and Jolshiri',
+    ],
+    bonus: ['Diploma in Civil Engineering', 'Experience with multi-storey residential buildings'],
+  },
+  {
+    slug: 'junior-architectural-visualizer',
+    team: 'Studio',
+    title: 'Junior Architectural Visualizer',
+    loc: 'Corporate Studio (Mohakhali DOHS)',
+    exp: '1–3 Years',
+    type: 'Full-Time',
+    salary: 'BDT 30,000 – 50,000 per month',
+    summary: 'Turn our architects’ designs into beautiful 3D images and short walkthroughs that help families picture their future home.',
+    responsibilities: [
+      'Build 3D models from architects’ drawings',
+      'Create exterior and interior renders for projects and brochures',
+      'Prepare simple walkthrough videos and social images',
+      'Match materials, light and mood to the design intent',
+      'Work with the architects and sales team on tight, friendly deadlines',
+    ],
+    needs: [
+      '1 to 3 years of architectural visualisation experience',
+      'Skilled in tools like SketchUp, 3ds Max, Lumion or similar, plus Photoshop',
+      'A good eye for light, colour and composition',
+      'A portfolio of past work to share',
+    ],
+    bonus: ['Short video or animation skills', 'Interest in interior design'],
+  },
+];
+
+// Department tiles on the Careers page (Open positions). "team" must match the team name on each job.
+// Photos are project pictures used as stand-ins: replace with real team photos later. If one fails to load the tile stays matte espresso.
+export const DEPARTMENTS = [
+  { team: 'Structure', image: '/assets/03_developments/ongoing/form-and-space/progress/piling.jpg' },
+  { team: 'Site', image: '/assets/03_developments/ongoing/sector-13-road-503/hero/render.webp' },
+  { team: 'Studio', image: '/assets/03_developments/flagships/moon-residence/delivered-facade/delivered.jpg' },
 ];
 
 // Freelance / part-time card (shown after Open positions). SAMPLE wording: replace with the real terms.

@@ -1,17 +1,14 @@
 // client/src/components/home/Careers.jsx
-// Careers page (/careers): header photo panel, what we offer, open positions, how hiring works, FAQ, closing card.
+// Careers page (/careers): big line with link to all openings, what we offer, open positions, how hiring works, FAQ, closing card.
 // Content lives in data/careers.js (replace from the CMS later).
 import React, { useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { CAREERS_HERO as H, OFFER_INTRO, CHAPTERS as PERKS, JOBS, FLEX, STEPS, FAQS, HR, APPLY } from '../../data/careers';
+import { CAREERS_HERO as H, OFFER_INTRO, OPEN_INTRO, CHAPTERS as PERKS, JOBS, DEPARTMENTS, FLEX, STEPS, FAQS, HR, APPLY } from '../../data/careers';
 import { Eyebrow, Reveal } from '../portfolio/shared';
 import { ApplyProvider, useApply } from './ApplyForm';
 
 const ESPRESSO = '#2A1F1A';
 const h2 = "mt-4 font-['Space_Grotesk'] text-2xl font-extrabold leading-[1.1] tracking-tight text-[#2A1F1A] sm:text-3xl lg:text-4xl";
-
-const ROLE_BG = ['#E4EDD6', '#D9CBB4', '#F2F5E9'];
 
 const mailto = (subject) => `mailto:${HR.email}?subject=${encodeURIComponent(subject)}`;
 
@@ -26,54 +23,11 @@ function Arrow() {
 const pillSand =
   "group relative isolate inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-full border-[1.5px] border-[#D9CBB4] px-6 py-3 font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.18em] text-[#D9CBB4] transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#D9CBB4] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0";
 
-function Header() {
-  const reduce = useReducedMotion();
-  const [failed, setFailed] = useState(false);
-  const showImg = H.image && !failed;
-  return (
-    <section className="px-3 pt-24 sm:px-6 sm:pt-28">
-      <div className="relative mx-auto flex min-h-[600px] max-w-7xl flex-col justify-end overflow-hidden rounded-[24px] bg-[#3A2D26] sm:min-h-[680px] sm:rounded-[32px] lg:min-h-[max(740px,80svh)]">
-        {showImg && (
-          <motion.img
-            src={H.image}
-            alt=""
-            aria-hidden
-            fetchPriority="high"
-            decoding="async"
-            onError={() => setFailed(true)}
-            className="absolute inset-0 h-full w-full object-cover"
-            initial={reduce ? false : { scale: 1.07 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 1.8, ease: 'easeOut' }}
-          />
-        )}
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(to top, rgba(42,31,26,.92) 0%, rgba(42,31,26,.55) 45%, rgba(42,31,26,.15) 100%)' }}
-        />
-        <div className="relative z-10 p-6 sm:p-10 lg:p-14">
-          <Reveal className="max-w-4xl">
-            <span className="inline-flex items-center gap-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.22em] text-[#D9CBB4]">
-              <span className="h-[2px] w-8 bg-[#D3E35A]" />
-              {H.eyebrow}
-            </span>
-            <h1 className="mt-5 font-['Space_Grotesk'] text-[2.5rem] font-extrabold leading-[1.02] tracking-tight text-[#D9CBB4] sm:text-6xl lg:text-7xl">
-              Build homes. <span className="text-[#D3E35A]">Shape your career.</span>
-            </h1>
-            <p className="mt-5 max-w-xl font-serif text-lg italic text-[#BBA992] sm:text-xl">{H.mission}</p>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ---------- discover (big line + link to all openings) ---------- */
 function Discover() {
   const [before, after] = H.joinTitle.split(H.joinHighlight);
   return (
-    <section className="px-5 py-24 sm:px-8 sm:py-32 lg:py-40">
+    <section className="px-5 pb-24 pt-40 sm:px-8 sm:pb-32 sm:pt-48 lg:pb-40">
       <Reveal className="mx-auto max-w-5xl text-center">
         <h2 className="font-['Space_Grotesk'] text-5xl font-extrabold leading-[1.04] tracking-tight text-[#2A1F1A] sm:text-7xl lg:text-8xl">
           {before}
@@ -157,71 +111,97 @@ function Offer() {
   );
 }
 
-/* ---------- open positions ---------- */
+/* ---------- open positions (department tiles) ---------- */
+// One tile per department, inside the same dark case as "What we offer". A tile opens the all-openings page filtered to that team.
+function DeptTile({ dept, count, index }) {
+  const [failed, setFailed] = useState(false);
+  const empty = count === 0;
+  return (
+    <Reveal delay={(index % 3) * 0.06}>
+      <Link
+        to={`/careers/openings?team=${encodeURIComponent(dept.team)}`}
+        className="group relative block h-[200px] overflow-hidden rounded-[14px] bg-[#3A2D26] sm:h-[260px] sm:rounded-[18px] lg:h-[300px]"
+      >
+        {dept.image && !failed && (
+          <img
+            src={dept.image}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            decoding="async"
+            onError={() => setFailed(true)}
+            className={`absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100 ${empty ? 'opacity-70' : ''}`}
+          />
+        )}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(180deg, rgba(42,31,26,.72) 0%, rgba(42,31,26,.12) 48%, rgba(42,31,26,.72) 100%)' }}
+        />
+        <div className="absolute left-5 right-5 top-5 sm:left-6 sm:top-6">
+          <span aria-hidden className="block h-[2px] w-10 bg-[#D3E35A]" />
+          <h3 className="mt-3 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.05] tracking-tight text-[#D9CBB4] sm:text-4xl">{dept.team}</h3>
+        </div>
+        <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-4 sm:bottom-6 sm:left-6 sm:right-6">
+          <span className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#D9CBB4]">
+            {empty ? 'No openings right now' : `${count} open ${count === 1 ? 'role' : 'roles'}`}
+          </span>
+          <span
+            aria-hidden
+            className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-[#D9CBB4] text-lg text-[#2A1F1A] transition-[background-color,transform] duration-300 group-hover:translate-x-1 group-hover:bg-[#C6DB3F] motion-reduce:group-hover:translate-x-0"
+          >
+            →
+          </span>
+        </div>
+      </Link>
+    </Reveal>
+  );
+}
+
 function Roles() {
   const { open } = useApply();
+  const known = DEPARTMENTS.map((d) => d.team);
+  const extra = Array.from(new Set(JOBS.map((j) => j.team).filter((t) => t && !known.includes(t)))).map((team) => ({ team }));
+  const depts = [...DEPARTMENTS, ...extra];
+  const countOf = (team) => JOBS.filter((j) => j.team === team).length;
   return (
-    <section id="roles" className="py-16 sm:py-20">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <Reveal className="flex flex-wrap items-end justify-between gap-4">
+    <section id="roles" className="px-3 py-16 sm:px-6 sm:py-20">
+      <div className="mx-auto max-w-7xl">
+        <Reveal className="flex flex-wrap items-end justify-between gap-4 px-2 sm:px-0">
           <div>
             <Eyebrow>Open positions</Eyebrow>
-            <h2 className={h2}>Join us on site and in the studio.</h2>
+            <h2 className={h2}>Find your team.</h2>
           </div>
           <span className="rounded-full border border-[#2A1F1A]/30 px-3.5 py-1.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#2A1F1A]">
             {JOBS.length} open
           </span>
         </Reveal>
 
-        <Reveal>
-          <ul className="-mx-5 mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-8 sm:gap-4 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0">
-            {JOBS.map((j, i) => (
-              <li
-                key={j.title}
-                className="flex min-h-[380px] w-[82%] flex-none snap-start flex-col justify-between gap-10 rounded-[24px] p-6 sm:min-h-[420px] sm:w-[55%] sm:rounded-[32px] sm:p-8 lg:w-auto"
-                style={{ background: ROLE_BG[i % ROLE_BG.length], border: '1px solid rgba(42,31,26,.10)' }}
-              >
-                <div>
-                  {j.team && (
-                    <span className="inline-flex items-center gap-2.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#2A1F1A]">
-                      <span className="h-2 w-2 rounded-full bg-[#C6DB3F] ring-1 ring-[#2A1F1A]/30" />
-                      {j.team}
-                    </span>
-                  )}
-                  <h3 className="mt-5 font-['Space_Grotesk'] text-2xl font-extrabold leading-[1.1] tracking-tight text-[#2A1F1A] sm:text-3xl">{j.title}</h3>
-                  <div className="mt-5 space-y-1.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#5C4A3E]">
-                    <p>{j.loc}</p>
-                    <p>
-                      {j.exp} · {j.type}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-                  <button type="button" onClick={() => open(j.title)} className={pill}>
-                    Apply now <Arrow />
-                  </button>
-                  <a
-                    href={mailto(`Application: ${j.title}`)}
-                    className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#2A1F1A] underline decoration-[#2A1F1A]/30 underline-offset-[6px] transition-colors hover:decoration-[#5C6E0A]"
-                  >
-                    Email
-                  </a>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <Reveal className="px-2 sm:px-0">
+          <p className="mt-5 max-w-2xl text-base leading-[1.75] text-[#4B3F37] sm:text-lg">{OPEN_INTRO}</p>
         </Reveal>
 
-        <p className="mt-8 font-serif text-lg italic text-[#4B3F37]">
-          Don't see your role?{' '}
-          <button
-            type="button"
-            onClick={() => open(APPLY.general)}
-            className="not-italic font-semibold text-[#2A1F1A] underline decoration-[#C6DB3F] decoration-2 underline-offset-[6px]"
-          >
-            Send your CV anyway →
-          </button>
-        </p>
+        <div className="mt-10 grid gap-2 rounded-[24px] bg-[#2A1F1A] p-2 sm:grid-cols-2 sm:gap-3 sm:rounded-[30px] sm:p-3 lg:grid-cols-3">
+          {depts.map((d, i) => (
+            <DeptTile key={d.team} dept={d} count={countOf(d.team)} index={i} />
+          ))}
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-x-8 gap-y-5 px-2 sm:px-0">
+          <p className="font-serif text-lg italic text-[#4B3F37]">
+            Don't see your role?{' '}
+            <button
+              type="button"
+              onClick={() => open(APPLY.general)}
+              className="not-italic font-semibold text-[#2A1F1A] underline decoration-[#C6DB3F] decoration-2 underline-offset-[6px]"
+            >
+              Send your CV anyway →
+            </button>
+          </p>
+          <Link to="/careers/openings" className={pill}>
+            View all openings ({JOBS.length}) <Arrow />
+          </Link>
+        </div>
       </div>
     </section>
   );
@@ -409,7 +389,6 @@ function Closing() {
 export default function Careers() {
   return (
     <ApplyProvider>
-      <Header />
       <Discover />
       <Offer />
       <Roles />
