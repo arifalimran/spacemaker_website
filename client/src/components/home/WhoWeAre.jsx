@@ -76,28 +76,46 @@ const CREAM_FILL = '#F3EFE6';
 const LINE_BG = 'linear-gradient(90deg, #2A1F1A, #5C6E0A 55%, #C6F00C)';
 const CREAM = '#F3EFE6';
 
-/* Frame 1: the statement, centred, with a lot of empty space around it */
+/* The photo behind the opening statement. 1600px wide, so it is shown only a little larger than the screen.
+   Replace src with a wide, sharp render (2400px or more) with calm space on the left for the words. */
+const INTRO_PHOTO = { src: '/assets/01_hero/hero-rayerbazar-1600.webp' };
+
+/* Frame 1: full-screen photo, the statement over it (left side), with a soft espresso fade behind the words only */
 function Intro() {
   return (
-    <div className="mx-auto max-w-4xl px-5 pb-28 pt-40 text-center sm:px-8 sm:pb-36 sm:pt-52 lg:pb-44">
-      <Reveal>
-        <span className="inline-flex items-center gap-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.22em] text-[#5C6E0A]">
-          <span aria-hidden className="h-[2px] w-9" style={{ background: LIME }} />
-          {COPY.eyebrow}
-          <span aria-hidden className="h-[2px] w-9" style={{ background: LIME }} />
-        </span>
-        <h2 className="f-display mt-8 text-4xl font-bold leading-[1.08] text-[#2A1F1A] sm:text-5xl lg:text-[clamp(3rem,4.8vw,4.8rem)]">{COPY.heading}</h2>
-        <p className="mx-auto mt-10 max-w-xl text-base leading-[1.8] text-[#4B3F37] sm:text-[17px]">{COPY.body}</p>
-        <div className="mt-14 flex flex-col items-center gap-4">
-          <div className="flex items-baseline gap-3">
-            <span className="f-display text-7xl font-bold leading-none text-[#2A1F1A] sm:text-8xl">12</span>
-            <span className="text-left font-['JetBrains_Mono'] text-xs uppercase leading-snug tracking-[0.2em] text-[#2A1F1A]/70">
-              years in<br />real estate
+    <div className="relative flex min-h-[100svh] items-center overflow-hidden bg-[#1A120E]">
+      {/* the picture is a little wider than the screen and anchored left, so the building sits right of centre */}
+      <img
+        src={INTRO_PHOTO.src}
+        alt="Space Maker residential tower with planted balconies, a real estate project in Dhaka, Bangladesh"
+        decoding="async"
+        className="absolute left-0 top-0 h-full w-full max-w-none object-cover lg:w-[118%]"
+        style={{ objectPosition: '50% 35%' }}
+      />
+      <div aria-hidden className="absolute inset-0 lg:hidden" style={{ background: 'linear-gradient(to top, rgba(26,18,14,.88) 0%, rgba(26,18,14,.7) 55%, rgba(26,18,14,.45) 100%)' }} />
+      <div aria-hidden className="absolute inset-0 hidden lg:block" style={{ background: 'linear-gradient(to right, rgba(26,18,14,.88) 0%, rgba(26,18,14,.7) 32%, rgba(26,18,14,.25) 58%, rgba(26,18,14,0) 78%)' }} />
+
+      <div className="relative mx-auto w-full max-w-7xl px-6 pb-20 pt-40 sm:px-10 sm:pb-24 sm:pt-44 lg:px-14">
+        <Reveal>
+          <div className="max-w-xl lg:max-w-[34rem]">
+            <span className="inline-flex items-center gap-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.22em] text-[#C6DB3F]">
+              <span aria-hidden className="h-[2px] w-9" style={{ background: LIME }} />
+              {COPY.eyebrow}
             </span>
+            <h2 className="f-display mt-7 text-[clamp(2.3rem,4.4vw,4.4rem)] font-bold leading-[1.05] text-[#FAF8F5]">{COPY.heading}</h2>
+            <p className="mt-8 text-base leading-[1.8] text-[#FAF8F5]/90 sm:text-[17px]">{COPY.body}</p>
+            <div className="mt-12 flex flex-col items-start gap-4">
+              <div className="flex items-baseline gap-3">
+                <span className="f-display text-7xl font-bold leading-none text-[#FAF8F5] sm:text-8xl">12</span>
+                <span className="font-['JetBrains_Mono'] text-xs uppercase leading-snug tracking-[0.2em] text-[#FAF8F5]/75">
+                  years in<br />real estate
+                </span>
+              </div>
+              <p className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#FAF8F5]/70">{COPY.places}</p>
+            </div>
           </div>
-          <p className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#4B3F37]/80">{COPY.places}</p>
-        </div>
-      </Reveal>
+        </Reveal>
+      </div>
     </div>
   );
 }
@@ -105,7 +123,7 @@ function Intro() {
 /* a frame: a big rounded photo near the screen edge and centred text on the other side. photoLeft flips the sides. */
 function Frame({ d, photoLeft }) {
   return (
-    <div className="px-3 pb-24 sm:px-4 sm:pb-32 lg:pb-40">
+    <div className="px-3 pb-10 sm:px-4 sm:pb-12 lg:pb-14">
       <Reveal>
         <div className="grid grid-cols-1 items-center gap-0 lg:grid-cols-12">
           <div className={`h-[420px] overflow-hidden rounded-[18px] bg-[#E4D8C7] sm:h-[560px] lg:h-[clamp(560px,82vh,780px)] lg:col-span-7 ${photoLeft ? 'lg:order-1' : 'lg:order-2'}`}>
@@ -192,7 +210,6 @@ export default function WhoWeAre() {
     {/* the five-ribbon stack: a zero-height strip at the section's top edge; the drawing rises into the hero and falls into this section */}
     <div aria-hidden className="pointer-events-none relative z-20 h-0" style={{ '--stack-h': 'clamp(120px, 13vw, 190px)' }}>
       <svg viewBox="0 0 1440 200" preserveAspectRatio="none" className="absolute inset-x-0 block w-full" style={{ height: 'var(--stack-h)', top: 'calc(var(--stack-h) * -0.65)' }}>
-        <path d={fillD} fill={CREAM_FILL} />
         <motion.g style={{ x: stackX, y: stackY }}>
           <motion.path d={d0} fill={BANDS[0][2]} />
           <motion.path d={d1} fill={BANDS[1][2]} />
@@ -209,6 +226,7 @@ export default function WhoWeAre() {
       style={{ background: CREAM }}
     >
       <Intro />
+      <div className="pt-10 sm:pt-12 lg:pt-14" />
       <Frame d={COPY.design} photoLeft />
       <Frame d={COPY.build} photoLeft={false} />
       <Quote />
