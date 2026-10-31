@@ -445,7 +445,7 @@ export const WHY_US = {
       line: 'Light first, then everything else.',
       text: 'Every apartment gets natural cross-ventilation, broad balconies and direct morning sunlight. We never build dark boxes.',
       points: ['Cross-ventilation in every apartment', 'Direct morning sunlight', 'Broad balconies'],
-      image: U(EXT1, 1400),
+      image: U(EXT1, 2000),
       treatment: 'arch',
     },
     {
@@ -455,7 +455,7 @@ export const WHY_US = {
       text: 'The structure behind the walls is built from materials we test and trust, with no compromise.',
       points: ['Certified 72.5 grade rebar', 'High-strength stone chips', 'Trusted cement brands'],
       specs: [['Rebar', 'Certified 72.5 grade'], ['Stone chips', 'High-strength'], ['Cement', 'Trusted brands']],
-      image: U(INT3, 1400),
+      image: U(INT3, 2000),
       treatment: 'frame', // cheap treatment on the espresso section (no CSS filters)
     },
     {
@@ -464,7 +464,7 @@ export const WHY_US = {
       line: 'A promise we track floor by floor.',
       text: 'Milestone tracking from foundation to finishing, with a disciplined timeline that prevents unnecessary delays.',
       milestones: ['Foundation', 'Structure', 'Brickwork', 'Finishing', 'Inspection', 'Handover'],
-      image: U(EXT4, 1400),
+      image: U(EXT4, 2000),
       treatment: 'blur',
     },
   ],

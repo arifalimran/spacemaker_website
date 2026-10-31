@@ -1,6 +1,5 @@
 // client/src/components/portfolio/PortfolioSection.jsx
-// Home portfolio. Each part has its own look so a long list never feels repetitive:
-//   signature flagships (dark, carved photo) -> expanding panels -> interiors strip -> upcoming rows
+// Home portfolio, kept short: a heading, the signature projects (wide cinematic photos on espresso), one link to all projects, then the interiors strip.
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -8,7 +7,6 @@ import {
   projects,
   interiorProjects,
   interiorCover,
-  upcoming,
   STATUS_LABEL,
   TYPE_LABEL,
   coverOf,
@@ -16,179 +14,116 @@ import {
 import {
   Shot,
   Eyebrow,
-  TypeTag,
   Reveal,
-  Facts,
-  HStrip,
   LeadLink,
-  ActionRow,
-  DarkBand,
-  Flutter,
-  linkCls,
+  CallLink,
 } from './shared';
 
-/* ---------------- Signature (flagships) ---------------- */
-function Signature({ project, index }) {
-  const flip = index % 2 === 1;
-  const cover = coverOf(project);
-  // a second, different exterior view (never a floor plan) for the small inset
-  const second = project.photos.find((p) => p.chapter === 'exterior' && p.src !== cover);
+/* ---------------- Signature (flagships): full-screen photo, text on the quiet side ----------------
+   Each project fills the screen. The text sits over the calm part of the photo (side = 'left' or 'right'), with a soft
+   espresso fade on that side only. PHOTOS: the pictures this needs are wide and sharp (2400px or more, landscape).
+   Put the path of each project's wide photo in `wide` below. Until then the page shows the current (small, upright) photo
+   on one half of the screen, next to the text on espresso, so nothing looks blurry. */
+const SIGNATURE_LOOK = {
+  'form-and-space': { wide: null, side: 'right', pos: '50% 55%' }, // e.g. '/assets/03_developments/ongoing/form-and-space/hero/wide.webp'
+  'moon-residence': { wide: null, side: 'left', pos: '50% 50%' }, // e.g. '/assets/03_developments/flagships/moon-residence/hero/wide.webp'
+};
 
+/* The photo behind "View our other projects". PLACEHOLDER: a free stock photo of a terraced garden house (1600px wide).
+   Replace src with your own terrace or rooftop render, 2400px wide or more, landscape. The three lines are sample wording. */
+const MORE_PHOTO = {
+  src: '/assets/01_hero/hero-1.jpg',
+  pos: '50% 60%',
+  lines: ['Every home has a place to step outside.', 'Terraces, balconies and gardens, planned from the first sketch.', 'See where else we are building.'],
+};
+
+const MONO = "font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em]";
+const QUIET_LINK = `${MONO} text-[#EFE6D8] underline decoration-[#C6DB3F] decoration-2 underline-offset-[8px] transition-colors hover:decoration-[#EFE6D8]`;
+
+function SignatureText({ project, meta }) {
   return (
-    <article className="group relative mx-auto grid max-w-7xl items-center gap-10 px-5 py-12 sm:px-8 md:grid-cols-12 md:gap-8">
+    <Reveal>
+      {meta && <p className={`${MONO} text-[#C6DB3F]`}>{meta}</p>}
+      <h3 className="f-display mt-6 text-[clamp(2.6rem,5.4vw,5.2rem)] font-bold leading-[1.02] text-[#FAF8F5]">{project.title}</h3>
+      {project.line && <p className="mt-7 max-w-md text-lg leading-[1.7] text-[#FAF8F5]/90 sm:text-xl">{project.line}</p>}
+      <Link
+        to={`/projects/${project.slug}`}
+        className="mt-10 inline-flex items-center gap-3 border border-[#FAF8F5]/70 px-6 py-3.5 font-['JetBrains_Mono'] text-[12px] uppercase tracking-[0.16em] text-[#FAF8F5] transition-colors duration-300 hover:bg-[#FAF8F5] hover:text-[#2A1F1A]"
+      >
+        Explore project
+        <span aria-hidden>→</span>
+      </Link>
+      <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+        <LeadLink project={project} kind="project" className={`${QUIET_LINK} inline-flex items-center gap-2`}>
+          <span className="h-1.5 w-1.5 rounded-full bg-[#C6DB3F]" />
+          Ask about this
+        </LeadLink>
+        <span aria-hidden className="text-[#FAF8F5]/35">·</span>
+        <CallLink project={project} className={QUIET_LINK}>
+          Call
+        </CallLink>
+      </div>
+    </Reveal>
+  );
+}
+
+function Signature({ project, index }) {
+  const look = { wide: null, side: index % 2 ? 'left' : 'right', pos: '50% 50%', ...(SIGNATURE_LOOK[project.slug] || {}) };
+  const meta = [STATUS_LABEL[project.status], project.area].filter(Boolean).join(' · ');
+  const textRight = look.side === 'right';
+
+  // full screen, wide photo
+  if (look.wide) {
+    return (
+      <article className="relative h-[100svh] min-h-[640px] overflow-hidden bg-[#1A120E]">
+        <img
+          src={look.wide}
+          alt={`${project.title}, ${project.area}`}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: look.pos }}
+        />
+        {/* soft fade, only where the words sit */}
+        <div aria-hidden className="absolute inset-0 lg:hidden" style={{ background: 'linear-gradient(to top, rgba(26,18,14,.85) 0%, rgba(26,18,14,.55) 40%, rgba(26,18,14,0) 75%)' }} />
+        <div
+          aria-hidden
+          className="absolute inset-0 hidden lg:block"
+          style={{ background: `linear-gradient(to ${textRight ? 'left' : 'right'}, rgba(26,18,14,.78) 0%, rgba(26,18,14,.45) 35%, rgba(26,18,14,0) 70%)` }}
+        />
+        <Link to={`/projects/${project.slug}`} aria-label={`Open ${project.title}`} className="absolute inset-0" tabIndex={-1} />
+        <div className="pointer-events-none absolute inset-0 flex items-end pb-16 lg:items-center lg:pb-0">
+          <div className={`pointer-events-none mx-auto w-full max-w-7xl px-6 sm:px-10 lg:px-14 ${textRight ? 'lg:flex lg:justify-end' : ''}`}>
+            <div className="pointer-events-auto max-w-xl">
+              <SignatureText project={project} meta={meta} />
+            </div>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
+  // until a wide photo is set: the current photo fills one half of the screen, edge to edge, text on espresso beside it
+  const cover = coverOf(project);
+  return (
+    <article className="grid min-h-[100svh] grid-cols-1 bg-[#2A1F1A] lg:grid-cols-2">
       <Link
         to={`/projects/${project.slug}`}
         aria-label={`Open ${project.title}`}
-        className={`relative md:col-span-7 ${flip ? 'md:order-2' : ''}`}
+        className={`relative block h-[70svh] min-h-[420px] overflow-hidden bg-[#3A2D26] lg:h-auto ${textRight ? 'lg:order-1' : 'lg:order-2'}`}
       >
-        <div className="relative aspect-[4/3] sm:aspect-[16/11]">
-          <Shot treatment="clean" src={cover} alt={`${project.title}, ${project.area}`} />
-          <span className="absolute left-4 top-4 rounded-full bg-[#1A120E]/70 px-3 py-1 font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-[#C6F00C]">
-            {STATUS_LABEL[project.status]}
-          </span>
-          {second && (
-            <div
-              className={`absolute -bottom-6 hidden w-[38%] aspect-[4/3] lg:block ${
-                flip ? '-left-6' : '-right-6'
-              } rounded-[18px] border-[5px] border-[#1A120E] transition duration-500 group-hover:-translate-y-1`}
-            >
-              <Shot treatment="clean" src={second.src} alt="" rounded="rounded-[13px]" />
-            </div>
-          )}
-        </div>
+        <img src={cover} alt={`${project.title}, ${project.area}`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: look.pos }} />
       </Link>
-
-      <Reveal className={`md:col-span-5 ${flip ? 'md:order-1' : ''}`}>
-        <div className="font-serif text-8xl italic leading-none text-[#C6F00C]/25">0{index + 1}</div>
-        <TypeTag type={project.type} dark />
-        <h3 className="relative mt-3 font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.04] tracking-tight text-[#D9CBB4] lg:text-5xl">
-          {project.title}
-          <Flutter
-            hue="#C6F00C"
-            size={26}
-            className="absolute -top-6 right-0 opacity-0 transition duration-500 group-hover:-translate-y-1 group-hover:opacity-100"
-          />
-        </h3>
-        <p className="mt-5 font-serif text-xl italic leading-snug text-[#C6DB3F]/90 sm:text-2xl">{project.line}</p>
-        <Facts
-          dark
-          className="mt-7"
-          items={[
-            { k: 'Location', v: project.area },
-            { k: 'Floors', v: project.floors },
-            { k: 'Started', v: project.started },
-          ]}
-        />
-        <ActionRow project={project} dark className="mt-8" />
-      </Reveal>
+      <div className={`flex items-center px-6 py-16 sm:px-10 lg:px-16 ${textRight ? 'lg:order-2' : 'lg:order-1'}`}>
+        <div className="max-w-xl">
+          <SignatureText project={project} meta={meta} />
+        </div>
+      </div>
     </article>
   );
 }
 
-/* ---------------- Expanding panels (other projects) ---------------- */
 const PANEL_CLIP = 'polygon(0 0, calc(100% - 36px) 0, 100% 36px, 100% 100%, 0 100%)';
-
-function Panels({ items, extra }) {
-  const [active, setActive] = useState(0);
-
-  return (
-    <div className="mx-auto max-w-7xl px-5 sm:px-8">
-      <div className="flex flex-col gap-4 md:h-[68vh] md:min-h-[480px] md:flex-row md:gap-3">
-        {items.map((p, i) => {
-          const open = i === active;
-          return (
-            <div
-              key={p.id}
-              onMouseEnter={() => setActive(i)}
-              onFocus={() => setActive(i)}
-              className="sm-acc group relative h-80 overflow-hidden md:h-auto"
-              style={{ '--f': open ? '3.4 1 0%' : '1 1 0%', clipPath: PANEL_CLIP }}
-            >
-              <div className="absolute inset-0">
-                <Shot treatment="duotone" src={coverOf(p)} alt={p.title} className={open ? 'is-on' : ''} />
-              </div>
-              <div
-                aria-hidden
-                className="absolute inset-0"
-                style={{ background: 'linear-gradient(to top, rgba(26,18,14,0.96) 0%, rgba(26,18,14,0.9) 28%, rgba(26,18,14,0.62) 48%, rgba(26,18,14,0.18) 68%, rgba(26,18,14,0.04) 100%)' }}
-              />
-              <Link
-                to={`/projects/${p.slug}`}
-                aria-label={`Open ${p.title}`}
-                onClick={(e) => {
-                  if (!open) {
-                    e.preventDefault();
-                    setActive(i);
-                  }
-                }}
-                className="absolute inset-0 z-[1]"
-              />
-
-              {/* collapsed: vertical title */}
-              <div
-                className={`pointer-events-none absolute bottom-6 left-5 z-10 hidden transition duration-500 md:block ${
-                  open ? 'opacity-0' : 'opacity-100'
-                }`}
-              >
-                <div
-                  className="font-['Space_Grotesk'] text-xl font-bold text-[#EADFCB]"
-                  style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', textShadow: '0 1px 12px rgba(26,18,14,.8)' }}
-                >
-                  {p.title}
-                </div>
-              </div>
-
-              {/* expanded: details */}
-              <div
-                style={{ textShadow: '0 1px 14px rgba(26,18,14,.75), 0 0 2px rgba(26,18,14,.5)' }}
-                className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 p-6 transition duration-500 md:p-8 ${
-                  open ? 'md:translate-y-0 md:opacity-100' : 'md:translate-y-3 md:opacity-0'
-                }`}
-              >
-                <TypeTag type={p.type} status={p.status} dark />
-                <h3 className="mt-3 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.05] tracking-tight text-[#EADFCB] sm:text-4xl">
-                  {p.title}
-                </h3>
-                <p className="mt-3 max-w-md font-serif text-xl italic leading-snug text-[#D3E35A]">{p.line}</p>
-                <div className="mt-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#D9CBB4]">
-                  {p.area} · {p.floors}
-                </div>
-                <div className="pointer-events-auto mt-5">
-                  <ActionRow project={p} dark />
-                </div>
-              </div>
-            </div>
-          );
-        })}
-
-        {/* the last panel opens the full list */}
-        <Link
-          to="/projects"
-          className="sm-acc group relative flex h-48 items-end overflow-hidden bg-[#2A1F1A] p-6 md:h-auto"
-          style={{ '--f': '1.1 1 0%', clipPath: PANEL_CLIP }}
-        >
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-[0.08]"
-            style={{ backgroundImage: 'radial-gradient(#C6F00C 1px, transparent 1px)', backgroundSize: '22px 22px' }}
-          />
-          <div className="relative">
-            <div className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.2em] text-[#C6F00C]">
-              Visit our other projects
-            </div>
-            <div className="mt-3 font-serif text-5xl italic leading-none text-[#D9CBB4]">
-              {extra > 0 ? `+${extra}` : 'All'}
-            </div>
-            <div className="mt-2 font-['Space_Grotesk'] text-lg font-bold text-[#BBA992]">
-              {extra > 0 ? 'more projects' : 'projects'}
-            </div>
-            <div className="mt-4 text-[#C6F00C] transition duration-300 group-hover:translate-x-2">→</div>
-          </div>
-        </Link>
-      </div>
-    </div>
-  );
-}
 
 /* ---------------- Interiors slider ---------------- */
 // The strip starts exactly on the page's left edge (same as the heading), bleeds off to the right,
@@ -322,114 +257,63 @@ function Interiors() {
   );
 }
 
-/* ---------------- Upcoming: compact cards ---------------- */
-const pill =
-  "relative isolate inline-flex items-center gap-2 overflow-hidden rounded-full border-[1.5px] border-[#2A1F1A] px-4 py-2 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.14em] text-[#2A1F1A] transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#2A1F1A] before:transition-transform before:duration-300 hover:text-[#BBA992] hover:before:translate-y-0";
-
-function UpcomingCard({ u }) {
-  const facts = [u.land, u.facing, u.floors && `${u.floors} floors`].filter(Boolean).join(' · ');
-  return (
-    <article className="flex h-full flex-col rounded-[14px] border-[1.5px] border-[#2A1F1A] bg-white/55 p-5">
-      <div className="flex items-center gap-2 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.18em] text-[#6B5446]">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#C6F00C] ring-1 ring-[#2A1F1A]/40" />
-        {TYPE_LABEL[u.type] || 'Project'} · {u.opening}
-      </div>
-      <div className="mt-2 font-['Space_Grotesk'] text-2xl font-bold tracking-tight text-[#2A1F1A]">{u.area}</div>
-      {u.line && <div className="mt-1 font-serif text-base italic text-[#6B5446]">{u.line}</div>}
-      {u.status && <div className="mt-3 text-xs uppercase tracking-[0.14em] text-[#2A1F1A]/70">{u.status}</div>}
-      {facts && <div className="mt-2 text-sm text-[#2A1F1A]/70">{facts}</div>}
-      {u.units && u.units.length > 0 && (
-        <div className="mt-2 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.12em] text-[#2A1F1A]">{u.units.join(' · ')}</div>
-      )}
-      <div className="mt-auto pt-5">
-        <LeadLink project={u} kind="upcoming" className={pill}>
-          Register interest →
-        </LeadLink>
-      </div>
-    </article>
-  );
-}
-
-function Upcoming() {
-  return (
-    <div className="mx-auto max-w-7xl px-5 sm:px-8">
-      <ul className="grid gap-4 md:grid-cols-3 md:gap-5">
-        {upcoming.map((u, i) => (
-          <li key={u.id}>
-            <Reveal delay={i * 0.08} className="h-full">
-              <UpcomingCard u={u} />
-            </Reveal>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 /* ---------------- the section ---------------- */
 export default function PortfolioSection() {
   const flagships = projects.filter((p) => p.flagship);
-  const others = projects.filter((p) => !p.flagship);
-  const shown = others.slice(0, 4);
-  const extra = projects.length - flagships.length - shown.length;
 
   return (
-    <section
-      id="projects"
-      className="relative"
-      style={{ background: 'linear-gradient(to bottom, #F6F8F5 0%, #EDF4EC 40%, #F3EFE6 100%)' }}
-    >
-      <div className="mx-auto max-w-7xl px-5 pb-10 pt-24 sm:px-8 sm:pt-32">
+    <section id="projects" className="relative" style={{ background: '#F3EFE6' }}>
+      <div className="mx-auto max-w-4xl px-5 pb-16 pt-28 text-center sm:px-8 sm:pb-24 sm:pt-40">
         <Eyebrow>Our projects</Eyebrow>
-        <h2 className="mt-5 max-w-3xl font-['Space_Grotesk'] text-4xl font-extrabold leading-[1.06] tracking-tight text-[#111827] sm:text-6xl">
+        <h2 className="f-display mt-6 text-4xl font-bold leading-[1.08] text-[#2A1F1A] sm:text-5xl lg:text-6xl">
           Places we are building, and places already lived in.
         </h2>
-        <p className="mt-6 max-w-xl text-base leading-[1.8] text-neutral-600 sm:text-lg">
-          Each one drawn, engineered and built by our own team. Walk through them, then ask us about the one that feels
-          like yours.
-        </p>
       </div>
 
       {flagships.length > 0 && (
-        <DarkBand id="signature" className="mt-6">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8">
-            <Eyebrow dark>Signature projects</Eyebrow>
-            <h3 className="mt-4 max-w-2xl font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.08] tracking-tight text-[#D9CBB4] sm:text-5xl">
-              The work we are proudest of.
-            </h3>
-          </div>
-          <div className="mt-8 grid gap-10">
-            {flagships.map((p, i) => (
-              <Signature key={p.id} project={p} index={i} />
-            ))}
-          </div>
-        </DarkBand>
-      )}
-
-      {shown.length > 0 && (
-        <div className="pb-6 pt-16">
-          <div className="mx-auto max-w-7xl px-5 pb-8 sm:px-8">
-            <Eyebrow>More of our work</Eyebrow>
-            <p className="mt-3 max-w-xl text-neutral-600">Move over a project to open it.</p>
-          </div>
-          <Panels items={shown} extra={extra} />
+        <div id="signature" style={{ background: '#2A1F1A' }}>
+          <p className={`${MONO} py-12 text-center text-[#C6DB3F]`}>Signature projects</p>
+          {flagships.map((p, i) => (
+            <Signature key={p.id} project={p} index={i} />
+          ))}
         </div>
       )}
+
+      {/* one full-screen photo with three short lines and a link to every project */}
+      <div className="relative h-[100svh] min-h-[640px] overflow-hidden bg-[#1A120E]">
+        <img
+          src={MORE_PHOTO.src}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: MORE_PHOTO.pos }}
+        />
+        <div aria-hidden className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,18,14,.82) 0%, rgba(26,18,14,.5) 38%, rgba(26,18,14,0) 70%)' }} />
+        <div className="absolute inset-0 flex items-end pb-16 sm:pb-20 lg:pb-24">
+          <div className="mx-auto w-full max-w-7xl px-6 sm:px-10 lg:px-14">
+            <Reveal>
+              <p className="f-display max-w-2xl text-[clamp(1.9rem,3.6vw,3.4rem)] font-bold leading-[1.1] text-[#FAF8F5]">{MORE_PHOTO.lines[0]}</p>
+              <p className="mt-5 max-w-md text-base leading-[1.7] text-[#FAF8F5]/90 sm:text-lg">
+                {MORE_PHOTO.lines[1]}
+                <br />
+                {MORE_PHOTO.lines[2]}
+              </p>
+              <Link
+                to="/projects"
+                className="mt-9 inline-flex items-center gap-3 border border-[#FAF8F5]/70 px-6 py-3.5 font-['JetBrains_Mono'] text-[12px] uppercase tracking-[0.16em] text-[#FAF8F5] transition-colors duration-300 hover:bg-[#FAF8F5] hover:text-[#2A1F1A]"
+              >
+                View our other projects
+                <span aria-hidden>→</span>
+              </Link>
+            </Reveal>
+          </div>
+        </div>
+      </div>
 
       <Interiors />
 
-      <div className="pb-14 sm:pb-16">
-        <div className="mx-auto max-w-7xl px-5 pt-14 sm:px-8 sm:pt-16">
-          <Eyebrow>Opening soon</Eyebrow>
-          <h3 className="mt-4 max-w-2xl font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.1] tracking-tight text-[#2A1F1A] sm:text-4xl">
-            New addresses are close.
-          </h3>
-          <p className="mt-3 font-serif text-lg italic text-[#6B5446]">Tell us you are interested and we will reach you first.</p>
-        </div>
-        <div className="mt-7">
-          <Upcoming />
-        </div>
-      </div>
+      <div className="pb-10 sm:pb-14" />
     </section>
   );
 }
