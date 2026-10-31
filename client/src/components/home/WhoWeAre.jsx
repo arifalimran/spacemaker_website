@@ -159,28 +159,6 @@ function Frame({ d, photoLeft }) {
   );
 }
 
-function Quote() {
-  return (
-    <div className="px-5 pb-36 pt-8 sm:px-8 sm:pb-44 lg:pb-56">
-      <Reveal>
-        <div className="mx-auto max-w-5xl text-center">
-          <span aria-hidden className="mx-auto mb-10 block h-3.5 w-3.5 rounded-full bg-[#2A1F1A] ring-[5px] ring-[#C6F00C] shadow-[0_0_0_10px_rgba(198,240,12,0.22)]" />
-          <p className="f-display text-[clamp(2rem,4.4vw,4.4rem)] font-bold leading-[1.1] text-[#2A1F1A]">{c.quote}</p>
-          <motion.span
-            aria-hidden
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto mt-10 block h-[5px] w-28 origin-left rounded-full"
-            style={{ background: LINE_BG }}
-          />
-        </div>
-      </Reveal>
-    </div>
-  );
-}
-
 /* Who we are: a flat cream page with big photo frames and lots of empty space. */
 export default function WhoWeAre() {
   const reduce = useReducedMotion();
@@ -229,7 +207,7 @@ export default function WhoWeAre() {
       <div className="pt-10 sm:pt-12 lg:pt-14" />
       <Frame d={COPY.design} photoLeft />
       <Frame d={COPY.build} photoLeft={false} />
-      <Quote />
+      <div className="pb-24 sm:pb-32 lg:pb-40" />
     </section>
     </>
   );

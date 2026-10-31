@@ -1,20 +1,27 @@
 // client/src/components/home/WhyChooseUs.jsx
-// Why choose us, for BUYERS. Three equal cards (design, materials, on-time delivery) on solid espresso, with room to breathe
-// and a proof row (counts come from the portfolio data, so they follow the back end).
-// On-time delivery is a vertical milestone track: the lime line fills top to bottom and each milestone lights up in turn.
-// Plain gradients/rgba only (no CSS filters). Reduced motion: track shown complete.
+// Why choose us, for BUYERS, on flat cream.
+// 1) opening statement + proof numbers as one flowing block, 2) the heading "Three things you can see, feel and count on",
+// 3) two big cards (design, materials), 4) the third promise, on-time delivery, as its own section with a handover photo.
+// Handover facts are placeholders (HANDOVER below): nothing is shown until real values are filled in.
 import React, { useEffect, useRef, useState } from 'react';
-import { animate, useInView, useReducedMotion } from 'framer-motion';
+import { animate, motion, useInView, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { WHY_US, projects } from '../../data/portfolio';
 import { Eyebrow, Reveal } from '../portfolio/shared';
 
 const LIME = '#C6F00C';
-// three text tiers on espresso: SAND = headings and figures, BODY = reading text, SUB = small labels (all matte, never white); SOFT = the one soft-lime accent
+// brand colours on cream: ESP = headings and figures, BODY = reading text, OLIVE = labels and italic lines, SAND = the delivery card; SOFT = the soft-lime accent
+const ESP = '#2A1F1A';
+const BODY = '#4B3F37';
+const OLIVE = '#5C6E0A';
 const SAND = '#D9CBB4';
-const SUB = '#A39380';
 const SOFT = '#C6DB3F';
 const INTRO = 'Every Space Maker home is built on these three promises.';
+const STATEMENT = 'Every great development begins with trust, transparency and disciplined execution.';
+// on-time delivery photo: replace the file in public/assets/04_why/ (same name) with a real Moon Residence handover photo when ready
+const HANDOVER_PHOTO = '/assets/04_why/ontime-handover.webp';
+// fill these in with real facts; a line only shows when its value is not empty
+const HANDOVER = { project: 'Moon Residence', date: '', note: '' };
 const underConstruction = projects.filter((p) => p.status === 'active').length;
 
 // hover on the photo cards: camera viewfinder. Four thin corner brackets fade in and ease inward, the photo zooms slowly
@@ -66,149 +73,27 @@ function CountUp({ to, suffix = '' }) {
   );
 }
 
-// On-time delivery track. Loops by itself while on screen (9s cycle): a lime pulse runs from Design down to Handover,
-// each milestone lights up and sends out a ring as it passes, Handover glows, then the track fades and restarts.
-// Pure CSS keyframes on transform + opacity only, so the browser runs it off the main thread and scrolling stays smooth
-// (no JS animation frames, no colour/shadow repaints). Paused while off screen. Reduced motion: finished track, no pulse.
-const CYCLE = 9;
-const SWEEP = 0.72; // fraction of the cycle the pulse takes to reach the last milestone
-const pc = (x) => `${+(x * 100).toFixed(2)}%`;
-
-function trackCss(n) {
-  let s = `
-@keyframes smFill{0%{transform:scaleY(0);opacity:1}${pc(SWEEP)}{transform:scaleY(1);opacity:1}90%{transform:scaleY(1);opacity:1}94%{transform:scaleY(0);opacity:0}100%{transform:scaleY(0);opacity:1}}
-@keyframes smHead{0%{transform:translate3d(0,0,0);opacity:1}${pc(SWEEP)}{transform:translate3d(0,var(--h),0);opacity:1}${pc(SWEEP + 0.08)}{transform:translate3d(0,var(--h),0);opacity:0}100%{transform:translate3d(0,var(--h),0);opacity:0}}
-.sm-trk-fill{transform-origin:top;will-change:transform,opacity}
-.sm-trk-head{will-change:transform,opacity}
-`;
-  for (let i = 0; i < n; i++) {
-    const t = Math.max(0.001, (SWEEP * i) / (n - 1));
-    const t2 = t + 0.02;
-    s += `@keyframes smOn${i}{0%{opacity:0}${pc(t)}{opacity:0}${pc(t2)}{opacity:1}88%{opacity:1}94%{opacity:0}100%{opacity:0}}`;
-    s += `@keyframes smLab${i}{0%{opacity:.55}${pc(t)}{opacity:.55}${pc(t2)}{opacity:1}88%{opacity:1}94%{opacity:.55}100%{opacity:.55}}`;
-    s += `@keyframes smRing${i}{0%{opacity:0;transform:scale(1)}${pc(t)}{opacity:.9;transform:scale(1)}${pc(Math.min(0.99, t + 0.06))}{opacity:0;transform:scale(2.8)}100%{opacity:0;transform:scale(2.8)}}`;
-  }
-  return s;
-}
-
-function Track({ items: raw }) {
-  const items = raw[0] === 'Design' ? raw : ['Design', ...raw];
-  const n = items.length;
-  const ref = useRef(null);
-  const olRef = useRef(null);
-  const reduce = useReducedMotion();
-  const inView = useInView(ref, { margin: '0px 0px -10% 0px' });
-  const [h, setH] = React.useState(160);
-  React.useLayoutEffect(() => {
-    if (olRef.current) setH(Math.max(40, olRef.current.offsetHeight - 18));
-  }, [n]);
-  const css = React.useMemo(() => trackCss(n), [n]);
-  const run = !reduce;
-  const play = inView ? 'running' : 'paused';
-  const an = (name) => (run ? { animation: `${name} ${CYCLE}s linear infinite`, animationPlayState: play } : undefined);
-
-  return (
-    <div ref={ref} className="relative pl-8">
-      {run && <style>{css}</style>}
-      {/* rail */}
-      <div aria-hidden className="absolute bottom-[9px] left-[7px] top-[9px] w-[2px] bg-[#FAF8F5]/20" />
-      {/* lime fill that follows the pulse */}
-      <div
-        aria-hidden
-        className="sm-trk-fill absolute bottom-[9px] left-[7px] top-[9px] w-[2px]"
-        style={{ background: LIME, transform: run ? 'scaleY(0)' : 'scaleY(1)', ...an('smFill') }}
-      />
-      {/* glowing head (static glow, only moves and fades) */}
-      {run && (
-        <span
-          aria-hidden
-          className="sm-trk-head absolute left-[3px] top-[5px] h-[10px] w-[10px] rounded-full"
-          style={{ background: LIME, boxShadow: '0 0 14px 4px rgba(198,240,12,.65)', '--h': `${h}px`, ...an('smHead') }}
-        />
-      )}
-      <ol ref={olRef} className="grid gap-5">
-        {items.map((m, i) => {
-          const last = i === n - 1;
-          return (
-            <li key={m} className="relative flex items-center gap-3">
-              {/* dot: dark ring, lime centre fades in as the pulse passes */}
-              <span aria-hidden className="absolute -left-8 h-4 w-4 rounded-full border-2 bg-[#2A1F1A]" style={{ borderColor: LIME }}>
-                <span
-                  className="absolute inset-0 rounded-full"
-                  style={{ background: LIME, opacity: run ? 0 : 1, ...an(`smOn${i}`) }}
-                />
-              </span>
-              {/* ring burst */}
-              {run && (
-                <span
-                  aria-hidden
-                  className="absolute -left-8 h-4 w-4 rounded-full border"
-                  style={{ borderColor: LIME, opacity: 0, ...an(`smRing${i}`) }}
-                />
-              )}
-              <span className="font-['JetBrains_Mono'] text-[10px] tracking-[0.18em] text-[#A39380]">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span
-                className={`font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] ${last ? 'font-semibold' : ''}`}
-                style={{ color: last ? LIME : '#BBA992', opacity: run ? 0.55 : 1, ...an(`smLab${i}`) }}
-              >
-                {m}
-              </span>
-              {last && (
-                <svg
-                  aria-hidden
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={LIME}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ opacity: run ? 0 : 1, ...an(`smOn${i}`) }}
-                >
-                  <path d="M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6" />
-                </svg>
-              )}
-            </li>
-          );
-        })}
-      </ol>
-    </div>
-  );
-}
-
 function Card({ s, i }) {
   return (
     <Reveal delay={i * 0.1} className="h-full">
       <article className="sm-wc flex h-full flex-col">
-        {s.milestones ? (
-          <div className="sm-wc-photo sm-wc-flat relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl bg-[#33261F] sm:aspect-[4/5]">
-            <div className="w-full max-w-[15rem] pt-8">
-              <Track items={s.milestones} />
-            </div>
-          </div>
-        ) : (
-          <div className="sm-wc-photo relative aspect-[4/3] overflow-hidden rounded-2xl sm:aspect-[4/5]">
-            {s.image && <img src={s.image} alt={s.title} loading="lazy" decoding="async" className="sm-wc-img h-full w-full object-cover" />}
-            <div aria-hidden className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(42,31,26,.55) 0%, rgba(42,31,26,0) 45%)' }} />
-            <Corners />
-          </div>
-        )}
+        <div className="sm-wc-photo relative aspect-[4/3] overflow-hidden rounded-[18px] bg-[#D9CBB4] sm:max-h-[72vh]">
+          {s.image && <img src={s.image} alt={s.title} loading="lazy" decoding="async" className="sm-wc-img h-full w-full object-cover" />}
+          <Corners />
+        </div>
 
-        <div className="mt-8 flex flex-1 flex-col">
+        <div className="mt-12 flex flex-1 flex-col px-3 sm:px-5">
           <span aria-hidden className="mb-4 block h-[2px] w-10" style={{ background: SOFT }} />
-          <h3 className="font-['Space_Grotesk'] text-2xl font-extrabold leading-tight tracking-tight text-[#D9CBB4] sm:text-3xl">{s.title}</h3>
-          <p className="mt-3 font-serif text-xl italic text-[#C6DB3F]/90">{s.line}</p>
-          <p className="mt-4 text-base leading-relaxed text-[#BBA992]">{s.text}</p>
+          <h3 className="f-display text-3xl font-bold leading-tight text-[#2A1F1A] sm:text-4xl">{s.title}</h3>
+          <p className="mt-3 font-serif text-xl italic text-[#5C6E0A]">{s.line}</p>
+          <p className="mt-4 text-base leading-relaxed text-[#4B3F37]">{s.text}</p>
           {s.specs ? (
-            <dl className="mt-6 divide-y divide-[#FAF8F5]/10 border-y border-[#FAF8F5]/10">
+            <dl className="mt-6 divide-y divide-[#2A1F1A]/15 border-y border-[#2A1F1A]/15">
               {s.specs.map(([k, v]) => (
                 <div key={k} className="flex items-baseline justify-between gap-4 py-3">
-                  <dt className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#A39380]">{k}</dt>
-                  <dd className="text-right font-['Space_Grotesk'] text-sm font-semibold text-[#BBA992]">
-                    <span aria-hidden className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: SOFT }} />
+                  <dt className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em] text-[#5C6E0A]">{k}</dt>
+                  <dd className="text-right font-['Space_Grotesk'] text-sm font-semibold text-[#2A1F1A]">
+                    <span aria-hidden className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle ring-1 ring-[#5C6E0A]/50" style={{ background: SOFT }} />
                     {v}
                   </dd>
                 </div>
@@ -218,8 +103,8 @@ function Card({ s, i }) {
             s.points && (
               <ul className="mt-6 grid gap-3">
                 {s.points.map((p) => (
-                  <li key={p} className="flex items-center gap-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.12em] text-[#BBA992]">
-                    <span className="h-1.5 w-1.5 flex-none rounded-full" style={{ background: LIME }} />
+                  <li key={p} className="flex items-center gap-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.12em] text-[#4B3F37]">
+                    <span className="h-1.5 w-1.5 flex-none rounded-full ring-1 ring-[#5C6E0A]/50" style={{ background: SOFT }} />
                     {p}
                   </li>
                 ))}
@@ -232,71 +117,150 @@ function Card({ s, i }) {
   );
 }
 
+function OnTime({ s }) {
+  const steps = (s.milestones || []).filter((m) => m !== 'Design');
+  const facts = [HANDOVER.project && `Project · ${HANDOVER.project}`, HANDOVER.date && `Handed over · ${HANDOVER.date}`, HANDOVER.note].filter(Boolean);
+  // the text on the photo: on phones it sits under the photo, from sm up it sits over the top right
+  const details = (
+    <>
+      <p className="font-serif text-xl italic sm:text-2xl" style={{ color: OLIVE }}>{s.line}</p>
+      <p className="mt-4 text-base leading-[1.8] sm:text-[17px]" style={{ color: ESP }}>{s.text}</p>
+      {facts.length > 0 && (
+        <ul className="mt-5 grid gap-2">
+          {facts.map((f) => (
+            <li key={f} className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.16em]" style={{ color: ESP }}>{f}</li>
+          ))}
+        </ul>
+      )}
+      <Link
+        to="/projects?status=completed"
+        className="mt-7 inline-block font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] underline decoration-2 underline-offset-[8px] transition-colors hover:decoration-[#5C6E0A]"
+        style={{ color: ESP, textDecorationColor: SOFT }}
+      >
+        See our completed projects →
+      </Link>
+    </>
+  );
+  return (
+    <div className="mt-32 sm:mt-44 lg:mt-56">
+      <Reveal className="px-3 sm:px-5">
+        <span className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.22em]" style={{ color: OLIVE }}>
+          Promise 03 · Delivered on time
+        </span>
+        <h3 className="f-display mt-5 text-4xl font-bold leading-[1.08] sm:text-5xl lg:text-6xl" style={{ color: ESP }}>
+          {s.title}
+        </h3>
+      </Reveal>
+
+      <Reveal className="mt-10 sm:mt-12">
+        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[18px] bg-[#D9CBB4] sm:aspect-[3/2]">
+          <img src={HANDOVER_PHOTO} alt="A home being handed over" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+          {/* soft warm veil so the cool photo sits with the brand colours (plain rgba, no filters) */}
+          <div aria-hidden className="absolute inset-0" style={{ background: 'rgba(217,203,180,.2)' }} />
+          {/* cream fade behind the text, top right only */}
+          <div
+            aria-hidden
+            className="absolute inset-0 hidden sm:block"
+            style={{ background: 'linear-gradient(to bottom left, rgba(243,239,230,.9) 0%, rgba(243,239,230,.65) 24%, rgba(243,239,230,0) 52%)' }}
+          />
+          <div className="absolute right-0 top-0 hidden max-w-[26rem] p-8 sm:block lg:max-w-[30rem] lg:p-12">{details}</div>
+        </div>
+        <div className="px-3 pt-10 sm:hidden">{details}</div>
+      </Reveal>
+
+      {/* milestones: foundation to handover, still (no animation) */}
+      <Reveal className="mt-14 px-3 sm:mt-20 sm:px-5" delay={0.1}>
+        <ol className="relative grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-6">
+          <span aria-hidden className="absolute left-0 right-0 top-[7px] hidden h-px bg-[#2A1F1A]/20 sm:block" />
+          {steps.map((m, i) => {
+            const last = i === steps.length - 1;
+            return (
+              <li key={m} className="relative">
+                <span
+                  aria-hidden
+                  className="relative block h-[15px] w-[15px] rounded-full border-2"
+                  style={{ borderColor: OLIVE, background: last ? SOFT : '#F3EFE6' }}
+                />
+                <span className="mt-4 block font-['JetBrains_Mono'] text-[10px] tracking-[0.18em]" style={{ color: '#6B5446' }}>{String(i + 1).padStart(2, '0')}</span>
+                <span className={`mt-1 block font-['JetBrains_Mono'] text-[12px] uppercase tracking-[0.16em] ${last ? 'font-semibold' : ''}`} style={{ color: last ? OLIVE : BODY }}>{m}</span>
+              </li>
+            );
+          })}
+        </ol>
+      </Reveal>
+    </div>
+  );
+}
+
 export default function WhyChooseUs() {
   const title = WHY_US.title || '';
   const cut = title.lastIndexOf(' ', title.lastIndexOf(' ') - 1) + 1;
   const band = [...(WHY_US.proof || []), { value: underConstruction, label: 'Under construction', to: '/projects?status=active' }];
+  const cards = WHY_US.scenes.filter((s) => !s.milestones);
+  const ontime = WHY_US.scenes.find((s) => s.milestones);
   return (
-    <section className="relative overflow-hidden py-20 sm:py-28" style={{ background: '#2A1F1A' }}>
+    <section className="relative overflow-hidden py-24 sm:py-32 lg:py-40" style={{ background: '#F3EFE6' }}>
       <style>{WC_CSS}</style>
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-        <Reveal className="max-w-6xl">
-          <Eyebrow dark>{WHY_US.eyebrow}</Eyebrow>
-          <h2 className="mt-4 font-['Space_Grotesk'] text-3xl font-extrabold leading-[1.1] tracking-tight text-[#D9CBB4] sm:text-4xl lg:text-5xl">
-            {title.slice(0, cut)}
-            <span style={{ background: 'linear-gradient(transparent 62%, rgba(198,240,12,.32) 62%)' }}>{title.slice(cut)}</span>
-          </h2>
-          <p className="mt-4 font-serif text-lg italic text-[#BBA992]">{WHY_US.intro || INTRO}</p>
+      <div className="relative mx-auto max-w-[2200px] px-3 sm:px-4">
+        {/* statement + numbers, one flowing block */}
+        <Reveal className="mx-auto max-w-5xl px-3 text-center sm:px-5">
+          <span aria-hidden className="mx-auto mb-10 block h-3.5 w-3.5 rounded-full bg-[#2A1F1A] ring-[5px] ring-[#C6F00C] shadow-[0_0_0_10px_rgba(198,240,12,0.22)]" />
+          <p className="f-display text-[clamp(2rem,4.4vw,4.4rem)] font-bold leading-[1.1]" style={{ color: ESP }}>{STATEMENT}</p>
+          <motion.span
+            aria-hidden
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mt-10 block h-[5px] w-28 origin-left rounded-full"
+            style={{ background: SOFT }}
+          />
         </Reveal>
 
-        {/* proof band */}
-        <Reveal className="mt-10 sm:mt-14" delay={0.05}>
-          <ul className="grid grid-cols-2 gap-y-8 border-y border-[#4A3B32] py-7 sm:py-8 lg:grid-cols-4 lg:gap-y-0">
+        <Reveal className="mt-20 px-3 sm:mt-24 sm:px-5" delay={0.05}>
+          <ul className="grid grid-cols-2 gap-y-8 border-y border-[#2A1F1A]/15 py-8 sm:py-10 lg:grid-cols-4 lg:gap-y-0">
             {band.map((x, k) => {
               const inner = (
                 <>
-                  <span className="block font-['Space_Grotesk'] text-3xl font-extrabold leading-none tracking-tight text-[#D9CBB4] sm:text-4xl lg:text-5xl">
+                  <span className="f-display block text-3xl font-bold leading-none sm:text-4xl lg:text-5xl" style={{ color: ESP }}>
                     <CountUp to={x.value} suffix={x.suffix} />
                   </span>
-                  <span className="mt-2.5 block font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#A39380]">{x.label}</span>
+                  <span className="mt-2.5 block font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em]" style={{ color: OLIVE }}>{x.label}</span>
                 </>
               );
               return (
-                <li key={x.label} className={`px-0 lg:px-8 ${k > 0 ? 'lg:border-l lg:border-[#4A3B32]' : 'lg:pl-0'}`}>
-                  {x.to ? (
-                    <Link to={x.to} className="block transition-opacity hover:opacity-80">{inner}</Link>
-                  ) : (
-                    inner
-                  )}
+                <li key={x.label} className={`px-0 lg:px-8 ${k > 0 ? 'lg:border-l lg:border-[#2A1F1A]/15' : 'lg:pl-0'}`}>
+                  {x.to ? <Link to={x.to} className="block transition-opacity hover:opacity-80">{inner}</Link> : inner}
                 </li>
               );
             })}
           </ul>
         </Reveal>
 
-        <div className="mt-14 grid gap-14 sm:mt-16 md:grid-cols-3 md:gap-8 lg:gap-12">
-          {WHY_US.scenes.map((s, i) => (
+        {/* the heading and the three promises */}
+        <Reveal className="mt-32 max-w-6xl px-3 sm:mt-44 sm:px-5">
+          <Eyebrow>{WHY_US.eyebrow}</Eyebrow>
+          <h2 className="f-display mt-5 text-3xl font-bold leading-[1.1] sm:text-4xl lg:text-5xl" style={{ color: ESP }}>
+            {title.slice(0, cut)}
+            <span style={{ background: 'linear-gradient(transparent 62%, rgba(198,219,63,.5) 62%)' }}>{title.slice(cut)}</span>
+          </h2>
+          <p className="mt-5 font-serif text-lg italic text-[#6B5446]">{WHY_US.intro || INTRO}</p>
+        </Reveal>
+
+        <div className="mt-20 grid gap-20 sm:mt-24 md:grid-cols-2 md:gap-3">
+          {cards.map((s, i) => (
             <Card key={s.key} s={s} i={i} />
           ))}
         </div>
 
-        <Reveal className="mt-14 flex justify-start sm:mt-16">
-          <Link
-            to="/projects?status=active"
-            className="group relative isolate inline-flex items-center gap-3 overflow-hidden rounded-full border-[1.5px] border-[#BBA992]/60 px-6 py-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.2em] text-[#BBA992] transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:translate-y-full before:bg-[#BBA992] before:transition-transform before:duration-300 hover:text-[#2A1F1A] hover:before:translate-y-0"
-          >
-            <span className="h-2 w-2 rounded-full" style={{ background: SOFT }} />
-            See our active projects
-            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </Link>
-        </Reveal>
+        {ontime && <OnTime s={ontime} />}
 
         {WHY_US.assurances?.length > 0 && (
-          <Reveal className="mt-14">
-            <ul className="flex flex-wrap gap-x-10 gap-y-3 border-t border-[#FAF8F5]/15 pt-8">
+          <Reveal className="mt-28 px-3 sm:px-5">
+            <ul className="flex flex-wrap gap-x-10 gap-y-3 border-t border-[#2A1F1A]/15 pt-8">
               {WHY_US.assurances.map((a) => (
-                <li key={a} className="flex items-center gap-3 font-['Space_Grotesk'] text-base font-semibold text-[#D9CBB4]">
-                  <span className="h-2 w-2 flex-none rounded-full" style={{ background: LIME }} />
+                <li key={a} className="flex items-center gap-3 font-['Space_Grotesk'] text-base font-semibold" style={{ color: ESP }}>
+                  <span className="h-2 w-2 flex-none rounded-full ring-1 ring-[#5C6E0A]/50" style={{ background: SOFT }} />
                   {a}
                 </li>
               ))}
