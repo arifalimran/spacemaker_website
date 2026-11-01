@@ -213,7 +213,7 @@ export function Flex() {
   const [failed, setFailed] = useState(false);
   const showImg = FLEX.image && !failed;
   return (
-    <section className="px-3 py-16 sm:px-6 sm:py-20">
+    <section className="px-3 py-24 sm:px-6 sm:py-28" style={{ background: '#F3EFE6' }}>
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <div className="grid overflow-hidden rounded-[24px] bg-[#2A1F1A] sm:rounded-[32px] lg:grid-cols-2">

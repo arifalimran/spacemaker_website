@@ -14,7 +14,7 @@ const pillSand =
 
 export default function LandownerSection() {
   return (
-    <section id="land" className="relative px-3 pb-6 pt-0 sm:px-6 sm:pb-8" style={{ background: '#F3EFE6' }}>
+    <section id="land" className="relative px-3 pb-12 pt-0 sm:px-6 sm:pb-16" style={{ background: '#F3EFE6' }}>
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <div className="flex flex-col gap-6 rounded-[24px] bg-[#2A1F1A] px-6 py-8 sm:rounded-[32px] sm:px-10 sm:py-10 md:flex-row md:items-center md:justify-between md:gap-10 lg:px-14">
