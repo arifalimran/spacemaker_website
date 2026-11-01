@@ -93,7 +93,7 @@ function Signature({ project, index }) {
         />
         <Link to={`/projects/${project.slug}`} aria-label={`Open ${project.title}`} className="absolute inset-0" tabIndex={-1} />
         <div className="pointer-events-none absolute inset-0 flex items-end pb-16 lg:items-center lg:pb-0">
-          <div className={`pointer-events-none mx-auto w-full max-w-7xl px-6 sm:px-10 lg:px-14 ${textRight ? 'lg:flex lg:justify-end' : ''}`}>
+          <div className={`pointer-events-none mx-auto w-full max-w-[1320px] px-6 sm:px-14 lg:px-24 ${textRight ? 'lg:flex lg:justify-end' : ''}`}>
             <div className="pointer-events-auto max-w-xl">
               <SignatureText project={project} meta={meta} />
             </div>
@@ -162,7 +162,7 @@ function Interiors() {
 
   return (
     <div>
-      <div ref={wrap} className="mx-auto max-w-7xl px-5 pb-2 pt-14 sm:px-8 sm:pt-16">
+      <div ref={wrap} className="mx-auto max-w-[1320px] px-6 pb-2 pt-14 sm:px-14 sm:pt-16 lg:px-24">
         <div className="flex items-end justify-between gap-6">
           <div>
             <Eyebrow>Interiors</Eyebrow>
@@ -242,7 +242,7 @@ function Interiors() {
       </div>
 
       {/* progress */}
-      <div className="mx-auto mt-2 max-w-7xl px-5 sm:px-8">
+      <div className="mx-auto mt-2 max-w-[1320px] px-6 sm:px-14 lg:px-24">
         <div className="flex items-center gap-4">
           <div className="relative h-[2px] flex-1 bg-[#2A1F1A]/15">
             <div className="absolute inset-y-0 left-0 bg-[#2A1F1A]" style={{ width: `${Math.max(12, prog * 100)}%`, transition: 'width .15s linear' }} />
@@ -263,7 +263,7 @@ export default function PortfolioSection() {
 
   return (
     <section id="projects" className="relative" style={{ background: '#F3EFE6' }}>
-      <div className="mx-auto max-w-4xl px-5 pb-16 pt-28 text-center sm:px-8 sm:pb-24 sm:pt-40">
+      <div className="mx-auto max-w-4xl px-5 pb-16 pt-16 text-center sm:px-8 sm:pb-24 sm:pt-24">
         <Eyebrow>Our projects</Eyebrow>
         <h2 className="f-display mt-6 text-4xl font-bold leading-[1.08] text-[#2A1F1A] sm:text-5xl lg:text-6xl">
           Places we are building, and places already lived in.
@@ -291,7 +291,7 @@ export default function PortfolioSection() {
         />
         <div aria-hidden className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,18,14,.82) 0%, rgba(26,18,14,.5) 38%, rgba(26,18,14,0) 70%)' }} />
         <div className="absolute inset-0 flex items-end pb-16 sm:pb-20 lg:pb-24">
-          <div className="mx-auto w-full max-w-7xl px-6 sm:px-10 lg:px-14">
+          <div className="mx-auto w-full max-w-[1320px] px-6 sm:px-14 lg:px-24">
             <Reveal>
               <p className="f-display max-w-2xl text-[clamp(1.9rem,3.6vw,3.4rem)] font-bold leading-[1.1] text-[#FAF8F5]">{MORE_PHOTO.lines[0]}</p>
               <p className="mt-5 max-w-md text-base leading-[1.7] text-[#FAF8F5]/90 sm:text-lg">

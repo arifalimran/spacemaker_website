@@ -95,7 +95,7 @@ function Intro() {
       <div aria-hidden className="absolute inset-0 lg:hidden" style={{ background: 'linear-gradient(to top, rgba(26,18,14,.88) 0%, rgba(26,18,14,.7) 55%, rgba(26,18,14,.45) 100%)' }} />
       <div aria-hidden className="absolute inset-0 hidden lg:block" style={{ background: 'linear-gradient(to right, rgba(26,18,14,.88) 0%, rgba(26,18,14,.7) 32%, rgba(26,18,14,.25) 58%, rgba(26,18,14,0) 78%)' }} />
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 pb-20 pt-40 sm:px-10 sm:pb-24 sm:pt-44 lg:px-14">
+      <div className="relative mx-auto w-full max-w-[1320px] px-6 pb-20 pt-40 sm:px-14 sm:pb-24 sm:pt-44 lg:px-24">
         <Reveal>
           <div className="max-w-xl lg:max-w-[34rem]">
             <span className="inline-flex items-center gap-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.22em] text-[#C6DB3F]">
@@ -204,10 +204,9 @@ export default function WhoWeAre() {
       style={{ background: CREAM }}
     >
       <Intro />
-      <div className="pt-10 sm:pt-12 lg:pt-14" />
+      <div className="pt-16 sm:pt-20 lg:pt-28" />
       <Frame d={COPY.design} photoLeft />
       <Frame d={COPY.build} photoLeft={false} />
-      <div className="pb-24 sm:pb-32 lg:pb-40" />
     </section>
     </>
   );
