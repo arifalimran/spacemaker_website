@@ -47,7 +47,7 @@ function Home() {
       <div id="why-us" data-sec="Why choose us" data-key="why" data-theme="light">
         <WhyChooseUs />
       </div>
-      <div data-sec="Testimonials" data-key="testimonials" data-theme="light">
+      <div data-sec="Testimonials" data-key="testimonials" data-theme="dark">
         <Testimonials />
       </div>
       <div data-sec="Team" data-key="team" data-theme="light">

@@ -12,7 +12,7 @@ import { Reveal } from '../portfolio/shared';
 import { ESPRESSO, SamplePortrait } from './TeamCard';
 
 const LIME = '#C6DB3F';
-const CREAM = '#FAF8F5';
+const CREAM = '#F3EFE6'; // same cream as the other sections
 
 /* keep the text short: the first sentence, cut at a word if it is still long */
 const shorten = (t = '', max = 150) => {
@@ -59,7 +59,7 @@ export default function TeamExperts() {
   const fade = reduce ? {} : { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
   return (
-    <section id="team" aria-labelledby="team-heading" className="relative overflow-clip pb-24 pt-24 sm:pb-32 sm:pt-32" style={{ background: CREAM }}>
+    <section id="team" aria-labelledby="team-heading" className="relative overflow-clip pb-16 pt-24 sm:pb-20 sm:pt-32" style={{ background: CREAM }}>
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="mx-auto max-w-3xl text-center">
           <span className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.22em] text-[#5C6E0A]">{S.label}</span>
