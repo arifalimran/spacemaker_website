@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* client/src/index.css  — REPLACE your current file with this (keep your @tailwind lines at top if you use the Vite Tailwind build) */
 
 :root {
