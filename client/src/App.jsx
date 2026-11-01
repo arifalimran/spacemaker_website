@@ -18,8 +18,7 @@ import Testimonials from './components/home/Testimonials';
 import TeamExperts from './components/home/TeamExperts';
 import TeamPage from './components/home/TeamPage';
 import LandownerSection from './components/home/LandownerSection';
-import Careers, { Flex } from './components/home/Careers';
-import { ApplyProvider } from './components/home/ApplyForm';
+import Careers, { CareersTeaser } from './components/home/Careers';
 import CareersOpenings from './components/home/CareersOpenings';
 import Landowners from './components/home/Landowners';
 import PortfolioSection from './components/portfolio/PortfolioSection';
@@ -56,10 +55,8 @@ function Home() {
       <div data-sec="Partner with us" data-key="land" data-theme="light">
         <LandownerSection />
       </div>
-      <div>
-        <ApplyProvider>
-          <Flex />
-        </ApplyProvider>
+      <div data-sec="Careers" data-key="careers" data-theme="light">
+        <CareersTeaser />
       </div>
     </main>
   );

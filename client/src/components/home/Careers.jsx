@@ -274,6 +274,92 @@ export function Flex() {
   );
 }
 
+/* ---------- home teaser: open roles + flexible work, links to /careers ---------- */
+export function CareersTeaser() {
+  const [failed, setFailed] = useState(false);
+  const showImg = FLEX.image && !failed;
+  return (
+    <section id="careers" className="py-20 sm:py-24 lg:py-28" style={{ background: '#F3EFE6' }}>
+      <div className="mx-auto max-w-[1320px] px-6 sm:px-14 lg:px-24">
+        <Reveal>
+          <Eyebrow>Careers</Eyebrow>
+          <h2 className={h2}>{H.title}</h2>
+          <p className="mt-5 max-w-2xl text-base leading-[1.75] text-[#4B3F37] sm:text-lg">{H.mission}</p>
+        </Reveal>
+
+        <Reveal>
+          <div className="mt-10 grid overflow-hidden rounded-[24px] bg-[#2A1F1A] sm:mt-12 sm:rounded-[32px] lg:grid-cols-2">
+            <div className="flex flex-col p-6 sm:p-10 lg:p-12">
+              <div className="flex items-center justify-between gap-4">
+                <span className="inline-flex items-center gap-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.22em] text-[#D9CBB4]">
+                  <span className="h-[2px] w-8 bg-[#C6DB3F]" />
+                  Full-time roles
+                </span>
+                <span className="rounded-full border border-[#BBA992]/40 px-3 py-1 font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.16em] text-[#BBA992]">
+                  {JOBS.length} open
+                </span>
+              </div>
+              <ul className="mt-6 divide-y divide-[#D9CBB4]/15">
+                {JOBS.map((j) => (
+                  <li key={j.title} className="py-4 first:pt-0">
+                    <h3 className="font-['Space_Grotesk'] text-xl font-extrabold leading-snug text-[#D9CBB4] sm:text-2xl">{j.title}</h3>
+                    <p className="mt-1.5 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.14em] text-[#BBA992]">
+                      {j.loc} · {j.exp}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex flex-col border-t border-[#D9CBB4]/15 lg:border-l lg:border-t-0">
+              <div className="relative h-52 bg-[#3A2D26] sm:h-60">
+                {showImg && (
+                  <img
+                    src={FLEX.image}
+                    alt=""
+                    aria-hidden
+                    loading="lazy"
+                    decoding="async"
+                    onError={() => setFailed(true)}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                )}
+              </div>
+              <div className="p-6 sm:p-10 lg:p-12">
+                <span className="inline-flex items-center gap-3 font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.22em] text-[#D9CBB4]">
+                  <span className="h-[2px] w-8 bg-[#C6DB3F]" />
+                  {FLEX.eyebrow}
+                </span>
+                <h3 className="mt-4 font-['Space_Grotesk'] text-2xl font-extrabold leading-[1.1] tracking-tight text-[#D9CBB4] sm:text-3xl">{FLEX.title}</h3>
+                <p className="mt-4 max-w-md text-[15px] leading-[1.7] text-[#BBA992]">{FLEX.text}</p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {FLEX.who.map((w) => (
+                    <span key={w} className="rounded-full border border-[#BBA992]/40 px-3 py-1 font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.16em] text-[#BBA992]">
+                      {w}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-5">
+          <Link to="/careers/openings" className={pill}>
+            View all openings ({JOBS.length}) <Arrow />
+          </Link>
+          <Link
+            to="/careers"
+            className="font-['JetBrains_Mono'] text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2A1F1A] underline decoration-[#C6DB3F] decoration-2 underline-offset-[6px]"
+          >
+            Explore careers →
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ---------- how hiring works ---------- */
 function Steps() {
   return (
