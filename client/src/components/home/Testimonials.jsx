@@ -90,7 +90,7 @@ export default function Testimonials({ items = testimonials }) {
   if (!list.length) return null;
 
   return (
-    <section id="testimonials" aria-labelledby="testimonials-heading" className="relative py-28 sm:py-40 lg:py-52" style={{ background: ESP }}>
+    <section id="testimonials" aria-labelledby="testimonials-heading" className="relative py-20 sm:py-24 lg:py-28" style={{ background: ESP }}>
       <div className="mx-auto max-w-[1320px] px-6 sm:px-14 lg:px-24">
         <FadeUp className="max-w-3xl">
           {S.label && (
@@ -104,7 +104,7 @@ export default function Testimonials({ items = testimonials }) {
           {S.intro && <p className="mt-5 text-base leading-[1.8] sm:text-lg" style={{ color: SAND }}>{S.intro}</p>}
         </FadeUp>
 
-        <ul className="mt-20 sm:mt-32">
+        <ul className="mt-12 sm:mt-16">
           {list.map((t, i) => (
             <li key={t.id || i} className="border-t border-[#F3EFE6]/15 last:border-b">
               <FadeUp className="grid items-center gap-10 py-6 sm:py-8 lg:grid-cols-[13.5rem_minmax(0,1fr)] lg:gap-14 lg:py-10">
@@ -133,7 +133,7 @@ export default function Testimonials({ items = testimonials }) {
                       )}
                     </div>
                   </figcaption>
-                  <blockquote className="font-serif text-[clamp(1.25rem,2vw,2.1rem)] italic leading-[1.35] " style={{ color: CREAM }}>
+                  <blockquote className="font-serif text-[clamp(1.05rem,1.45vw,1.5rem)] italic leading-[1.35] " style={{ color: CREAM }}>
                     <Quote t={t} />
                   </blockquote>
                 </figure>

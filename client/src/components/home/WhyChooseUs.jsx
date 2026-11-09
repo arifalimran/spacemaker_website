@@ -16,6 +16,9 @@ const ESP = '#2A1F1A';
 const BODY = '#4B3F37';
 const OLIVE = '#5C6E0A';
 const SOFT = '#C6DB3F';
+const SAND = '#D9CBB4';
+const CREAM = '#F3EFE6';
+const MUTED = '#BBA992'; // small labels on espresso
 // the box colour: lighter than the page cream, thin border. Change this one line to try latte (#F3ECDD) or pale olive (#E4EDD6)
 const BOX = '#FAF8F5';
 const INTRO = 'Every Space Maker home is built on these three promises.';
@@ -187,13 +190,14 @@ export default function WhyChooseUs() {
   // design, materials, then on-time delivery last
   const scenes = [...WHY_US.scenes.filter((s) => !s.milestones), ...WHY_US.scenes.filter((s) => s.milestones)];
   return (
-    <section className="relative overflow-hidden pb-20 pt-24 sm:pb-24 sm:pt-32 lg:pb-28 lg:pt-40" style={{ background: '#F3EFE6' }}>
-      <div className="relative mx-auto max-w-[2200px] px-3 sm:px-4">
-        {/* statement + numbers: one centred block */}
+    <>
+      {/* statement + numbers: their own solid espresso band, centred, with generous padding */}
+      <div className="relative py-24 sm:py-32 lg:py-40" style={{ background: ESP }}>
+        <div className="mx-auto max-w-[2200px] px-3 sm:px-4">
         <div className="mx-auto max-w-[68rem] px-3 text-center sm:px-5">
           <Reveal>
-            <span aria-hidden className="mx-auto mb-8 block h-3.5 w-3.5 rounded-full bg-[#2A1F1A] ring-[5px] ring-[#C6F00C] shadow-[0_0_0_10px_rgba(198,240,12,0.22)]" />
-            <p className="f-display text-balance text-[clamp(1.75rem,3.2vw,3.1rem)] font-bold leading-[1.12]" style={{ color: ESP }}>{STATEMENT}</p>
+            <span aria-hidden className="mx-auto mb-8 block h-3.5 w-3.5 rounded-full bg-[#C6F00C] ring-[5px] ring-[#C6F00C]/25 shadow-[0_0_0_10px_rgba(198,240,12,0.12)]" />
+            <p className="f-display text-balance text-[clamp(1.75rem,3.2vw,3.1rem)] font-bold leading-[1.12]" style={{ color: CREAM }}>{STATEMENT}</p>
           </Reveal>
 
           <Reveal className="mt-14 sm:mt-16" delay={0.05}>
@@ -201,14 +205,14 @@ export default function WhyChooseUs() {
               {band.map((x, k) => {
                 const inner = (
                   <>
-                    <span className="f-display block text-3xl font-bold leading-none sm:text-4xl lg:text-5xl" style={{ color: ESP }}>
+                    <span className="f-display block text-3xl font-bold leading-none sm:text-4xl lg:text-5xl" style={{ color: SAND }}>
                       <CountUp to={x.value} suffix={x.suffix} />
                     </span>
-                    <span className="mt-3 block font-['JetBrains_Mono'] text-[12px] uppercase tracking-[0.18em]" style={{ color: BODY }}>{x.label}</span>
+                    <span className="mt-3 block font-['JetBrains_Mono'] text-[12px] uppercase tracking-[0.18em]" style={{ color: MUTED }}>{x.label}</span>
                   </>
                 );
                 return (
-                  <li key={x.label} className={`px-3 ${k > 0 ? 'lg:border-l lg:border-[#2A1F1A]/15' : ''}`}>
+                  <li key={x.label} className={`px-3 ${k > 0 ? 'lg:border-l lg:border-[#F3EFE6]/15' : ''}`}>
                     {x.to ? <Link to={x.to} className="block transition-opacity hover:opacity-80">{inner}</Link> : inner}
                   </li>
                 );
@@ -217,8 +221,13 @@ export default function WhyChooseUs() {
           </Reveal>
         </div>
 
+        </div>
+      </div>
+
+      <section className="relative overflow-hidden pb-20 pt-20 sm:pb-24 sm:pt-24 lg:pb-28 lg:pt-28" style={{ background: '#F3EFE6' }}>
+        <div className="relative mx-auto max-w-[2200px] px-3 sm:px-4">
         {/* the heading and the three promises */}
-        <Reveal className="mt-28 max-w-6xl px-6 sm:mt-36 sm:px-12 lg:px-16">
+        <Reveal className="max-w-6xl px-6 sm:px-12 lg:px-16">
           <Eyebrow>{WHY_US.eyebrow}</Eyebrow>
           <h2 className="f-display mt-5 text-3xl font-bold leading-[1.1] sm:text-4xl lg:text-5xl" style={{ color: ESP }}>
             {title.slice(0, brk)}
@@ -233,7 +242,8 @@ export default function WhyChooseUs() {
 
         <PromiseBox scenes={scenes} />
 
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }
